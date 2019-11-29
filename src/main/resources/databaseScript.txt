@@ -1,0 +1,82 @@
+DROP DATABASE IF EXISTS salon_tina_database;
+CREATE DATABASE IF NOT EXISTS salon_tina_database;
+USE salon_tina_database;
+
+CREATE TABLE IF NOT EXISTS users(
+   users_id INT AUTO_INCREMENT UNIQUE NOT NULL,
+   users_fullName VARCHAR(100) NOT NULL,
+   users_phonenumber INT NOT NULL UNIQUE,
+   users_email VARCHAR(50) NOT NULL UNIQUE,
+   users_preferences TEXT
+);
+
+CREATE TABLE IF NOT EXISTS users_archive(
+   users_id INT UNIQUE NOT NULL,
+   users_fullName VARCHAR(100),
+   users_phonenumber INT,
+   users_email VARCHAR(50),
+   users_preferences TEXT
+);
+
+CREATE TABLE IF NOT EXISTS users_roles(
+   users_id INT NOT NULL,
+   role VARCHAR(20),
+   CONSTRAINT usersroles_fk_users FOREIGN KEY (users_id) REFERENCES salon_tina_database.users (users_id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS newsletter (
+   users_id INT NOT NULL,
+   CONSTRAINT newsletter_fk_users FOREIGN KEY (users_id) REFERENCES salon_tina_database.users (users_id)
+);
+
+CREATE TABLE IF NOT EXISTS bookings(
+   bookings_id INT AUTO_INCREMENT UNIQUE NOT NULL,
+   users_id INT NOT NULL,
+   bookings_date DATE NOT NULL,
+   bookings_comment TEXT,
+   CONSTRAINT bookings_fk_users FOREIGN KEY (users_id) REFERENCES salon_tina_database.users (users_id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE IF NOT EXISTS treatments (
+   treatments_id INT AUTO_INCREMENT NOT NULL UNIQUE,
+   treatments_name VARCHAR(50) NOT NULL,
+   treatments_price DOUBLE NOT NULL,
+   treatments_description TEXT,
+   treatments_duration INT,
+   treatments_active BOOLEAN NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS bookings_treatment
+(
+   bookings_id  INT NOT NULL,
+   treatments_id INT NOT NULL,
+   CONSTRAINT bookingstreatment_fk_bookings FOREIGN KEY (bookings_id) REFERENCES salon_tina_database.bookings (bookings_id),
+   CONSTRAINT bookingstreatment_fk_treatments FOREIGN KEY (treatments_id) REFERENCES salon_tina_database.treatments (treatments_id)
+);
+
+
+CREATE TABLE IF NOT EXISTS items (
+   items_id INT AUTO_INCREMENT UNIQUE NOT NULL,
+   items_name VARCHAR(50) NOT NULL,
+   items_price DOUBLE NOT NULL,
+   items_description TEXT,
+   items_active BOOLEAN NOT NULL,
+   items_quantity INT
+);
+
+-- Mangler values i tabellerne
+
+SELECT * FROM newsletter;
+SELECT * FROM bookings;
+SELECT * FROM users;
+SELECT * FROM users_roles;
+SELECT * FROM bookings_treatment;
+SELECT * FROM treatments;
+SELECT * FROM items;
+SELECT * FROM users_archive;
+
+
+
+
+
