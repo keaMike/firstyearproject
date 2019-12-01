@@ -3,69 +3,125 @@ CREATE DATABASE IF NOT EXISTS salon_tina_database;
 USE salon_tina_database;
 
 CREATE TABLE IF NOT EXISTS users(
-   users_id INT AUTO_INCREMENT UNIQUE NOT NULL,
-   users_fullName VARCHAR(100) NOT NULL,
-   users_phonenumber INT NOT NULL UNIQUE,
-   users_email VARCHAR(50) NOT NULL UNIQUE,
-   users_preferences TEXT
+    users_id INT AUTO_INCREMENT UNIQUE NOT NULL,
+    users_fullName VARCHAR(100) NOT NULL,
+    users_phonenumber INT NOT NULL UNIQUE,
+    users_email VARCHAR(50) NOT NULL UNIQUE,
+    users_preferences TEXT
 );
+
+INSERT INTO users (users_fullName, users_phonenumber, users_email) VALUES
+('admin', 100000001, 'admin@admin.com'),
+('Frisør', 10000002, 'frisør@salon.dk'),
+('Adam Hansen', 67426732, 'AdamnHansen@gmail.com'),
+('Alexa Korsberg', 88214321, 'AlexaKorsberg@gmail.com'),
+('Andrea Munck', 56867845, 'AndreaMunch@gmail.com'),
+('Martin Lund', 75849762, 'MartinLund@gmail.com'),
+('Trine Zedeler', 23536148, 'TrineZedeler@gmail.com'),
+('Jonas Olczyk', 21135362, 'JonasOlczyk@gmail.com'),
+('Anders Steen Thranum', 86235142, 'AndersThranum@hotmail.com'),
+('Morten Brander Knudsen', 65221147, 'Morten@knudsen.dk'),
+('Christian De Freiesleben Røssel', 40025684, 'Christan@Røssel.dk'),
+('Wen Hao Xuan', 20124254, 'WenHaoXuan@gmail.com'),
+('Emilie Riisberg', 30689885, 'EmilieRis@gmail.com'),
+('Stefan Hansen', 45879586, 'Stefan@hansen.com'),
+('Otto Linnet', 78424006, 'OttoLinnet@gmail.com'),
+('Harald Welling', 62545212, 'Harald@Welling.com'),
+('Chris Raahauge DeStantis', 20024578, 'Chris@DeStantis.com');
 
 CREATE TABLE IF NOT EXISTS users_archive(
-   users_id INT UNIQUE NOT NULL,
-   users_fullName VARCHAR(100),
-   users_phonenumber INT,
-   users_email VARCHAR(50),
-   users_preferences TEXT
+    users_id INT UNIQUE NOT NULL,
+    users_fullName VARCHAR(100),
+    users_phonenumber INT,
+    users_email VARCHAR(50),
+    users_preferences TEXT
 );
+INSERT INTO users_archive (users_id, users_fullName, users_phonenumber, users_email, users_preferences )
+VALUES
+(101, 'Ida Gether', 22124257, 'IdaGether@gmail.com', 'Blond'),
+(102, 'Rasmus Kuhlmann', 64824578, 'Rasmus@Kuhlmann.dk', '10mm i siderne, 15mm i toppen');
+
 
 CREATE TABLE IF NOT EXISTS users_roles(
-   users_id INT NOT NULL,
-   role VARCHAR(20),
-   CONSTRAINT usersroles_fk_users FOREIGN KEY (users_id) REFERENCES salon_tina_database.users (users_id) ON DELETE CASCADE
+    users_id INT NOT NULL,
+    role VARCHAR(20),
+    CONSTRAINT usersroles_fk_users FOREIGN KEY (users_id) REFERENCES salon_tina_database.users (users_id) ON DELETE CASCADE
 );
+
+INSERT INTO users_roles (users_id, role) VALUES
+(1, 'Admin'),
+(1, 'Frisør'),
+(2, 'Frisør');
 
 CREATE TABLE IF NOT EXISTS newsletter (
-   users_id INT NOT NULL,
-   CONSTRAINT newsletter_fk_users FOREIGN KEY (users_id) REFERENCES salon_tina_database.users (users_id)
+    users_id INT NOT NULL,
+    CONSTRAINT newsletter_fk_users FOREIGN KEY (users_id) REFERENCES salon_tina_database.users (users_id)
 );
+
+INSERT INTO newsletter (users_id) VALUES
+(1), (2), (4), (6), (7), (9), (5);
 
 CREATE TABLE IF NOT EXISTS bookings(
-   bookings_id INT AUTO_INCREMENT UNIQUE NOT NULL,
-   users_id INT NOT NULL,
-   bookings_date DATE NOT NULL,
-   bookings_comment TEXT,
-   CONSTRAINT bookings_fk_users FOREIGN KEY (users_id) REFERENCES salon_tina_database.users (users_id) ON DELETE CASCADE
+    bookings_id INT AUTO_INCREMENT UNIQUE NOT NULL,
+    users_id INT NOT NULL,
+    bookings_time VARCHAR(8),
+    bookings_date DATE NOT NULL,
+    bookings_comment TEXT,
+    CONSTRAINT bookings_fk_users FOREIGN KEY (users_id) REFERENCES salon_tina_database.users (users_id) ON DELETE CASCADE
 );
 
+INSERT INTO bookings (users_id, bookings_time, bookings_date) VALUES
+(3, '10:00', '2019-12-05'), (3, '12:30', '2019-06-10'), (4, '09:30', '2019-12-09'),(5, '10:15', '2019-10-29'),(5, '08:30', '2019-12-20'),
+(6, '15:30', '2019-12-01'), (7, '14:30', '2019-12-15'), (8, '10:30', '2019-09-01'), (9, '11:00', '2019-12-13'), (10, '09:15', '2019-11-30'),
+(11, '13:30', '2019-01-16'), (12, '14:45', '2019-12-10'), (12, '15:00', '2019-12-22'), (13, '16:00', '2019-12-10'),
+(5, '10:15', '2019-12-05'),(8, '09:45', '2019-12-05'),(11, '12:30', '2019-12-05'),(6, '14:45', '2019-12-05'),(16, '13:00', '2019-12-05'),
+(14, '11:00', '2019-12-10'),(15, '08:00', '2019-12-15');
 
 CREATE TABLE IF NOT EXISTS treatments (
-   treatments_id INT AUTO_INCREMENT NOT NULL UNIQUE,
-   treatments_name VARCHAR(50) NOT NULL,
-   treatments_price DOUBLE NOT NULL,
-   treatments_description TEXT,
-   treatments_duration INT,
-   treatments_active BOOLEAN NOT NULL
+    treatments_id INT AUTO_INCREMENT UNIQUE NOT NULL,
+    treatments_name VARCHAR(50) NOT NULL,
+    treatments_price DOUBLE NOT NULL,
+    treatments_description TEXT,
+    treatments_duration INT,
+    treatments_active BOOLEAN NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS bookings_treatment
-(
-   bookings_id  INT NOT NULL,
-   treatments_id INT NOT NULL,
-   CONSTRAINT bookingstreatment_fk_bookings FOREIGN KEY (bookings_id) REFERENCES salon_tina_database.bookings (bookings_id),
-   CONSTRAINT bookingstreatment_fk_treatments FOREIGN KEY (treatments_id) REFERENCES salon_tina_database.treatments (treatments_id)
+INSERT INTO treatments (treatments_name, treatments_price, treatments_description, treatments_duration, treatments_active) VALUES
+('Dameklip', 290.00, 'Normal klipning for damer', 30, 1),
+('Herreklip', 210.00, 'Normal klipning for herre', 30, 1),
+('Børneklip', 200.00, 'Normal klipning for børn', 30, 1),
+('Farve', 380.00, 'Farvning af hår', 90, 1),
+('Permanent', 380.00, 'Permanent farvning af hår', 90, 1),
+('Lys spidser', 380.00, 'Lys farvning af spidser', 90, 1),
+('Bryn & Vipper', 180.00, 'Både bryn og bipper', 15, 1),
+('Bryn', 90.00, 'Kun bryn', 15, 1),
+('Vipper', 90.00, 'Kun vipper', 15, 1),
+('Føn', 210, 'Føn', 30, 1),
+('Skylle Farve', 280, 'Skylle farve', 90, 1);
+
+CREATE TABLE IF NOT EXISTS bookings_treatment (
+    bookings_id  INT NOT NULL,
+    treatments_id INT NOT NULL,
+    CONSTRAINT bookingstreatment_fk_bookings FOREIGN KEY (bookings_id) REFERENCES bookings (bookings_id),
+    CONSTRAINT bookingstreatment_fk_treatments FOREIGN KEY (treatments_id) REFERENCES treatments (treatments_id)
 );
 
+INSERT INTO bookings_treatment (bookings_id, treatments_id) VALUES
+(1, 2), (2, 5), (3, 10), (4, 5), (5, 1), (6, 4), (7, 1), (8, 2), (9, 1), (10, 4), (11, 7), (12, 8), (13, 6), (14, 3),
+(15, 11), (16, 2), (17, 5), (18, 6), (19, 3), (20, 10), (21, 1);
 
 CREATE TABLE IF NOT EXISTS items (
-   items_id INT AUTO_INCREMENT UNIQUE NOT NULL,
-   items_name VARCHAR(50) NOT NULL,
-   items_price DOUBLE NOT NULL,
-   items_description TEXT,
-   items_active BOOLEAN NOT NULL,
-   items_quantity INT
+    items_id INT AUTO_INCREMENT UNIQUE NOT NULL,
+    items_name VARCHAR(50) NOT NULL,
+    items_price DOUBLE NOT NULL,
+    items_description TEXT,
+    items_active BOOLEAN NOT NULL,
+    items_quantity INT
 );
 
--- Mangler values i tabellerne
+INSERT INTO items (items_name, items_price, items_description, items_active, items_quantity) VALUES
+('Super 88 Hårkur 150 ml', 126.75, 'Super 88 Hårkur er en professionel hårkur til farvet, permanentet, tørt og porøst hår. Tilfører håret fugtighed, elasticitet, glans og forbedrer hårstrukturen mærkbart.', 1, 10),
+('Clearspring Organic Coconut Oil 550 ml', 74.25, 'Clearspring Organic Coconut Oil er et helt fantastisk produkt.', 1, 20);
 
 SELECT * FROM newsletter;
 SELECT * FROM bookings;
@@ -75,8 +131,3 @@ SELECT * FROM bookings_treatment;
 SELECT * FROM treatments;
 SELECT * FROM items;
 SELECT * FROM users_archive;
-
-
-
-
-
