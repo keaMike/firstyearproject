@@ -1,4 +1,4 @@
-package com.firstyearproject.salontina.Handlers;
+package com.firstyearproject.salontina.Services;
 
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
