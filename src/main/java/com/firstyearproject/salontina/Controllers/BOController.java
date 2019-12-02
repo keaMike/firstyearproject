@@ -1,5 +1,7 @@
 package com.firstyearproject.salontina.Controllers;
 
+import com.firstyearproject.salontina.Handlers.SMSHandler;
+import com.firstyearproject.salontina.Models.Newsletter;
 import com.firstyearproject.salontina.Handlers.UserHandler;
 import com.firstyearproject.salontina.Models.User;
 import com.firstyearproject.salontina.Handlers.ProductHandler;
@@ -23,13 +25,52 @@ import javax.servlet.http.HttpSession;
 public class BOController {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
+
+    private String NEWSLETTER = "newsletter";
+    private String REDIRECTNEWSLETTER = "redirect:/" + NEWSLETTER;
+  
     private boolean taskResult = false;  
+  
+    @Autowired
+    SMSHandler sMSHandler;
   
     @Autowired
     UserHandler userHandler;
 
     @Autowired
     ProductHandler productHandler;
+
+    //Luca
+    @GetMapping("newsletter")
+    public String newsletter(Model model, HttpSession session){
+        log.info("get newsletter action started...");
+
+        model.addAttribute("newsletter", new Newsletter());
+        return NEWSLETTER;
+    }
+
+    //Luca
+    @PostMapping("sendnewsletter")
+    public String sendNewsletter(Model model, HttpSession session, @ModelAttribute Newsletter newsletter){
+        log.info("post newsletter action started...");
+
+        if(sMSHandler.sendNewsletter(newsletter.getText())){
+            log.info("newsletter was successfully sent...");
+        }
+        return REDIRECTNEWSLETTER;
+    }
+
+    //Luca
+    @PostMapping("sendtestnewsletter")
+    public String sendTestNewsletter(Model model, HttpSession session,
+                                     @ModelAttribute Newsletter newsletter){
+        log.info("post newsletter action started...");
+
+        if(sMSHandler.sendNewsletterTest(newsletter.getTestNumber(), newsletter.getText())){
+            log.info("newsletter was successfully sent...");
+        }
+        return REDIRECTNEWSLETTER;
+    }
 
     @GetMapping("/register")
     public String createUser(Model model) {
