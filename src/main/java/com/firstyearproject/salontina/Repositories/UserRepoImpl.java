@@ -50,6 +50,30 @@ public class UserRepoImpl implements UserRepo{
         return phonenumbers;
     }
 
+    //Luca
+    public List<String> getReminderList(){
+        log.info("getReminderList method started...");
+
+        List<String> phonenumbers = new ArrayList<>();
+
+        String statement =  "SELECT (SELECT users.users_phonenumber FROM users WHERE users.users_id = bookings.users_id) " +
+                            "AS booking_phonenumber FROM bookings WHERE bookings_date " +
+                            "BETWEEN DATE_ADD(CURDATE(), INTERVAL 1 day) AND DATE_ADD(CURDATE(), INTERVAL 2 day)";
+
+        try {
+            PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while(rs.next()){
+                phonenumbers.add(rs.getString(1));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return phonenumbers;
+    }
+
     public boolean addUser(User user){
         System.out.println(user.getUsername());
         Boolean userCreated = false;
