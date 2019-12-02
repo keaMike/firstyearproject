@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Produkter</title>
+</head>
+<body>
+
+<div class="container">
+    <table class="table table-bordered table-striped table-hover">
+        <thead class="thead-dark">
+        <tr>
+            <th>ID</th>
+            <th>Navn</th>
+            <th>Pris</th>
+            <th>Varighed</th>
+            <th>Beskrivelse</th>
+            <th>Rediger</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="treatment: ${treatments}">
+            <td th:text="${treatment.productID}"></td>
+            <td th:text="${treatment.productName}"></td>
+            <td th:text="${treatment.productPrice} + DK"></td>
+            <td th:text="${treatment.treatmentDuration}"></td>
+            <td th:text="${treatment.productDescription}"></td>
+            <td>
+                <a class="fa fa-pencil-square-o" th:href="${'editTreatment/' + treatment.productID}"></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="container">
+    <table class="table table-bordered table-striped table-hover">
+        <thead class="thead-dark">
+        <tr>
+            <th>ID</th>
+            <th>Navn</th>
+            <th>Pris</th>
+            <th>Antal på lager</th>
+            <th>Beskrivelse</th>
+            <th>Rediger</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item: ${items}">
+            <td th:text="${item.productID}"></td>
+            <td th:text="${item.productName}"></td>
+            <td th:text="${item.productPrice} + DK"></td>
+            <td th:text="${item.itemQuantity}"></td>
+            <td th:text="${treatment.productDescription}"></td>
+            <td>
+                <a class="fa fa-pencil-square-o" th:href="${'editItem/' + item.productID}"></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

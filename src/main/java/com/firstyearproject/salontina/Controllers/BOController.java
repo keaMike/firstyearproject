@@ -14,9 +14,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 
 @Controller
 
@@ -136,6 +138,54 @@ public class BOController {
             return "redirect:/";
         } else {
             return "createTreatment";
+        }
+    }
+
+    //Asbjørn
+    @GetMapping ("/displayProducts")
+    public String displayProducts (Model model, HttpSession session) {
+        ArrayList<Item> itemArrayList = new ArrayList<>();
+        ArrayList<Treatment> treatmentArrayList = new ArrayList<>();
+
+        taskResult = productServiceImpl.createProductArrayLists(itemArrayList, treatmentArrayList);
+        model.addAttribute("treatments", treatmentArrayList);
+        model.addAttribute("items", itemArrayList);
+        return "displayProducts";
+    }
+
+    //Asbjørn
+    @GetMapping ("/editTreatment/{id}")
+    public String editProduct (@PathVariable ("id") int id, Model model, ArrayList treatmentArrayList) {
+        model.addAttribute("treatments", treatmentArrayList.get(id-1));
+        return "editProduct";
+    }
+
+    //Asbjørn
+    @PostMapping ("/editTreatment")
+    public String editProduct (@ModelAttribute Treatment treatment) {
+        taskResult = productServiceImpl.editTreatment(treatment);
+        if (taskResult) {
+            return "redirect:/";
+        } else {
+            return "displayProduct";
+        }
+    }
+
+    //Asbjørn
+    @GetMapping ("/editItem/{id}")
+    public String editItem (@PathVariable ("id") int id, Model model, ArrayList itemArrayList) {
+        model.addAttribute("items", itemArrayList.get(id-1));
+        return "editProduct";
+    }
+
+    //Asbjørn
+    @PostMapping ("/editItem")
+    public String editItem (@ModelAttribute Item item) {
+        taskResult = productServiceImpl.editItem(item);
+        if (taskResult) {
+            return "redirect:/";
+        } else {
+            return "displayProduct";
         }
     }
 }
