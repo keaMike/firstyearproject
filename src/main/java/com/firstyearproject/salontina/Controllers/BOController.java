@@ -24,10 +24,19 @@ public class BOController {
     private String NEWSLETTER = "newsletter";
     private String REDIRECTNEWSLETTER = "redirect:/" + NEWSLETTER;
 
+    private boolean showConfirmation = false;
+    private String confirmationText = "";
+
     //Luca
     @GetMapping("newsletter")
     public String newsletter(Model model, HttpSession session){
         log.info("get newsletter action started...");
+
+        if(showConfirmation){
+            model.addAttribute("showconfirmation", true);
+            model.addAttribute("confirmationtext", confirmationText);
+            showConfirmation = false;
+        }
 
         model.addAttribute("newsletter", new Newsletter());
         return NEWSLETTER;
@@ -40,6 +49,9 @@ public class BOController {
 
         if(sMSHandler.sendNewsletter(newsletter.getText())){
             log.info("newsletter was successfully sent...");
+
+            showConfirmation = true;
+            confirmationText = "Nyhedsbrev blev sendt.";
         }
         return REDIRECTNEWSLETTER;
     }
@@ -52,6 +64,9 @@ public class BOController {
 
         if(sMSHandler.sendNewsletterTest(newsletter.getTestNumber(), newsletter.getText())){
             log.info("newsletter was successfully sent...");
+
+            showConfirmation = true;
+            confirmationText = "Test nyhedsbrev blev sendt.";
         }
         return REDIRECTNEWSLETTER;
     }
