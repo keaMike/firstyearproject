@@ -1,13 +1,17 @@
 package com.firstyearproject.salontina.Handlers;
 
 import com.firstyearproject.salontina.Models.User;
+import com.firstyearproject.salontina.Repositories.UserRepo;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserHandler {
 
+    private UserRepo UR = new UserRepo();
+
     public boolean addUser(User user){
-        return false;
+        boolean userCreated = UR.addUser(user);
+        return userCreated;
     }
 
     public boolean deleteUser(int userId){

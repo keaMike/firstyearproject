@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>createItem</title>
+</head>
+<body>
+
+<div class="container">
+    <h1>Opret et nyt produkt</h1>
+    <form th:method="post" th:action="@{/createItem}">
+        <div>Navn</div>
+        <input type="text" th:field="${item.productName}" placeholder="Produkt Navn" required/>
+        <br>
+        <div>Pris</div>
+        <input type="text" th:field="${item.productPrice}" placeholder="Pris" required/>
+        <br>
+        <div>Beskrivelse</div>
+        <input type="text" th:field="${item.productDescription}" placeholder="Produkt Beskrivelse" required/>
+        <br>
+        <div>Antal</div>
+        <input type="text" th:field="${item.itemQuantity}" placeholder="Antal" required/>
+        <br>
+        <input class="btn btn-primary btn-danger" type="submit" value="create"/>
+    </form>
+</div>
+
+</body>
+</html>
