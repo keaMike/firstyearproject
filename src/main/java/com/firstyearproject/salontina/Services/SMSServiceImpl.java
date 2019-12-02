@@ -1,5 +1,6 @@
 package com.firstyearproject.salontina.Services;
 
+import com.firstyearproject.salontina.Models.Reminder;
 import com.firstyearproject.salontina.Repositories.UserRepoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,11 +21,14 @@ public class SMSServiceImpl implements SMSService{
 
     //Luca
     public boolean sendReminder(){
-        List<String> phonenumbers = userRepoImpl.getReminderList();
+        List<Reminder> reminderList = userRepoImpl.getReminderList();
 
-        String reminderText = "Hej, du har en tid hos Salon Tina i morgen.";
+        for(Reminder r : reminderList){
+            //TODO Skal tilføje tidspunkt, når det bliver tilføjet til databasen.
+            String reminderText = "Hej " + r.getReminderUsername() + " du har en tid i morgen d. " + r.getReminderDate() + " hos Salon Tina.";
+            sendSMS(verifyNumber(r.getReminderPhonenumber()), reminderText);
+        }
 
-        sendSMSToList(phonenumbers, reminderText);
         return true;
     }
 
