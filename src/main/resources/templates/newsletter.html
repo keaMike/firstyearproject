@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Newsletter</title>
+
+    <link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet" media="screen"/>
+    <script th:src="@{/webjars/jquery/3.1.1/jquery.min.js}"></script>
+</head>
+<body>
+    <div class="container">
+        <form th:method="Post" th:action="@{/sendnewsletter}" th:object="${newsletter}">
+            <textarea class="form-control" th:field="${newsletter.text}" required></textarea>
+            <input th:field="${newsletter.testNumber}" hidden>
+            <input class="btn btn-primary" type="submit" value="Send newsletter"/>
+        </form>
+
+        <form th:method="Post" th:action="@{/sendtestnewsletter}" th:object="${newsletter}">
+            <textarea class="form-control" th:field="${newsletter.text}" required></textarea>
+            <input type="text" class="form-control" th:field="${newsletter.testNumber}">
+            <input class="btn btn-primary" type="submit" value="Send test newsletter"/>
+        </form>
+    </div>
+</body>
+</html>
