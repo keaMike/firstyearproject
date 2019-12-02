@@ -24,6 +24,7 @@ public class BOController {
     private String NEWSLETTER = "newsletter";
     private String REDIRECTNEWSLETTER = "redirect:/" + NEWSLETTER;
 
+    //Luca
     @GetMapping("newsletter")
     public String newsletter(Model model, HttpSession session){
         log.info("get newsletter action started...");
@@ -32,6 +33,7 @@ public class BOController {
         return NEWSLETTER;
     }
 
+    //Luca
     @PostMapping("sendnewsletter")
     public String sendNewsletter(Model model, HttpSession session, @ModelAttribute Newsletter newsletter){
         log.info("post newsletter action started...");
@@ -42,19 +44,16 @@ public class BOController {
         return REDIRECTNEWSLETTER;
     }
 
+    //Luca
     @PostMapping("sendtestnewsletter")
     public String sendTestNewsletter(Model model, HttpSession session,
                                      @ModelAttribute Newsletter newsletter){
         log.info("post newsletter action started...");
 
-        log.info(newsletter.getTestNumber());
-
-        if(sMSHandler.sendNewsletterTest(newsletter.getText(), newsletter.getTestNumber())){
+        if(sMSHandler.sendNewsletterTest(newsletter.getTestNumber(), newsletter.getText())){
             log.info("newsletter was successfully sent...");
         }
         return REDIRECTNEWSLETTER;
     }
-
-
 
 }

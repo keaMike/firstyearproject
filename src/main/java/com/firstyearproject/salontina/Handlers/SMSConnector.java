@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+//Luca
 @Component
 public class SMSConnector {
 
@@ -23,13 +24,13 @@ public class SMSConnector {
     }
 
     @Value("${sms.account}")
-    private static String ACCOUNT_SID;
+    private String ACCOUNT_SID;
 
-    @Value("${sms.auth")
-    private static String AUTH_TOKEN;
+    @Value("${sms.auth}")
+    private String AUTH_TOKEN;
 
     @Value("${sms.fromnumber}")
-    private static String FROMNUMBER;
+    private String FROMNUMBER;
 
     public void sendSMS(String number, String text){
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
@@ -39,8 +40,6 @@ public class SMSConnector {
                         new PhoneNumber(FROMNUMBER), // from
                         text)
                 .create();
-
-        System.out.println(message.getSid());
 
         log.info("sms: '" + text + "', to: '" + number + "'");
         log.info("sms id: " + message.getSid());

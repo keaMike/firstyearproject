@@ -20,6 +20,7 @@ public class UserRepo {
     @Autowired
     MySQLConnector mySQLConnector;
 
+    //Luca
     public List<String> getNewsletterList(){
         log.info("getNewsletterList method started...");
 
