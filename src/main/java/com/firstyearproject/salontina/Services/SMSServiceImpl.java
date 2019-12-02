@@ -24,8 +24,7 @@ public class SMSServiceImpl implements SMSService{
         List<Reminder> reminderList = userRepoImpl.getReminderList();
 
         for(Reminder r : reminderList){
-            //TODO Skal tilføje tidspunkt, når det bliver tilføjet til databasen.
-            String reminderText = "Hej " + r.getReminderUsername() + " du har en tid i morgen d. " + r.getReminderDate() + " hos Salon Tina.";
+            String reminderText = "Hej " + r.getReminderUsername() + " du har en tid d. " + r.getReminderDate() + " kl. " + r.getReminderTime() + " hos Salon Tina.";
             sendSMS(verifyNumber(r.getReminderPhonenumber()), reminderText);
         }
 

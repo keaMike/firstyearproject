@@ -61,9 +61,9 @@ public class UserRepoImpl implements UserRepo{
         String statement =  "SELECT (SELECT users.users_phonenumber FROM users WHERE users.users_id = bookings.users_id) " +
                             "AS booking_phonenumber, (SELECT users.users_fullName FROM users WHERE users.users_id = bookings.users_id) " +
                             "AS booking_name, " +
-                            "bookings_date " +
-                            "FROM bookings WHERE bookings_date " +
-                            "BETWEEN DATE_ADD(CURDATE(), INTERVAL 1 day) AND DATE_ADD(CURDATE(), INTERVAL 2 day)";
+                            "bookings_date, " +
+                            "bookings_time " +
+                            "FROM bookings WHERE bookings_date BETWEEN DATE_ADD(CURDATE(), INTERVAL 1 day) AND DATE_ADD(CURDATE(), INTERVAL 1 day);";
 
         try {
             PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
@@ -75,6 +75,7 @@ public class UserRepoImpl implements UserRepo{
                 r.setReminderPhonenumber(rs.getString(1));
                 r.setReminderUsername(rs.getString(2));
                 r.setReminderDate(rs.getDate(3));
+                r.setReminderTime(rs.getString(4));
                 reminderList.add(r);
             }
         } catch (SQLException e) {

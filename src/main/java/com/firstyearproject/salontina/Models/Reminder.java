@@ -7,14 +7,16 @@ public class Reminder {
     private String reminderUsername;
     private String reminderPhonenumber;
     private Date reminderDate;
+    private String reminderTime;
 
     public Reminder() {
     }
 
-    public Reminder(String reminderUsername, String reminderPhonenumber, Date reminderDate) {
+    public Reminder(String reminderUsername, String reminderPhonenumber, Date reminderDate, String reminderTime) {
         this.reminderUsername = reminderUsername;
         this.reminderPhonenumber = reminderPhonenumber;
         this.reminderDate = reminderDate;
+        this.reminderTime = reminderTime;
     }
 
     public String getReminderUsername() {
@@ -39,5 +41,13 @@ public class Reminder {
 
     public void setReminderDate(Date reminderDate) {
         this.reminderDate = reminderDate;
+    }
+
+    public String getReminderTime() {
+        return reminderTime;
+    }
+
+    public void setReminderTime(String reminderTime) {
+        this.reminderTime = reminderTime;
     }
 }
