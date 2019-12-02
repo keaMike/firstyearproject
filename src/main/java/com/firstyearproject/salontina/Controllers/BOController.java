@@ -38,10 +38,19 @@ public class BOController {
     @Autowired
     ProductServiceImpl productServiceImpl;
 
+    private boolean showConfirmation = false;
+    private String confirmationText = "";
+
     //Luca
     @GetMapping("newsletter")
     public String newsletter(Model model, HttpSession session){
         log.info("get newsletter action started...");
+
+        if(showConfirmation){
+            model.addAttribute("showconfirmation", true);
+            model.addAttribute("confirmationtext", confirmationText);
+            showConfirmation = false;
+        }
 
         model.addAttribute("newsletter", new Newsletter());
         return NEWSLETTER;
@@ -54,6 +63,9 @@ public class BOController {
 
         if(sMSServiceImpl.sendNewsletter(newsletter.getText())){
             log.info("newsletter was successfully sent...");
+
+            showConfirmation = true;
+            confirmationText = "Nyhedsbrev blev sendt.";
         }
         return REDIRECTNEWSLETTER;
     }
@@ -66,6 +78,9 @@ public class BOController {
 
         if(sMSServiceImpl.sendNewsletterTest(newsletter.getTestNumber(), newsletter.getText())){
             log.info("newsletter was successfully sent...");
+
+            showConfirmation = true;
+            confirmationText = "Test nyhedsbrev blev sendt.";
         }
         return REDIRECTNEWSLETTER;
     }

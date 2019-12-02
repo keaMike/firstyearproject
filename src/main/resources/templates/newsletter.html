@@ -5,7 +5,11 @@
     <title>Newsletter</title>
 
     <link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet" media="screen"/>
+
     <script th:src="@{/webjars/jquery/3.1.1/jquery.min.js}"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/popper.js/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -21,5 +25,11 @@
             <input class="btn btn-primary" type="submit" value="Send test newsletter"/>
         </form>
     </div>
+
+    <div th:if="${showconfirmation}">
+        <div th:include="fragments/confirmation :: modal"></div>
+        <div th:include="fragments/confirmation :: script"></div>
+    </div>
+
 </body>
 </html>
