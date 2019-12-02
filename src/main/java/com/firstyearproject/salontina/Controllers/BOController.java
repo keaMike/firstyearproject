@@ -1,5 +1,7 @@
 package com.firstyearproject.salontina.Controllers;
 
+import com.firstyearproject.salontina.Handlers.UserHandler;
+import com.firstyearproject.salontina.Models.User;
 import com.firstyearproject.salontina.Handlers.ProductHandler;
 import com.firstyearproject.salontina.Models.Item;
 import com.firstyearproject.salontina.Models.Product;
@@ -17,13 +19,35 @@ import org.springframework.web.bind.annotation.PostMapping;
 import javax.servlet.http.HttpSession;
 
 @Controller
+
 public class BOController {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
-    private boolean taskResult = false;
+    private boolean taskResult = false;  
+  
+    @Autowired
+    UserHandler userHandler;
 
     @Autowired
     ProductHandler productHandler;
+
+    @GetMapping("/register")
+    public String createUser(Model model) {
+        model.addAttribute("userToBeRegistered", new User());
+        return "register";
+    }
+
+    @PostMapping("/register")
+    public String createUser(@ModelAttribute User user) {
+        userHandler.addUser(user);
+    return "redirect:/login";
+    }
+
+    @GetMapping("/login")
+    public String login(Model model) {
+        model.addAttribute("userToBeRegistered", new User());
+        return "login";
+    }
 
     @GetMapping ("/")
     public String index (Model model) {

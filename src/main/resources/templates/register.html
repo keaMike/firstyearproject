@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+</head>
+<body>
+    <form action="#" th:action="@{/register}" method="post">
+        <label for="username">Skriv navn og efternavn</label>
+        <input type="text" th:field="${userToBeRegistered.username}" id="username" class="form-control" placeholder="Navn og Efternavn">
+        <label for="userPhonenumber">Skriv dit telefon nummer</label>
+        <input type="text" th:field="${userToBeRegistered.userPhonenumber}" id="userPhonenumber" class="form-control" placeholder="Telefonnummer">
+        <label for="userEmail">Skriv din E-mail</label>
+        <input type="text" th:field="${userToBeRegistered.userEmail}" id="userEmail" class="form-control" placeholder="email">
+        <label for="userPreference">Udfyld hvis du har nogle preferencer, din frisør skal kende.</label>
+        <input type="text" th:field="${userToBeRegistered.userPreference}" id="userPreference" class="form-control" placeholder="Preferencer">
+
+        <input class="btn btn-dark" type="submit" value="Send">
+
+    </form>
+</body>
+</html>

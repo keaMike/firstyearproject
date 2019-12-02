@@ -8,6 +8,7 @@ public class User {
     private String username;
     private int userPhonenumber;
     private boolean userNewsLetter;
+    private String userEmail;
     private String userPreference;
     private List<String> userRoles; //Find out about enums
     private List<Booking> userHistory;
@@ -15,15 +16,17 @@ public class User {
     public User() {
     }
 
-    public User(int userId, String username, int userPhonenumber, boolean userNewsLetter, String userPreference, List<String> userRoles, List<Booking> userHistory) {
+    public User(int userId, String username, int userPhonenumber, boolean userNewsLetter, String userEmail, String userPreference, List<String> userRoles, List<Booking> userHistory) {
         this.userId = userId;
         this.username = username;
         this.userPhonenumber = userPhonenumber;
         this.userNewsLetter = userNewsLetter;
+        this.userEmail = userEmail;
         this.userPreference = userPreference;
         this.userRoles = userRoles;
         this.userHistory = userHistory;
     }
+
 
     public int getUserId() {
         return userId;
@@ -55,6 +58,14 @@ public class User {
 
     public void setUserNewsLetter(boolean userNewsLetter) {
         this.userNewsLetter = userNewsLetter;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 
     public String getUserPreference() {
