@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>CreateTreatment</title>
+</head>
+<body>
+
+<div class="container">
+    <h1>Opret ny behandling</h1>
+    <form th:method="post" th:action="@{/createTreatment}">
+        <div>Navn</div>
+        <input type="text" th:field="${treatment.productName}" placeholder="Behandlings Navn" required/>
+        <br>
+        <div>Beskrivelse</div>
+        <input type="text" th:field="${treatment.productPrice}" placeholder="Pris" required/>
+        <br>
+        <div>Beskrivelse</div>
+        <input type="text" th:field="${treatment.productDescription}" placeholder="Behandlings Beskrivelse" required/>
+        <br>
+        <div>Tid</div>
+        <input type="text" th:field="${treatment.treatmentDuration}" placeholder="Behandlings tid (i minutter)" required/>
+        <br>
+        <input class="btn btn-primary btn-danger" type="submit" value="create"/>
+    </form>
+</div>
+
+</body>
+</html>
