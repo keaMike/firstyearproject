@@ -1,12 +1,10 @@
 package com.firstyearproject.salontina.Controllers;
 
+import com.firstyearproject.salontina.Models.*;
+import com.firstyearproject.salontina.Services.BookingServiceImpl;
 import com.firstyearproject.salontina.Services.SMSServiceImpl;
-import com.firstyearproject.salontina.Models.Newsletter;
 import com.firstyearproject.salontina.Services.UserServiceImpl;
-import com.firstyearproject.salontina.Models.User;
 import com.firstyearproject.salontina.Services.ProductServiceImpl;
-import com.firstyearproject.salontina.Models.Item;
-import com.firstyearproject.salontina.Models.Treatment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 
@@ -37,6 +36,9 @@ public class BOController {
 
     @Autowired
     ProductServiceImpl productServiceImpl;
+
+    @Autowired
+    BookingServiceImpl bookingServiceImpl;
 
     //Luca
     @GetMapping("newsletter")
@@ -137,5 +139,15 @@ public class BOController {
         } else {
             return "createTreatment";
         }
+    }
+
+    //Mike
+    @GetMapping("/edituserhistory")
+    public String editUserHistory(Model model, HttpSession session) {
+        User user = userServiceImpl.getDummyUser();
+        List<Booking> bookings = bookingServiceImpl.getBookingList(user.getUserId());
+        model.addAttribute("user", user);
+        model.addAttribute("bookings", bookings);
+        return "edituserhistory";
     }
 }

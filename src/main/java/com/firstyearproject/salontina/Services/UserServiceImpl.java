@@ -22,4 +22,8 @@ public class UserServiceImpl implements UserService {
         return false;
     }
 
+    public User getDummyUser() {
+        return UR.findDummyUser();
+    }
+
 }

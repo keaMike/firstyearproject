@@ -18,6 +18,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Random;
 
 @Repository
 public class UserRepoImpl implements UserRepo{
@@ -66,6 +67,30 @@ public class UserRepoImpl implements UserRepo{
             E.printStackTrace();
         }
         return userCreated;
+    }
+
+    public User findDummyUser() {
+        try {
+            Random rand = new Random();
+            int randInt = rand.nextInt(18);
+            Connection con = mySQLConnector.openConnection();
+            PreparedStatement pstm = con.prepareStatement("SELECT * FROM users WHERE users_id = " + randInt);
+            ResultSet rs = pstm.executeQuery();
+            while(rs.next()) {
+                User u = new User();
+                u.setUserId(rs.getInt(1));
+                u.setUsername(rs.getString(2));
+                u.setUserPhonenumber(rs.getInt(3));
+                u.setUserEmail(rs.getString(4));
+                u.setUserPreference(rs.getString(5));
+                return u;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            mySQLConnector.closeConnection();
+        }
+        return null;
     }
 
 
