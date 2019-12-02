@@ -29,7 +29,7 @@ public class BOController {
     private boolean taskResult = false;  
   
     @Autowired
-    SMSServiceImpl sMSServiceImpl;
+    SMSServiceImpl smsServiceImpl;
   
     @Autowired
     UserServiceImpl userServiceImpl;
@@ -54,7 +54,7 @@ public class BOController {
     public String sendNewsletter(Model model, HttpSession session, @ModelAttribute Newsletter newsletter){
         log.info("post newsletter action started...");
 
-        if(sMSServiceImpl.sendNewsletter(newsletter.getText())){
+        if(smsServiceImpl.sendNewsletter(newsletter.getText())){
             log.info("newsletter was successfully sent...");
         }
         return REDIRECTNEWSLETTER;
@@ -66,7 +66,7 @@ public class BOController {
                                      @ModelAttribute Newsletter newsletter){
         log.info("post newsletter action started...");
 
-        if(sMSServiceImpl.sendNewsletterTest(newsletter.getTestNumber(), newsletter.getText())){
+        if(smsServiceImpl.sendNewsletterTest(newsletter.getTestNumber(), newsletter.getText())){
             log.info("newsletter was successfully sent...");
         }
         return REDIRECTNEWSLETTER;
