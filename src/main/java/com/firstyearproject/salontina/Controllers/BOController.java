@@ -1,14 +1,12 @@
 package com.firstyearproject.salontina.Controllers;
 
-import com.firstyearproject.salontina.Handlers.SMSHandler;
+import com.firstyearproject.salontina.Services.SMSServiceImpl;
 import com.firstyearproject.salontina.Models.Newsletter;
-import com.firstyearproject.salontina.Handlers.UserHandler;
+import com.firstyearproject.salontina.Services.UserServiceImpl;
 import com.firstyearproject.salontina.Models.User;
-import com.firstyearproject.salontina.Handlers.ProductHandler;
+import com.firstyearproject.salontina.Services.ProductServiceImpl;
 import com.firstyearproject.salontina.Models.Item;
-import com.firstyearproject.salontina.Models.Product;
 import com.firstyearproject.salontina.Models.Treatment;
-import com.firstyearproject.salontina.Repositories.ProductRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +30,13 @@ public class BOController {
     private boolean taskResult = false;  
   
     @Autowired
-    SMSHandler sMSHandler;
+    SMSServiceImpl sMSServiceImpl;
   
     @Autowired
-    UserHandler userHandler;
+    UserServiceImpl userServiceImpl;
 
     @Autowired
-    ProductHandler productHandler;
+    ProductServiceImpl productServiceImpl;
 
     //Luca
     @GetMapping("newsletter")
@@ -54,7 +52,7 @@ public class BOController {
     public String sendNewsletter(Model model, HttpSession session, @ModelAttribute Newsletter newsletter){
         log.info("post newsletter action started...");
 
-        if(sMSHandler.sendNewsletter(newsletter.getText())){
+        if(sMSServiceImpl.sendNewsletter(newsletter.getText())){
             log.info("newsletter was successfully sent...");
         }
         return REDIRECTNEWSLETTER;
@@ -66,49 +64,56 @@ public class BOController {
                                      @ModelAttribute Newsletter newsletter){
         log.info("post newsletter action started...");
 
-        if(sMSHandler.sendNewsletterTest(newsletter.getTestNumber(), newsletter.getText())){
+        if(sMSServiceImpl.sendNewsletterTest(newsletter.getTestNumber(), newsletter.getText())){
             log.info("newsletter was successfully sent...");
         }
         return REDIRECTNEWSLETTER;
     }
 
+    //Jonathan
     @GetMapping("/register")
     public String createUser(Model model) {
         model.addAttribute("userToBeRegistered", new User());
         return "register";
     }
 
+    //Jonathan
     @PostMapping("/register")
     public String createUser(@ModelAttribute User user) {
-        userHandler.addUser(user);
+        userServiceImpl.addUser(user);
     return "redirect:/login";
     }
 
+    //Jonathan
     @GetMapping("/login")
     public String login(Model model) {
         model.addAttribute("userToBeRegistered", new User());
         return "login";
     }
 
+    //Asbjørn
     @GetMapping ("/")
     public String index (Model model) {
         return "index";
     }
 
+    //Asbjørn
     @GetMapping ("/createProduct")
     public String createProduct (Model model, HttpSession session) {
         return "createProduct";
     }
 
+    //Asbjørn
     @GetMapping ("/createItem")
     public String createItem (Model model, HttpSession session) {
         model.addAttribute("item", new Item());
         return "createItem";
     }
 
+    //Asbjørn
     @PostMapping ("/createItem")
     public String createItem (@ModelAttribute Item item, Model model, HttpSession session) {
-        taskResult = productHandler.createItem(item);
+        taskResult = productServiceImpl.createItem(item);
         if (taskResult) {
             return "redirect:/";
         } else {
@@ -116,15 +121,17 @@ public class BOController {
         }
     }
 
+    //Asbjørn
     @GetMapping ("/createTreatment")
     public String createTreatment (Model model, HttpSession session) {
         model.addAttribute("treatment", new Treatment());
         return "createTreatment";
     }
 
+    //Asbjørn
     @PostMapping ("/createTreatment")
     public String createTreatment (@ModelAttribute Treatment treatment, Model model, HttpSession session) {
-        taskResult = productHandler.createTreatment(treatment);
+        taskResult = productServiceImpl.createTreatment(treatment);
         if (taskResult) {
             return "redirect:/";
         } else {

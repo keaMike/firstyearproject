@@ -1,6 +1,6 @@
-package com.firstyearproject.salontina.Handlers;
+package com.firstyearproject.salontina.Services;
 
-import com.firstyearproject.salontina.Repositories.UserRepo;
+import com.firstyearproject.salontina.Repositories.UserRepoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,10 +10,10 @@ import java.util.List;
 
 //Luca
 @Service
-public class SMSHandler {
+public class SMSServiceImpl implements SMSService{
 
     @Autowired
-    UserRepo userRepo;
+    UserRepoImpl userRepoImpl;
 
     @Autowired
     SMSConnector smsConnector;
