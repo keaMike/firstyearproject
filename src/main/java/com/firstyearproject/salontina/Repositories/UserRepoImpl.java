@@ -1,6 +1,7 @@
 package com.firstyearproject.salontina.Repositories;
 
 
+import com.firstyearproject.salontina.Models.Reminder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import com.firstyearproject.salontina.Models.User;
@@ -48,6 +50,37 @@ public class UserRepoImpl implements UserRepo{
             e.printStackTrace();
         }
         return phonenumbers;
+    }
+
+    //Luca
+    public List<Reminder> getReminderList(){
+        log.info("getReminderList method started...");
+
+        List<Reminder> reminderList = new ArrayList<>();
+
+        String statement =  "SELECT (SELECT users.users_phonenumber FROM users WHERE users.users_id = bookings.users_id) " +
+                            "AS booking_phonenumber, (SELECT users.users_fullName FROM users WHERE users.users_id = bookings.users_id) " +
+                            "AS booking_name, " +
+                            "bookings_date " +
+                            "FROM bookings WHERE bookings_date " +
+                            "BETWEEN DATE_ADD(CURDATE(), INTERVAL 1 day) AND DATE_ADD(CURDATE(), INTERVAL 2 day)";
+
+        try {
+            PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while(rs.next()){
+                Reminder r = new Reminder();
+                r.setReminderPhonenumber(rs.getString(1));
+                r.setReminderUsername(rs.getString(2));
+                r.setReminderDate(rs.getDate(3));
+                reminderList.add(r);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return reminderList;
     }
 
     public boolean addUser(User user){

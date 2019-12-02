@@ -1,10 +1,12 @@
 package com.firstyearproject.salontina.Repositories;
 
-import com.firstyearproject.salontina.Models.User;
-
+import com.firstyearproject.salontina.Models.Reminder;
 import java.util.List;
 
 public interface UserRepo {
+
+    List<Reminder> getReminderList();
     List<String> getNewsletterList();
     boolean addUser(User user);
+
 }
