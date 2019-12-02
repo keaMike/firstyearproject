@@ -23,6 +23,7 @@ public class SMSHandler {
     }
 
     //Luca
+    //Method gets a list of phonenumbers and sendt text to them
     public boolean sendNewsletter(String text){
         List<String> phonenumbers = getTestNewsletterList(); //userRepo.getNewsletterList();
 
@@ -42,11 +43,13 @@ public class SMSHandler {
     }
 
     //Luca
+    //Method is only called internally in the class
     private void sendSMS(String phonenumber, String text){
         smsConnector.sendSMS(phonenumber, text);
     }
 
     //Luca
+    //Method validates (or fixes) that number starts with +45 and is the correct length
     private String verifyNumber(String number){
         if(!number.substring(0,3).equals("+45")){
             number = "+45" + number;
@@ -58,6 +61,7 @@ public class SMSHandler {
     }
 
     //Luca
+    //Method only relevant in development, as SMS-API only sends to 'verified' numbers.
     private List<String> getTestNewsletterList(){
         List<String> testList = new ArrayList<>();
 
