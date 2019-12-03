@@ -1,7 +1,5 @@
 package com.firstyearproject.salontina.Repositories;
 
-import org.springframework.stereotype.Repository;
+public interface BookingRepo {
 
-@Repository
-public class BookingRepo {
 }

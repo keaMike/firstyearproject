@@ -1,0 +1,28 @@
+<div th:fragment="modal" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Bekræftelse</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Luk">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p th:text="${confirmationtext}"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Okay</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="script" xmlns:th="http://www.w3.org/1999/xhtml">
+    <script type="text/javascript">
+        $(window).on('load',function(){
+            $('#confirmationModal').modal('show');
+        });
+    </script>
+</div>
