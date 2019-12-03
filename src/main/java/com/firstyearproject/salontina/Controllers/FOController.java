@@ -79,7 +79,7 @@ public class FOController {
     //Jonathan
     @GetMapping("/redigerbruger")
     public String redigerUser(HttpSession session, Model model) {
-        User user = (User)session.getAttribute("user");
+        User user =  new User(); //(User)session.getAttribute("user");
         model.addAttribute("userToBeEdited", user);
         return "redigerbruger";
     }
@@ -97,6 +97,11 @@ public class FOController {
     }
 
     //Mike
+    @GetMapping("/sletbruger/{userid}")
+    public String deleteUser(@PathVariable int userId) {
+        userService.deleteUser(userId);
+        return "redirect:/redigerbruger";
+
     @GetMapping("/minebookings")
     public String userbookings(Model model, HttpSession session) {
         //Test user
@@ -150,6 +155,7 @@ public class FOController {
         Booking booking = (Booking) httpSession.getAttribute("booking"); //Henter Booking fra HttpSession
         model.addAttribute("booking", booking);
         return "bookingconfirmation";
+
     }
 
 }

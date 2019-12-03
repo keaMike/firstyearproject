@@ -23,17 +23,22 @@ public class UserServiceImpl implements UserService {
 
     //Jonathan
     public boolean addUser(User user){
+
+        return UR.addUser(user);
         user.setUserPassword(hashPassword(user.getUserPassword()));
         boolean userCreated = UR.addUser(user);
         return userCreated;
     }
 
+    //Mike & Asbjørn
     public boolean deleteUser(int userId){
-        return false;
+        return UR.deleteUser(userId);
     }
 
     //Jonathan
     public boolean editUser(User user){
+        return UR.editUser(user);
+
         user.setUserPassword(hashPassword(user.getUserPassword()));
         boolean userEdited = UR.editUser(user);
         return userEdited;

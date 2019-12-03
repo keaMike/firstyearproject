@@ -33,7 +33,7 @@ public class BOController {
     private String REDIRECTREMINDER = "redirect:/" + REMINDER;
   
     @Autowired
-    SMSServiceImpl sMSServiceImpl;
+    SMSServiceImpl smsServiceImpl;
 
     @Autowired
     UserServiceImpl userServiceImpl;

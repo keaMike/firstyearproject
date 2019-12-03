@@ -313,4 +313,24 @@ public class UserRepoImpl implements UserRepo{
 
         return user;
     }
+
+    //Mike & Asbjørn
+    public boolean deleteUser(int userId) {
+        try {
+            Connection connection = mySQLConnector.openConnection();
+            PreparedStatement pstm = connection.prepareStatement("INSERT INTO users_archive SELECT users_id, users_fullName, " +
+                                                    "users_phonenumber, users_email, users_preferences FROM users WHERE users_id = ?");
+            pstm.setInt(1, userId);
+            pstm.executeUpdate();
+
+            pstm = connection.prepareStatement("DELETE FROM users WHERE users_id = ?");
+            pstm.setInt(1, userId);
+            pstm.executeUpdate();
+            pstm.close();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
