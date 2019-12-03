@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>EditUser</title>
+    <script src= "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet" media="screen"/>
+    <script src="https://kit.fontawesome.com/af932a1361.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container">
+        <form class="form-group" th:method="put" th:action="@{/register}" th:object="${userToBeEdited}">
+            <input type="hidden" th:field="${userToBeEdited.userId}"/>
+            <label class="label">Navn og Efternavn</label>
+            <input class="form-control" type="text" th:field="${userToBeEdited.username}">
+            <br>
+            <label class="label">Telefon nummer</label>
+            <input class="form-control" type="number" th:field="${userToBeEdited.userPhonenumber}">
+            <br>
+            <label class="label">Email</label>
+            <input class="form-control" type="text" th:field="${userToBeEdited.userEmail}">
+            <br>
+            <label class="label">Password</label>
+            <input class="form-control" type="password" th:field="${userToBeEdited.userPassword}">
+            <br>
+            <label class="label">Preferences</label>
+            <input class="form-control" type="text" th:field="${userToBeEdited.userPreference}">
+            <br>
+            <input class="btn btn-dark" type="submit" value="Gem ændringer">
+        </form>
+
+        <a data-toggle="modal" data-target="#deletemodal">
+            <i class = "fas fa-trash-alt" data-toggle="tooltip" title = "Slet booking" style="cursor: pointer;"></i>
+            <!--Modal Content-->
+            <div class="modal fade" id="deletemodal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Er du sikker på du vil slette din bruger? <span th:text="${userToBeEdited.username}"></span></h3>
+                        </div>
+                        <div class="modal-body">
+                            <a th:href="@{'/sletbruger/' + ${userToBeEdited.userId}}" class="btn btn-dark">Ja</a>
+                            <a class="btn btn-dark" data-dismiss="modal" style="color: white">Nej</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+</body>
+</html>

@@ -1,11 +1,12 @@
 package com.firstyearproject.salontina.Services;
 
+import com.firstyearproject.salontina.Models.Reminder;
 import com.firstyearproject.salontina.Repositories.UserRepoImpl;
+import com.twilio.exception.ApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 //Luca
@@ -17,41 +18,67 @@ public class SMSServiceImpl implements SMSService{
 
     @Autowired
     SMSConnector smsConnector;
+    private ApiException ApiException;
 
-    public boolean sendReminder(Date date){
-        return false;
+    //Luca
+    public boolean sendReminder(){
+        try {
+            List<Reminder> reminderList = userRepoImpl.getReminderList();
+
+            for(Reminder r : reminderList){
+                String reminderText = "Hej " + r.getReminderUsername() + " du har en tid d. " + r.getReminderDate() + " kl. " + r.getReminderTime() + " hos Salon Tina.";
+                sendSMS(verifyNumber(r.getReminderPhonenumber()), reminderText);
+            }
+
+            return true;
+        } catch (com.twilio.exception.ApiException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     //Luca
-    //Method gets a list of phonenumbers and sendt text to them
+    //Method gets a list of phonenumbers and sends text to them
     public boolean sendNewsletter(String text){
-        List<String> phonenumbers = getTestNewsletterList(); //userRepo.getNewsletterList();
+        try {
+            List<String> phonenumbers = getTestNewsletterList(); //userRepo.getNewsletterList();
 
-        for(String s : phonenumbers){
-            if(verifyNumber(s) == null){
-                break;
-            }
-            sendSMS(s, text);
+            sendSMSToList(phonenumbers, text);
+            return true;
+        } catch (com.twilio.exception.ApiException e) {
+            e.printStackTrace();
+            return false;
         }
-        return true;
     }
 
     //Luca
     public boolean sendNewsletterTest(String phonenumber, String text){
-        sendSMS(phonenumber, text);
-        return true;
+        try {
+            sendSMS(verifyNumber(phonenumber), text);
+            return true;
+        } catch (com.twilio.exception.ApiException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    //Luca
+    public void sendSMSToList(List<String> numberList, String text) throws ApiException{
+        for(String s : numberList){
+            sendSMS(verifyNumber(s), text);
+        }
     }
 
     //Luca
     //Method is only called internally in the class
-    private void sendSMS(String phonenumber, String text){
+    private void sendSMS(String phonenumber, String text) throws ApiException{
         smsConnector.sendSMS(phonenumber, text);
     }
 
     //Luca
     //Method validates (or fixes) that number starts with +45 and is the correct length
-    private String verifyNumber(String number){
-        if(!number.substring(0,3).equals("+45")){
+    private String verifyNumber(String number) throws ApiException {
+        if(number.length() > 2 && !number.substring(0,3).equals("+45")){
             number = "+45" + number;
         }
         if(number.length() != 11){
@@ -61,7 +88,8 @@ public class SMSServiceImpl implements SMSService{
     }
 
     //Luca
-    //Method only relevant in development, as SMS-API only sends to 'verified' numbers.
+    //Method only relevant in development, as SMS-API only sends to 'verified' numbers,
+    //when using trial account.
     private List<String> getTestNewsletterList(){
         List<String> testList = new ArrayList<>();
 

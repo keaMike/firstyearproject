@@ -1,6 +1,7 @@
 package com.firstyearproject.salontina.Services;
 
 import com.twilio.Twilio;
+import com.twilio.exception.ApiException;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
 import org.slf4j.Logger;
@@ -32,7 +33,7 @@ public class SMSConnector {
     @Value("${sms.fromnumber}")
     private String FROMNUMBER;
 
-    public void sendSMS(String number, String text){
+    public void sendSMS(String number, String text) throws ApiException {
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
 
         Message message = Message

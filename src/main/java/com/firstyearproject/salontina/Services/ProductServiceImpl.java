@@ -2,11 +2,15 @@ package com.firstyearproject.salontina.Services;
 
 import com.firstyearproject.salontina.Models.Item;
 import com.firstyearproject.salontina.Models.Treatment;
+import com.firstyearproject.salontina.Repositories.ProductRepo;
 import com.firstyearproject.salontina.Repositories.ProductRepoImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.ArrayList;
 
 @Service
 public class ProductServiceImpl implements ProductService{
@@ -17,6 +21,8 @@ public class ProductServiceImpl implements ProductService{
     @Autowired
     ProductRepoImpl productRepoImplManager;
 
+    //Asbjørn
+    @Override
     public boolean createTreatment(Treatment treatment){
         pHandlerTaskResult = productRepoImplManager.createTreatment(treatment);
         log.info(String.valueOf(pHandlerTaskResult));
@@ -27,10 +33,17 @@ public class ProductServiceImpl implements ProductService{
         return false;
     }
 
+    //Asbjørn
+    @Override
     public boolean editTreatment(Treatment treatment){
-        return false;
+
+        pHandlerTaskResult = productRepoImplManager.editTreatment(treatment);
+
+        return pHandlerTaskResult;
     }
 
+    //Asbjørn
+    @Override
     public boolean createItem(Item item){
         pHandlerTaskResult = productRepoImplManager.createItem(item);
         log.info(String.valueOf(pHandlerTaskResult));
@@ -41,8 +54,22 @@ public class ProductServiceImpl implements ProductService{
         return false;
     }
 
+    //Asbjørn
+    @Override
     public boolean editItem(Item item){
-        return false;
+
+        pHandlerTaskResult = productRepoImplManager.editItem(item);
+
+        return pHandlerTaskResult;
+    }
+  
+    //Asbjørn
+    @Override
+    public boolean createProductArrayLists(ArrayList<Item> itemArrayList, ArrayList<Treatment> treatmentArrayList) {
+
+        pHandlerTaskResult = productRepoImplManager.createProductArrayLists(itemArrayList, treatmentArrayList);
+
+        return pHandlerTaskResult;
     }
 
 }

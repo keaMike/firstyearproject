@@ -1,5 +1,6 @@
 package com.firstyearproject.salontina.Repositories;
 
+import com.firstyearproject.salontina.Models.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,20 +11,18 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import com.firstyearproject.salontina.Models.User;
-import org.springframework.stereotype.Repository;
 
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.util.Random;
 
 @Repository
 public class UserRepoImpl implements UserRepo{
 
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
+    private PreparedStatement pstm;
 
     @Autowired
     MySQLConnector mySQLConnector;
@@ -50,16 +49,49 @@ public class UserRepoImpl implements UserRepo{
         return phonenumbers;
     }
 
+    //Luca
+    public List<Reminder> getReminderList(){
+        log.info("getReminderList method started...");
+
+        List<Reminder> reminderList = new ArrayList<>();
+
+        String statement =  "SELECT (SELECT users.users_phonenumber FROM users WHERE users.users_id = bookings.users_id) " +
+                            "AS booking_phonenumber, (SELECT users.users_fullName FROM users WHERE users.users_id = bookings.users_id) " +
+                            "AS booking_name, " +
+                            "bookings_date, " +
+                            "bookings_time " +
+                            "FROM bookings WHERE bookings_date BETWEEN DATE_ADD(CURDATE(), INTERVAL 1 day) AND DATE_ADD(CURDATE(), INTERVAL 1 day);";
+
+        try {
+            PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while(rs.next()){
+                Reminder r = new Reminder();
+                r.setReminderPhonenumber(rs.getString(1));
+                r.setReminderUsername(rs.getString(2));
+                r.setReminderDate(rs.getDate(3));
+                r.setReminderTime(rs.getString(4));
+                reminderList.add(r);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return reminderList;
+    }
+
+    //Jonathan
     public boolean addUser(User user){
-        System.out.println(user.getUsername());
         Boolean userCreated = false;
         try{
             Connection connection = mySQLConnector.openConnection();
-            PreparedStatement pstms = connection.prepareStatement("INSERT INTO users (users_fullName, users_phonenumber, users_email, users_preferences) VALUES(?, ?, ?, ?)");
+            PreparedStatement pstms = connection.prepareStatement("INSERT INTO users (users_fullName, users_phonenumber, users_email, users_preferences, users_password) VALUES(?, ?, ?, ?, ?)");
             pstms.setString(1, user.getUsername());
             pstms.setInt(2, user.getUserPhonenumber());
             pstms.setString(3, user.getUserEmail());
             pstms.setString(4, user.getUserPreference());
+            pstms.setString(5, user.getUserPassword());
             pstms.executeUpdate();
             userCreated = true;
         } catch (Exception E) {
@@ -68,5 +100,237 @@ public class UserRepoImpl implements UserRepo{
         return userCreated;
     }
 
+    //Mike
+    public List findAllUsers() {
+        List users = new ArrayList();
+        try {
+            Connection connection = mySQLConnector.openConnection();
+            PreparedStatement pstm = connection.prepareStatement("SELECT * FROM users");
+            ResultSet rs = pstm.executeQuery();
+            while(rs.next()) {
+                User u = new User();
+                u.setUserId(rs.getInt("users_id"));
+                u.setUsername(rs.getString("users_fullName"));
+                u.setUserPassword(rs.getString("users_password"));
+                u.setUserPhonenumber(rs.getInt("users_phonenumber"));
+                u.setUserEmail(rs.getString("users_email"));
+                u.setUserPreference(rs.getString("users_preferences"));
+                users.add(u);
+            }
+            return users;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
+    //Mike
+    public User findUserById(int userid) {
+        User u = new User();
+        try {
+            Connection con = mySQLConnector.openConnection();
+            pstm = null;
+            pstm = con.prepareStatement("SELECT * FROM users WHERE users_id = ?");
+            pstm.setInt(1, userid);
+            ResultSet rs = pstm.executeQuery();
+            while (rs.next()) {
+                u.setUserId(rs.getInt(1));
+                u.setUsername(rs.getString(2));
+                u.setUserPassword(rs.getString(3));
+                u.setUserPhonenumber(rs.getInt(4));
+                u.setUserEmail(rs.getString(5));
+                u.setUserPreference(rs.getString(6));
+            }
+            pstm.close();
+            return u;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    //Jonathan
+    public boolean editUser(User user) {
+        Boolean userEdited = false;
+        log.info(user.toString());
+        try{
+            Connection connection = mySQLConnector.openConnection();
+            PreparedStatement pstms = connection.prepareStatement("UPDATE users SET users_fullName = ?, users_phonenumber = ?, users_email = ?, users_preferences = ?, users_password = ? WHERE users_id = ?;");
+            pstms.setString(1, user.getUsername());
+            pstms.setInt(2,user.getUserPhonenumber());
+            pstms.setString(3,user.getUserEmail());
+            pstms.setString(4,user.getUserPreference());
+            pstms.setString(5, user.getUserPassword());
+            pstms.setInt(6,user.getUserId());
+            pstms.executeUpdate();
+            userEdited = true;
+        } catch (Exception E){
+            E.printStackTrace();
+        }
+        return userEdited;
+    }
+
+    //Mike
+    public boolean editUserHistory(User user) {
+        try{
+            Connection connection = mySQLConnector.openConnection();
+            PreparedStatement pstm = connection.prepareStatement("UPDATE users SET users_preferences = ? WHERE users_id = ?");
+            pstm.setString(1,user.getUserPreference());
+            pstm.setInt(2,user.getUserId());
+            pstm.executeUpdate();
+            return true;
+        } catch (Exception E){
+            E.printStackTrace();
+        }
+        return false;
+    }
+
+    //Luca
+    public User authenticateUser(LoginToken loginToken){
+        log.info("authenticateUser method started...");
+
+        String statement = "SELECT * FROM users WHERE users_phonenumber = ? OR users_email = ? AND users_password = ?;";
+
+        try {
+            PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
+
+            pstmt.setString(1, loginToken.getLoginTokenUsername());
+            pstmt.setString(2, loginToken.getLoginTokenUsername());
+            pstmt.setString(3, loginToken.getLoginTokenPassword());
+
+            ResultSet rs = pstmt.executeQuery();
+
+            return generateUserFromResultSet(rs);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    //Luca
+    public List<String> getUserRoles(int userId){
+        log.info("getUserRoles method started...");
+
+        List<String> userRoles = new ArrayList<>();
+
+        String statement = "SELECT * FROM users_roles WHERE users_id = ?;";
+
+        try {
+            PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
+
+            pstmt.setInt(1, userId);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while(rs.next()){
+                userRoles.add(rs.getString(2));
+            }
+
+            return userRoles;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    //Luca
+    public List<Booking> getUserHistory(int userId){
+        log.info("getUserHistory method started...");
+
+        List<Booking> userHistory = new ArrayList<>();
+
+        String statement = "SELECT * FROM bookings WHERE users_id = ?;";
+
+        try {
+            PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
+
+            pstmt.setInt(1, userId);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while(rs.next()){
+                Booking booking = new Booking();
+
+                booking.setBookingId(rs.getInt(1));
+                booking.setBookingUserId(rs.getInt(2));
+                booking.setBookingDate(rs.getDate(4));
+                booking.setBookingComment(rs.getString(5));
+                booking.setBookingTreatmentList(getTreatmentsForBooking(booking.getBookingId()));
+            }
+
+            return userHistory;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    //Luca
+    public List<Treatment> getTreatmentsForBooking(int bookingId){
+        log.info("getTreatmentsForBooking method started...");
+
+        List<Treatment> treatmentList = new ArrayList<>();
+
+        String statement = "SELECT (SELECT treatments.treatments_name FROM treatments WHERE treatments_id = bookings_treatment.treatments_id) AS treatment_name FROM bookings_treatment WHERE bookings_id = ?;";
+
+        try {
+            PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
+
+            pstmt.setInt(1, bookingId);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while(rs.next()){
+                Treatment treatment = new Treatment();
+
+                treatment.setProductName(rs.getString(1));
+
+                treatmentList.add(treatment);
+            }
+
+            return treatmentList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    //Luca
+    public User generateUserFromResultSet(ResultSet rs) throws SQLException{
+        if(!rs.next()){
+            return null;
+        }
+        User user = new User();
+
+        user.setUserId(rs.getInt(1));
+        user.setUsername(rs.getString(2));
+        user.setUserPassword(rs.getString(3));
+        user.setUserPassword(rs.getString(4));
+        user.setUserEmail(rs.getString(5));
+        user.setUserPreference(rs.getString(6));
+        user.setUserRoles(getUserRoles(user.getUserId()));
+        user.setUserHistory(getUserHistory(user.getUserId()));
+
+        return user;
+    }
+
+    //Mike & Asbjørn
+    public boolean deleteUser(int userId) {
+        try {
+            Connection connection = mySQLConnector.openConnection();
+            PreparedStatement pstm = connection.prepareStatement("INSERT INTO users_archive SELECT users_id, users_fullName, " +
+                                                    "users_phonenumber, users_email, users_preferences FROM users WHERE users_id = ?");
+            pstm.setInt(1, userId);
+            pstm.executeUpdate();
+
+            pstm = connection.prepareStatement("DELETE FROM users WHERE users_id = ?");
+            pstm.setInt(1, userId);
+            pstm.executeUpdate();
+            pstm.close();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
