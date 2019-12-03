@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-
 public class BOController {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
@@ -27,16 +27,17 @@ public class BOController {
     private String NEWSLETTER = "newsletter";
     private String REMINDER = "reminder";
     private String REDIRECTNEWSLETTER = "redirect:/" + NEWSLETTER;
+    private boolean taskResult = false;
+    private ArrayList<Item> itemArrayList = new ArrayList<>();
+    private ArrayList<Treatment> treatmentArrayList = new ArrayList<>();
     private String REDIRECTREMINDER = "redirect:/" + REMINDER;
-
-    private boolean taskResult = false;  
   
     @Autowired
     SMSServiceImpl smsServiceImpl;
-  
+
     @Autowired
     UserServiceImpl userServiceImpl;
-
+  
     @Autowired
     ProductServiceImpl productServiceImpl;
 
@@ -48,10 +49,10 @@ public class BOController {
 
     //Luca
     @GetMapping("reminder")
-    public String reminder(Model model, HttpSession session){
+    public String reminder(Model model, HttpSession session) {
         log.info("get reminder action started...");
 
-        if(showConfirmation){
+        if (showConfirmation) {
             model.addAttribute("showconfirmation", true);
             model.addAttribute("confirmationtext", confirmationText);
             showConfirmation = false;
@@ -60,14 +61,20 @@ public class BOController {
         return REMINDER;
     }
 
+    //Luca
     @GetMapping("sendreminder")
-    public String sendreminder(Model model, HttpSession session){
+    public String sendreminder(Model model, HttpSession session) {
         log.info("post sendreminder action started...");
 
-        if(smsServiceImpl.sendReminder()){
+        if(sMSServiceImpl.sendReminder()){
+
             log.info("sms reminder sent successfully...");
             showConfirmation = true;
             confirmationText = "SMS Reminder blev sendt.";
+        } else{
+            log.info("sms reminder failed to sent...");
+            showConfirmation = true;
+            confirmationText = "Der skete en fejl ved afsendelse af reminder.";
         }
 
         return REDIRECTREMINDER;
@@ -75,10 +82,10 @@ public class BOController {
 
     //Luca
     @GetMapping("newsletter")
-    public String newsletter(Model model, HttpSession session){
+    public String newsletter(Model model, HttpSession session) {
         log.info("get newsletter action started...");
 
-        if(showConfirmation){
+        if (showConfirmation) {
             model.addAttribute("showconfirmation", true);
             model.addAttribute("confirmationtext", confirmationText);
             showConfirmation = false;
@@ -90,55 +97,67 @@ public class BOController {
 
     //Luca
     @PostMapping("sendnewsletter")
-    public String sendNewsletter(Model model, HttpSession session, @ModelAttribute Newsletter newsletter){
+    public String sendNewsletter(Model model, HttpSession session, @ModelAttribute Newsletter newsletter) {
         log.info("post newsletter action started...");
 
-        if(smsServiceImpl.sendNewsletter(newsletter.getText())){
+        if(sMSServiceImpl.sendNewsletter(newsletter.getText())){
+
             log.info("newsletter was successfully sent...");
 
             showConfirmation = true;
             confirmationText = "Nyhedsbrev blev sendt.";
+        } else{
+            log.info("sms newsletter failed to sent...");
+            showConfirmation = true;
+            confirmationText = "Der skete en fejl ved afsendelse af nyhedsbrev.";
         }
+
         return REDIRECTNEWSLETTER;
     }
 
     //Luca
     @PostMapping("sendtestnewsletter")
     public String sendTestNewsletter(Model model, HttpSession session,
-                                     @ModelAttribute Newsletter newsletter){
+                                     @ModelAttribute Newsletter newsletter) {
         log.info("post newsletter action started...");
 
-        if(smsServiceImpl.sendNewsletterTest(newsletter.getTestNumber(), newsletter.getText())){
+        if(sMSServiceImpl.sendNewsletterTest(newsletter.getTestNumber(), newsletter.getText())){
+
             log.info("newsletter was successfully sent...");
 
             showConfirmation = true;
             confirmationText = "Test nyhedsbrev blev sendt.";
+        } else{
+            log.info("sms reminder failed to sent...");
+            showConfirmation = true;
+            confirmationText = "Der skete en fejl ved afsendelse af nyhedsbrev.";
         }
+
         return REDIRECTNEWSLETTER;
     }
 
     //Asbjørn
-    @GetMapping ("/")
-    public String index (Model model) {
+    @GetMapping("/")
+    public String index(Model model) {
         return "index";
     }
 
     //Asbjørn
-    @GetMapping ("/createProduct")
-    public String createProduct (Model model, HttpSession session) {
+    @GetMapping("/createProduct")
+    public String createProduct(Model model, HttpSession session) {
         return "createProduct";
     }
 
     //Asbjørn
-    @GetMapping ("/createItem")
-    public String createItem (Model model, HttpSession session) {
+    @GetMapping("/createItem")
+    public String createItem(Model model, HttpSession session) {
         model.addAttribute("item", new Item());
         return "createItem";
     }
 
     //Asbjørn
-    @PostMapping ("/createItem")
-    public String createItem (@ModelAttribute Item item, Model model, HttpSession session) {
+    @PostMapping("/createItem")
+    public String createItem(@ModelAttribute Item item, Model model, HttpSession session) {
         taskResult = productServiceImpl.createItem(item);
         if (taskResult) {
             return "redirect:/";
@@ -148,15 +167,15 @@ public class BOController {
     }
 
     //Asbjørn
-    @GetMapping ("/createTreatment")
-    public String createTreatment (Model model, HttpSession session) {
+    @GetMapping("/createTreatment")
+    public String createTreatment(Model model, HttpSession session) {
         model.addAttribute("treatment", new Treatment());
         return "createTreatment";
     }
 
     //Asbjørn
-    @PostMapping ("/createTreatment")
-    public String createTreatment (@ModelAttribute Treatment treatment, Model model, HttpSession session) {
+    @PostMapping("/createTreatment")
+    public String createTreatment(@ModelAttribute Treatment treatment, Model model, HttpSession session) {
         taskResult = productServiceImpl.createTreatment(treatment);
         if (taskResult) {
             return "redirect:/";
@@ -164,7 +183,52 @@ public class BOController {
             return "createTreatment";
         }
     }
+  
+    //Asbjørn
+    @GetMapping ("/displayProducts")
+    public String displayProducts (Model model, HttpSession session) {
+        taskResult = productServiceImpl.createProductArrayLists(itemArrayList, treatmentArrayList);
+        model.addAttribute("treatments", treatmentArrayList);
+        model.addAttribute("items", itemArrayList);
 
+        return "displayProducts";
+    }
+
+    //Asbjørn
+    @GetMapping ("/editTreatment/{id}")
+    public String editTreatment (@PathVariable ("id") int id, Model model, HttpSession session) {
+        model.addAttribute("treatments", treatmentArrayList.get(id-1));
+        return "editTreatment";
+    }
+
+    //Asbjørn
+    @PostMapping ("/editTreatment")
+    public String editTreatment (@ModelAttribute Treatment treatment) {
+        taskResult = productServiceImpl.editTreatment(treatment);
+        if (taskResult) {
+            return "redirect:/";
+        } else {
+            return "displayProduct";
+        }
+    }
+
+    //Asbjørn
+    @GetMapping ("/editItem/{id}")
+    public String editItem (@PathVariable ("id") int id, Model model, HttpSession session) {
+        model.addAttribute("items", itemArrayList.get(id-1));
+        return "editItem";
+    }
+
+    //Asbjørn
+    @PostMapping ("/editItem")
+    public String editItem (@ModelAttribute Item item) {
+        taskResult = productServiceImpl.editItem(item);
+        if (taskResult) {
+            return "redirect:/";
+        } else {
+            return "displayProduct";
+        }
+    }
     //Mike
     @GetMapping("/edituserhistory")
     public String userList(Model model, HttpSession session) {
