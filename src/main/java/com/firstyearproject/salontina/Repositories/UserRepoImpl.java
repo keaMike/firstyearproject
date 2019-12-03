@@ -80,14 +80,16 @@ public class UserRepoImpl implements UserRepo{
             while(rs.next()) {
                 u.setUserId(rs.getInt(1));
                 u.setUsername(rs.getString(2));
-                u.setUserPhonenumber(rs.getInt(3));
-                u.setUserEmail(rs.getString(4));
-                u.setUserPreference(rs.getString(5));
+                u.setUserPassword(rs.getString(3));
+                u.setUserPhonenumber(rs.getInt(4));
+                u.setUserEmail(rs.getString(5));
+                u.setUserPreference(rs.getString(6));
             }
             pstm.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        log.info(u.toString());
         return u;
     }
 

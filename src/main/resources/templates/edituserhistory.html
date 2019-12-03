@@ -17,27 +17,30 @@
             <label for="email">E-Mail</label>
             <input class="form-control" id="email" type="text" disabled th:field="${user.userEmail}">
 
-            <label for="pref"></label>
-            <input class="form-control" id="pref" type="text" th:field="${user.userPreference}">
-
+            <label for="pref">Preferences</label>
+            <textarea class="form-control" rows = "10" cols = "50" id="pref" type="text" th:field="${user.userPreference}"></textarea>
+            <br>
+            <input class="btn btn-dark" value="Gem ændringer" type="submit">
+        </form>
+            <br>
             <table class="table table-striped">
                 <thead class="thead-dark">
-                    <tr>Dato</tr>
-                    <tr>Kommentar</tr>
-                    <tr>Behandlinger</tr>
+                    <tr>
+                        <th>Dato</th>
+                        <th>Kommentar</th>
+                        <th>Behandlinger</th>
+                    </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="booking : ${bookings}" th:if="${booking.bookingUserId} == ${userId}">
-                        <td th:text="${booking.date}"></td>
+                    <tr th:each="booking : ${bookings}" th:if="${booking.bookingUserId} == ${user.userId}">
+                        <td th:text="${booking.bookingDate}"></td>
                         <td th:text="${booking.bookingComment}"></td>
                         <td th:each="treatment : ${booking.bookingTreatmentList}">
                             <span th:text="${treatment.productName}"></span>
                         </td>
                     </tr>
                 </tbody>
-
             </table>
-        </form>
     </div>
 </body>
 </html>

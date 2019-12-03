@@ -150,4 +150,11 @@ public class BOController {
         model.addAttribute("bookings", bookings);
         return "edituserhistory";
     }
+
+    //Mike
+    @PostMapping("edituserhistory")
+    public String saveUserHistory(@ModelAttribute User user) {
+        userServiceImpl.addUser(user);
+        return "edituserhistory";
+    }
 }

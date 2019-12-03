@@ -29,15 +29,34 @@ public class BookingRepoImpl implements BookingRepo{
     public List findBookingsByUserId(int userid) {
         try {
             con = mySQLConnector.openConnection();
-            pstm = con.prepareStatement("SELECT * FROM bookings WHERE users_id = " + userid);
+            pstm = con.prepareStatement("SELECT * FROM bookings JOIN bookings_treatment ON " +
+                    "bookings.bookings_id = bookings_treatment.bookings_id JOIN treatments ON " +
+                    "bookings_treatment.treatments_id = treatments.treatments_id WHERE users_id = ?");
+            pstm.setInt(1, userid);
             ResultSet rs = pstm.executeQuery();
             ArrayList<Booking> bookings = new ArrayList<>();
             while(rs.next()) {
                 Booking b = new Booking();
-                b.setBookingId(rs.getInt(1));
-                b.setBookingUserId(rs.getInt(2));
-                b.setBookingDate(rs.getDate(4));
-                b.setBookingComment(rs.getString(5));
+                b.setBookingId(rs.getInt("bookings_id"));
+                b.setBookingUserId(rs.getInt("users_id"));
+                //setTime?
+                b.setBookingDate(rs.getDate("bookings_date"));
+                b.setBookingComment(rs.getString("bookings_comment"));
+
+                Treatment t = new Treatment();
+                t.setProductId(rs.getInt("treatments_id"));
+                t.setProductName(rs.getString("treatments_name"));
+                t.setProductPrice(rs.getInt("treatments_price"));
+                t.setProductDescription(rs.getString("treatments_description"));
+                t.setTreatmentDuration(rs.getInt("treatments_duration"));
+                t.setProductActive(rs.getBoolean("treatments_active"));
+
+                //Initializing list
+                ArrayList<Treatment> treatments = new ArrayList<>();
+                b.setBookingTreatmentList(treatments);
+                //Add treatments to a bookings treatment list
+                b.getBookingTreatmentList().add(t);
+                //Add bookings to ArrayList
                 bookings.add(b);
             }
             return bookings;
@@ -47,24 +66,5 @@ public class BookingRepoImpl implements BookingRepo{
             mySQLConnector.closeConnection();
         }
         return null;
-    }
-
-    //Mike
-    public void addAllBookingTreatments(Booking booking) {
-        try {
-            con = mySQLConnector.openConnection();
-            pstm = con.prepareStatement("SELECT (SELECT treatments_name FROM treatments WHERE treatments_id = bookings_treatment.treatments_id) AS treatments " +
-                                                                "FROM bookings_treatment WHERE bookings_id = " + booking.getBookingId());
-            ResultSet rs = pstm.executeQuery();
-            while(rs.next()) {
-                Treatment t = new Treatment();
-                t.setProductName(rs.getString(1));
-                booking.getBookingTreatmentList().add(t);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            mySQLConnector.closeConnection();
-        }
     }
 }

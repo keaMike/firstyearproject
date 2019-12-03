@@ -32,11 +32,7 @@ public class BookingServiceImpl implements BookingService{
 
     //Mike
     public List<Booking> getBookingList(int userId){
-        List<Booking> bookings = BR.findBookingsByUserId(userId);
-        for(Booking b : bookings) {
-            BR.addAllBookingTreatments(b);
-        }
-        return bookings;
+        return BR.findBookingsByUserId(userId);
     }
 
 }
