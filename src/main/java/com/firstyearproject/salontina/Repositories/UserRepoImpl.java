@@ -1,7 +1,7 @@
 package com.firstyearproject.salontina.Repositories;
 
-
 import com.firstyearproject.salontina.Models.Reminder;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,17 +15,15 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import com.firstyearproject.salontina.Models.User;
-import org.springframework.stereotype.Repository;
 
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.util.Random;
 
 @Repository
 public class UserRepoImpl implements UserRepo{
 
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
+    private PreparedStatement pstm;
 
     @Autowired
     MySQLConnector mySQLConnector;
@@ -102,6 +100,32 @@ public class UserRepoImpl implements UserRepo{
         }
         return userCreated;
     }
+    //Mike
+    public User findDummyUser() {
+
+        Random rand = new Random();
+        int randInt = rand.nextInt(17) + 1;
+        User u = new User();
+        try {
+            Connection con = mySQLConnector.openConnection();
+            pstm = null;
+            pstm = con.prepareStatement("SELECT * FROM users WHERE users_id = ?");
+            pstm.setInt(1, randInt);
+            ResultSet rs = pstm.executeQuery();
+            while(rs.next()) {
+                u.setUserId(rs.getInt(1));
+                u.setUsername(rs.getString(2));
+                u.setUserPassword(rs.getString(3));
+                u.setUserPhonenumber(rs.getInt(4));
+                u.setUserEmail(rs.getString(5));
+                u.setUserPreference(rs.getString(6));
+            }
+            pstm.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        log.info(u.toString());
+        return u;
 
     //Jonathan
     public boolean editUser(User user) {

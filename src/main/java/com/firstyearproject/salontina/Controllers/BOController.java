@@ -1,12 +1,10 @@
 package com.firstyearproject.salontina.Controllers;
 
+import com.firstyearproject.salontina.Models.*;
+import com.firstyearproject.salontina.Services.BookingServiceImpl;
 import com.firstyearproject.salontina.Services.SMSServiceImpl;
-import com.firstyearproject.salontina.Models.Newsletter;
 import com.firstyearproject.salontina.Services.UserServiceImpl;
-import com.firstyearproject.salontina.Models.User;
 import com.firstyearproject.salontina.Services.ProductServiceImpl;
-import com.firstyearproject.salontina.Models.Item;
-import com.firstyearproject.salontina.Models.Treatment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 
@@ -32,13 +31,16 @@ public class BOController {
     private boolean taskResult = false;  
   
     @Autowired
-    SMSServiceImpl sMSServiceImpl;
+    SMSServiceImpl smsServiceImpl;
   
     @Autowired
     UserServiceImpl userServiceImpl;
 
     @Autowired
     ProductServiceImpl productServiceImpl;
+
+    @Autowired
+    BookingServiceImpl bookingServiceImpl;
 
     private boolean showConfirmation = false;
     private String confirmationText = "";
@@ -90,7 +92,7 @@ public class BOController {
     public String sendNewsletter(Model model, HttpSession session, @ModelAttribute Newsletter newsletter){
         log.info("post newsletter action started...");
 
-        if(sMSServiceImpl.sendNewsletter(newsletter.getText())){
+        if(smsServiceImpl.sendNewsletter(newsletter.getText())){
             log.info("newsletter was successfully sent...");
 
             showConfirmation = true;
@@ -105,7 +107,7 @@ public class BOController {
                                      @ModelAttribute Newsletter newsletter){
         log.info("post newsletter action started...");
 
-        if(sMSServiceImpl.sendNewsletterTest(newsletter.getTestNumber(), newsletter.getText())){
+        if(smsServiceImpl.sendNewsletterTest(newsletter.getTestNumber(), newsletter.getText())){
             log.info("newsletter was successfully sent...");
 
             showConfirmation = true;
@@ -160,5 +162,22 @@ public class BOController {
         } else {
             return "createTreatment";
         }
+    }
+
+    //Mike
+    @GetMapping("/edituserhistory")
+    public String editUserHistory(Model model, HttpSession session) {
+        User user = userServiceImpl.getDummyUser();
+        List<Booking> bookings = bookingServiceImpl.getBookingList(user.getUserId());
+        model.addAttribute("user", user);
+        model.addAttribute("bookings", bookings);
+        return "edituserhistory";
+    }
+
+    //Mike
+    @PostMapping("edituserhistory")
+    public String saveUserHistory(@ModelAttribute User user) {
+        userServiceImpl.addUser(user);
+        return "edituserhistory";
     }
 }
