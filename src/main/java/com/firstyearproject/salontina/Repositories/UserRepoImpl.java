@@ -100,19 +100,40 @@ public class UserRepoImpl implements UserRepo{
         }
         return userCreated;
     }
-    //Mike
-    public User findDummyUser() {
 
-        Random rand = new Random();
-        int randInt = rand.nextInt(17) + 1;
+    //Mike
+    public List findAllUsers() {
+        List users = new ArrayList();
+        try {
+            Connection connection = mySQLConnector.openConnection();
+            PreparedStatement pstm = connection.prepareStatement("SELECT * FROM users");
+            ResultSet rs = pstm.executeQuery();
+            while(rs.next()) {
+                User u = new User();
+                u.setUserId(rs.getInt("users_id"));
+                u.setUsername(rs.getString("users_fullName"));
+                u.setUserPassword(rs.getString("users_password"));
+                u.setUserPhonenumber(rs.getInt("users_phonenumber"));
+                u.setUserEmail(rs.getString("users_email"));
+                u.setUserPreference(rs.getString("users_preferences"));
+                users.add(u);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return users;
+    }
+
+    //Mike
+    public User findUserById(int userid) {
         User u = new User();
         try {
             Connection con = mySQLConnector.openConnection();
             pstm = null;
             pstm = con.prepareStatement("SELECT * FROM users WHERE users_id = ?");
-            pstm.setInt(1, randInt);
+            pstm.setInt(1, userid);
             ResultSet rs = pstm.executeQuery();
-            while(rs.next()) {
+            while (rs.next()) {
                 u.setUserId(rs.getInt(1));
                 u.setUsername(rs.getString(2));
                 u.setUserPassword(rs.getString(3));
@@ -126,10 +147,12 @@ public class UserRepoImpl implements UserRepo{
         }
         log.info(u.toString());
         return u;
+    }
 
     //Jonathan
     public boolean editUser(User user) {
         Boolean userEdited = false;
+        log.info(user.toString());
         try{
             Connection connection = mySQLConnector.openConnection();
             PreparedStatement pstms = connection.prepareStatement("UPDATE users SET users_fullName = ?, users_phonenumber = ?, users_email = ?, users_preferences = ?, users_password = ? WHERE users_id = ?;");
@@ -144,9 +167,22 @@ public class UserRepoImpl implements UserRepo{
         } catch (Exception E){
             E.printStackTrace();
         }
-
         return userEdited;
     }
 
-
+    public boolean editUserHistory(User user) {
+        Boolean userEdited = false;
+        log.info(user.toString());
+        try{
+            Connection connection = mySQLConnector.openConnection();
+            PreparedStatement pstm = connection.prepareStatement("UPDATE users SET users_preferences = ? WHERE users_id = ?");
+            pstm.setString(1,user.getUserPreference());
+            pstm.setInt(2,user.getUserId());
+            pstm.executeUpdate();
+            userEdited = true;
+        } catch (Exception E){
+            E.printStackTrace();
+        }
+        return userEdited;
+    }
 }
