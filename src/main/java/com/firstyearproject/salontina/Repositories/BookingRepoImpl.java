@@ -67,4 +67,18 @@ public class BookingRepoImpl implements BookingRepo{
         }
         return null;
     }
+
+    //Mike
+    public boolean deleteBooking(int bookingId) {
+        try {
+            con = mySQLConnector.openConnection();
+            pstm = con.prepareStatement("DELETE FROM bookings WHERE bookings_id = ?");
+            pstm.setInt(1, bookingId);
+            pstm.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

@@ -33,7 +33,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="booking : ${bookings}" th:if="${booking.bookingUserId} == ${user.userId}">
+                    <tr th:each="booking : ${bookings}">
                         <td th:text="${booking.bookingDate}"></td>
                         <td th:text="${booking.bookingComment}"></td>
                         <td th:each="treatment : ${booking.bookingTreatmentList}">

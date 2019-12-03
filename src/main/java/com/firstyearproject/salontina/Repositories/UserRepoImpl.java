@@ -118,10 +118,11 @@ public class UserRepoImpl implements UserRepo{
                 u.setUserPreference(rs.getString("users_preferences"));
                 users.add(u);
             }
+            return users;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return users;
+        return null;
     }
 
     //Mike
@@ -142,11 +143,11 @@ public class UserRepoImpl implements UserRepo{
                 u.setUserPreference(rs.getString(6));
             }
             pstm.close();
+            return u;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        log.info(u.toString());
-        return u;
+        return null;
     }
 
     //Jonathan
@@ -170,19 +171,18 @@ public class UserRepoImpl implements UserRepo{
         return userEdited;
     }
 
+    //Mike
     public boolean editUserHistory(User user) {
-        Boolean userEdited = false;
-        log.info(user.toString());
         try{
             Connection connection = mySQLConnector.openConnection();
             PreparedStatement pstm = connection.prepareStatement("UPDATE users SET users_preferences = ? WHERE users_id = ?");
             pstm.setString(1,user.getUserPreference());
             pstm.setInt(2,user.getUserId());
             pstm.executeUpdate();
-            userEdited = true;
+            return true;
         } catch (Exception E){
             E.printStackTrace();
         }
-        return userEdited;
+        return false;
     }
 }
