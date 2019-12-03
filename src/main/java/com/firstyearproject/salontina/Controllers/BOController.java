@@ -31,7 +31,6 @@ public class BOController {
     private ArrayList<Item> itemArrayList = new ArrayList<>();
     private ArrayList<Treatment> treatmentArrayList = new ArrayList<>();
     private String REDIRECTREMINDER = "redirect:/" + REMINDER;
-    private boolean taskResult = false;    
   
     @Autowired
     SMSServiceImpl sMSServiceImpl;
@@ -61,14 +60,19 @@ public class BOController {
         return REMINDER;
     }
 
+    //Luca
     @GetMapping("sendreminder")
     public String sendreminder(Model model, HttpSession session){
         log.info("post sendreminder action started...");
 
-        if(smsServiceImpl.sendReminder()){
+        if(sMSServiceImpl.sendReminder()){
             log.info("sms reminder sent successfully...");
             showConfirmation = true;
             confirmationText = "SMS Reminder blev sendt.";
+        } else{
+            log.info("sms reminder failed to sent...");
+            showConfirmation = true;
+            confirmationText = "Der skete en fejl ved afsendelse af reminder.";
         }
 
         return REDIRECTREMINDER;
@@ -94,12 +98,17 @@ public class BOController {
     public String sendNewsletter(Model model, HttpSession session, @ModelAttribute Newsletter newsletter){
         log.info("post newsletter action started...");
 
-        if(smsServiceImpl.sendNewsletter(newsletter.getText())){
+        if(sMSServiceImpl.sendNewsletter(newsletter.getText())){
             log.info("newsletter was successfully sent...");
 
             showConfirmation = true;
             confirmationText = "Nyhedsbrev blev sendt.";
+        } else{
+            log.info("sms newsletter failed to sent...");
+            showConfirmation = true;
+            confirmationText = "Der skete en fejl ved afsendelse af nyhedsbrev.";
         }
+
         return REDIRECTNEWSLETTER;
     }
 
@@ -109,12 +118,17 @@ public class BOController {
                                      @ModelAttribute Newsletter newsletter){
         log.info("post newsletter action started...");
 
-        if(smsServiceImpl.sendNewsletterTest(newsletter.getTestNumber(), newsletter.getText())){
+        if(sMSServiceImpl.sendNewsletterTest(newsletter.getTestNumber(), newsletter.getText())){
             log.info("newsletter was successfully sent...");
 
             showConfirmation = true;
             confirmationText = "Test nyhedsbrev blev sendt.";
+        } else{
+            log.info("sms reminder failed to sent...");
+            showConfirmation = true;
+            confirmationText = "Der skete en fejl ved afsendelse af nyhedsbrev.";
         }
+
         return REDIRECTNEWSLETTER;
     }
 

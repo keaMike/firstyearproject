@@ -12,23 +12,23 @@ CREATE TABLE IF NOT EXISTS users(
 );
 
 INSERT INTO users (users_fullName, users_password, users_phonenumber, users_email) VALUES
-('admin', 'admin', 100000001, 'admin@admin.com'),
-('Frisør', 'frisør', 10000002, 'frisør@salon.dk'),
-('Adam Hansen', 'AH' 67426732, 'AdamnHansen@gmail.com'),
-('Alexa Korsberg', 'AK', 88214321, 'AlexaKorsberg@gmail.com'),
-('Andrea Munck', 'AM', 56867845, 'AndreaMunch@gmail.com'),
-('Martin Lund', 'ML', 75849762, 'MartinLund@gmail.com'),
-('Trine Zedeler', 'TZ', 23536148, 'TrineZedeler@gmail.com'),
-('Jonas Olczyk', 'JO', 21135362, 'JonasOlczyk@gmail.com'),
-('Anders Steen Thranum', 'AST', 86235142, 'AndersThranum@hotmail.com'),
-('Morten Brander Knudsen', 'MBK', 65221147, 'Morten@knudsen.dk'),
-('Christian De Freiesleben Røssel', 'CDFR', 40025684, 'Christan@Røssel.dk'),
-('Wen Hao Xuan', 'WHX', 20124254, 'WenHaoXuan@gmail.com'),
-('Emilie Riisberg', 'ER', 30689885, 'EmilieRis@gmail.com'),
-('Stefan Hansen', 'SH', 45879586, 'Stefan@hansen.com'),
-('Otto Linnet', 'OL', 78424006, 'OttoLinnet@gmail.com'),
-('Harald Welling', 'HW', 62545212, 'Harald@Welling.com'),
-('Chris Raahauge DeStantis', 'CRD', 20024578, 'Chris@DeStantis.com');
+('admin', '89146bd636a722bfa5f423ad208f54bf', 100000001, 'admin@admin.com'),
+('Frisør', '644f7427180c737aebc6bdb2ad6b07dd', 10000002, 'frisør@salon.dk'),
+('Adam Hansen', '78c263af1e079e5aa51723dfb28deced' 67426732, 'AdamnHansen@gmail.com'),
+('Alexa Korsberg', '34d9fc9de4ece0c200a29064f739d9fd', 88214321, 'AlexaKorsberg@gmail.com'),
+('Andrea Munck', 'd8178084591516ba79d37363d676b17b', 56867845, 'AndreaMunch@gmail.com'),
+('Martin Lund', 'ee7bdbd75dbe2b7871b662edd515aeef', 75849762, 'MartinLund@gmail.com'),
+('Trine Zedeler', '7208856d85d4e38be61b3ac959d30a18', 23536148, 'TrineZedeler@gmail.com'),
+('Jonas Olczyk', 'e9da978bd35ef37f89bb3defb94baab8', 21135362, 'JonasOlczyk@gmail.com'),
+('Anders Steen Thranum', '8cb9a09f5e439ce9e826d03739816adf', 86235142, 'AndersThranum@hotmail.com'),
+('Morten Brander Knudsen', 'de020b5ca349f0ba471cf4349ef18dd9', 65221147, 'Morten@knudsen.dk'),
+('Christian De Freiesleben Røssel', 'ff6cb1de90f843476da683ad2c9d7ca9', 40025684, 'Christan@Røssel.dk'),
+('Wen Hao Xuan', '755f9590116c8f56fd50f34f8ff13205', 20124254, 'WenHaoXuan@gmail.com'),
+('Emilie Riisberg', '48945308832ae5feae1747c3cd39d946', 30689885, 'EmilieRis@gmail.com'),
+('Stefan Hansen', '7f7c7c9dc4bdf5e85447e550337f690c', 45879586, 'Stefan@hansen.com'),
+('Otto Linnet', 'c26f8a6ba913ee889697d6fc65a276', 78424006, 'OttoLinnet@gmail.com'),
+('Harald Welling', '3b985bde9e131d89595279719e91e69e', 62545212, 'Harald@Welling.com'),
+('Chris Raahauge DeStantis', '2cff3c8ed6a4da444d8267a733de6344', 20024578, 'Chris@DeStantis.com');
 
 CREATE TABLE IF NOT EXISTS users_archive(
     users_id INT UNIQUE NOT NULL,
@@ -103,8 +103,8 @@ INSERT INTO treatments (treatments_name, treatments_price, treatments_descriptio
 CREATE TABLE IF NOT EXISTS bookings_treatment (
     bookings_id  INT NOT NULL,
     treatments_id INT NOT NULL,
-    CONSTRAINT bookingstreatment_fk_bookings FOREIGN KEY (bookings_id) REFERENCES bookings (bookings_id),
-    CONSTRAINT bookingstreatment_fk_treatments FOREIGN KEY (treatments_id) REFERENCES treatments (treatments_id)
+    CONSTRAINT bookingstreatment_fk_bookings FOREIGN KEY (bookings_id) REFERENCES bookings (bookings_id) ON DELETE CASCADE,
+    CONSTRAINT bookingstreatment_fk_treatments FOREIGN KEY (treatments_id) REFERENCES treatments (treatments_id) ON DELETE CASCADE
 );
 
 INSERT INTO bookings_treatment (bookings_id, treatments_id) VALUES
