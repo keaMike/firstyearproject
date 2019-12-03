@@ -6,3 +6,4 @@ to send SMS-remainders, send SMS-newsletters, manage reservations among other th
 
 Database setup script can be found in the *databaseScript.txt* text file located in */src/main/resources/* folder.
 Database URL, username and password needs to be set up in *application.properties*.
+SMS-API ACCOUNT_SID, AUTH_TOKEN and FROMNUMBER also need to be set up in *application.properties*.

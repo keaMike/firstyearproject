@@ -1,6 +1,7 @@
-package com.firstyearproject.salontina.Handlers;
+package com.firstyearproject.salontina.Services;
 
-import com.firstyearproject.salontina.Repositories.UserRepo;
+import com.firstyearproject.salontina.Models.Reminder;
+import com.firstyearproject.salontina.Repositories.UserRepoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,36 +11,46 @@ import java.util.List;
 
 //Luca
 @Service
-public class SMSHandler {
+public class SMSServiceImpl implements SMSService{
 
     @Autowired
-    UserRepo userRepo;
+    UserRepoImpl userRepoImpl;
 
     @Autowired
     SMSConnector smsConnector;
 
-    public boolean sendReminder(Date date){
-        return false;
+    //Luca
+    public boolean sendReminder(){
+        List<Reminder> reminderList = userRepoImpl.getReminderList();
+
+        for(Reminder r : reminderList){
+            String reminderText = "Hej " + r.getReminderUsername() + " du har en tid d. " + r.getReminderDate() + " kl. " + r.getReminderTime() + " hos Salon Tina.";
+            sendSMS(verifyNumber(r.getReminderPhonenumber()), reminderText);
+        }
+
+        return true;
     }
 
     //Luca
-    //Method gets a list of phonenumbers and sendt text to them
+    //Method gets a list of phonenumbers and sends text to them
     public boolean sendNewsletter(String text){
         List<String> phonenumbers = getTestNewsletterList(); //userRepo.getNewsletterList();
 
-        for(String s : phonenumbers){
-            if(verifyNumber(s) == null){
-                break;
-            }
-            sendSMS(s, text);
-        }
+        sendSMSToList(phonenumbers, text);
         return true;
     }
 
     //Luca
     public boolean sendNewsletterTest(String phonenumber, String text){
-        sendSMS(phonenumber, text);
+        sendSMS(verifyNumber(phonenumber), text);
         return true;
+    }
+
+    //Luca
+    public void sendSMSToList(List<String> numberList, String text){
+        for(String s : numberList){
+            sendSMS(verifyNumber(s), text);
+        }
     }
 
     //Luca
@@ -61,7 +72,8 @@ public class SMSHandler {
     }
 
     //Luca
-    //Method only relevant in development, as SMS-API only sends to 'verified' numbers.
+    //Method only relevant in development, as SMS-API only sends to 'verified' numbers,
+    //when using trial account.
     private List<String> getTestNewsletterList(){
         List<String> testList = new ArrayList<>();
 
