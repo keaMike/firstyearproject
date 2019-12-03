@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Salon-Tina</title>
+    <link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet" media="screen"/>
+</head>
+<body>
+    <div class="container">
+    <h1>Velkommen til Salon-Tina</h1>
+    <form th:method="get" th:action="@{/addbooking}">
+        <input class="btn btn-dark" value="Book en behandling" type="submit"></input>
+    </form>
+    </div>
+</body>
+</html>

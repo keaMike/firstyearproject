@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Salon-Tina</title>
+    <link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet" media="screen"/>
+</head>
+<body>
+    <div class="container">
+            <h1>Vælg én eller flere behandlinger</h1>
+        <form th:method="get" th:action="@{/vælgdato}" th:object="${booking}">
+            <div th:each="treatment : ${treatments}">
+                <input class="btn btn-dark" type="checkbox" th:value="treatment"
+                       th:text="${treatment.productName}">
+            </div>
+            <input class="btn btn-dark" type="submit" value="Gem valgte behandlinger">
+        </form>
+
+        <form th:method="get" th:action="@{/vælgtidspunkt}" th:object="${booking}">
+            <div th:each="date : ${availableDates}">
+                <label for="date">Vælg en dato</label>
+                <input id="date" type="radio" th:field="${boooking.bookingDate}" th:value="date">
+            </div>
+            <input class="btn btn-dark" type="submit" value="Gem valgte dato">
+        </form>
+
+        <form th:method="get" th:action="@{/book}">
+            <input class="btn btn-dark" type="submit" value="Gem valgte tidspunkt">
+        </form>
+
+        <form th:method="post" th:action="@{/book}">
+            <label for="comment">Tilføj en kommentar</label>
+            <input id="comment" type="text" th:field="${booking.bookingComment}">
+
+            <label for="book">Book behandling</label>
+            <input id="book" class="btn btn-dark" type="submit" value="Book Behandling">
+        </form>
+    </div>
+</body>
+</html>
