@@ -114,27 +114,6 @@ public class BOController {
         return REDIRECTNEWSLETTER;
     }
 
-    //Jonathan
-    @GetMapping("/register")
-    public String createUser(Model model) {
-        model.addAttribute("userToBeRegistered", new User());
-        return "register";
-    }
-
-    //Jonathan
-    @PostMapping("/register")
-    public String createUser(@ModelAttribute User user) {
-        userServiceImpl.addUser(user);
-    return "redirect:/login";
-    }
-
-    //Jonathan
-    @GetMapping("/login")
-    public String login(Model model) {
-        model.addAttribute("userToBeRegistered", new User());
-        return "login";
-    }
-
     //Asbjørn
     @GetMapping ("/")
     public String index (Model model) {

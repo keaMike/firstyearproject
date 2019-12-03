@@ -1,7 +1,7 @@
 package com.firstyearproject.salontina.Controllers;
 
-import com.firstyearproject.salontina.Handlers.UserHandler;
 import com.firstyearproject.salontina.Models.User;
+import com.firstyearproject.salontina.Services.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,7 +15,7 @@ import javax.servlet.http.HttpSession;
 public class FOController {
 
     @Autowired
-    UserHandler userHandler;
+    UserServiceImpl userService;
 
     @GetMapping("/login")
     public String login(Model model) {
@@ -32,7 +32,7 @@ public class FOController {
     //Jonathan
     @PostMapping("/register")
     public String createUser(@ModelAttribute User user) {
-        userHandler.addUser(user);
+        userService.addUser(user);
         return "redirect:/login";
     }
 
@@ -45,7 +45,7 @@ public class FOController {
 
     @PostMapping("/redigerbruger")
     public String redigerbruger(@ModelAttribute User user) {
-        userHandler.editUser(user);
+        userService.editUser(user);
         return "redirect:/userprofile";
     }
 
