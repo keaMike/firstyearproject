@@ -18,6 +18,7 @@ public class BookingServiceImpl implements BookingService{
         return false;
     }
 
+    //Mike
     public boolean deleteBooking(int bookingId){
         return BR.deleteBooking(bookingId);
     }

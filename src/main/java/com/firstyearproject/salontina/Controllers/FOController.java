@@ -74,6 +74,7 @@ public class FOController {
         return "mybookings";
     }
 
+    //Mike
     @GetMapping("/sletbooking/{bookingid}")
     public String deleteuserbooking(@PathVariable int bookingid) {
         taskResult = bookingService.deleteBooking(bookingid);

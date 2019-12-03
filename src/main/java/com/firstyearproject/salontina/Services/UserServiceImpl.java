@@ -13,6 +13,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UserRepoImpl UR;
 
+    //Jonathan
     public boolean addUser(User user){
         boolean userCreated = UR.addUser(user);
         return userCreated;
@@ -22,20 +23,24 @@ public class UserServiceImpl implements UserService {
         return false;
     }
 
+    //Jonathan
     public boolean editUser(User user){
         boolean userEdited = UR.editUser(user);
         return userEdited;
     }
 
+    //Mike
     public boolean editUserHistory(User user){
         boolean userEdited = UR.editUserHistory(user);
         return userEdited;
     }
 
+    //Mike
     public List<User> getAllUsers() {
         return UR.findAllUsers();
     }
 
+    //Mike
     public User getUserById(int userid) {
         return UR.findUserById(userid);
     }
