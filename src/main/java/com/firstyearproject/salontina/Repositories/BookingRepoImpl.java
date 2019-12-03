@@ -24,7 +24,6 @@ public class BookingRepoImpl implements BookingRepo{
     @Autowired
     MySQLConnector mySQLConnector;
 
-
     //Mike
     public List findBookingsByUserId(int userid) {
         try {

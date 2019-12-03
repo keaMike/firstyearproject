@@ -23,11 +23,8 @@ public class UserServiceImpl implements UserService {
 
     //Jonathan
     public boolean addUser(User user){
-
-        return UR.addUser(user);
         user.setUserPassword(hashPassword(user.getUserPassword()));
-        boolean userCreated = UR.addUser(user);
-        return userCreated;
+        return UR.addUser(user);
     }
 
     //Mike & Asbjørn
@@ -37,21 +34,17 @@ public class UserServiceImpl implements UserService {
 
     //Jonathan
     public boolean editUser(User user){
-        return UR.editUser(user);
-
         user.setUserPassword(hashPassword(user.getUserPassword()));
-        boolean userEdited = UR.editUser(user);
-        return userEdited;
+        return UR.editUser(user);
     }
 
     //Mike
-
     public User authenticateUser(LoginToken loginToken) {
         loginToken.setLoginTokenPassword(hashPassword(loginToken.getLoginTokenPassword()));
         return UR.authenticateUser(loginToken);
     }
 
-
+    //Mike
     public boolean editUserHistory(User user){
         boolean userEdited = UR.editUserHistory(user);
         return userEdited;
