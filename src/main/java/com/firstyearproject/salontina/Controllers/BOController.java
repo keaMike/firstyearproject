@@ -65,6 +65,10 @@ public class BOController {
             log.info("sms reminder sent successfully...");
             showConfirmation = true;
             confirmationText = "SMS Reminder blev sendt.";
+        } else{
+            log.info("sms reminder failed to sent...");
+            showConfirmation = true;
+            confirmationText = "Der skete en fejl ved afsendelse af reminder.";
         }
 
         return REDIRECTREMINDER;
@@ -95,7 +99,12 @@ public class BOController {
 
             showConfirmation = true;
             confirmationText = "Nyhedsbrev blev sendt.";
+        } else{
+            log.info("sms newsletter failed to sent...");
+            showConfirmation = true;
+            confirmationText = "Der skete en fejl ved afsendelse af nyhedsbrev.";
         }
+
         return REDIRECTNEWSLETTER;
     }
 
@@ -110,7 +119,12 @@ public class BOController {
 
             showConfirmation = true;
             confirmationText = "Test nyhedsbrev blev sendt.";
+        } else{
+            log.info("sms reminder failed to sent...");
+            showConfirmation = true;
+            confirmationText = "Der skete en fejl ved afsendelse af nyhedsbrev.";
         }
+
         return REDIRECTNEWSLETTER;
     }
 
