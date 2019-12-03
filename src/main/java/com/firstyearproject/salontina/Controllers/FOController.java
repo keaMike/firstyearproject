@@ -22,29 +22,29 @@ import java.util.List;
 @Controller
 public class FOController {
 
-
-    private boolean taskResult = false;
-
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    private String LANDINGPAGE = "landingpage";
-    private String ADDBOOKING = "addbooking";
     private String REDIRECT = "redirect:/";
     private String LOGIN = "login";
     private String REGISTER = "register";
-    private String REDIRECTREGISTER = "redirect:/" + REGISTER;
+    private String REDIGERBRUGER = "redigerbruger";
+    private String USERPROFILE = "userprofile";
+    private String MYBOOKINGS = "mybookings";
+    private String MINEBOOKINGS = "minebookings";
+    private String VÆLGTREATMENT = "vælgtreatment";
+    private String VÆLGTID = "vælgtid";
+    private String BOOKINGCONFIRMATION = "bookingconfirmation";
 
+    private boolean taskResult = false;
 
     @Autowired
     UserServiceImpl userService;
+
     @Autowired
     BookingServiceImpl bookingService;
 
     @Autowired
     ProductServiceImpl productService;
-
-    @Autowired
-    BookingService bookingService;
 
     @GetMapping("/login")
     public String login(Model model, HttpSession session) {
@@ -59,7 +59,7 @@ public class FOController {
         if(user != null){
             session.setAttribute("user", user);
 
-            return REDIRECTREGISTER;
+            return REDIRECT + REGISTER;
         }
         return LOGIN;
     }
@@ -74,33 +74,34 @@ public class FOController {
     @PostMapping("/register")
     public String createUser(@ModelAttribute User user) {
         userService.addUser(user);
-        return "redirect:/login";
+        return REDIRECT + LOGIN;
     }
     //Jonathan
     @GetMapping("/redigerbruger")
     public String redigerUser(HttpSession session, Model model) {
         User user =  new User(); //(User)session.getAttribute("user");
         model.addAttribute("userToBeEdited", user);
-        return "redigerbruger";
+        return REDIGERBRUGER;
     }
     //Jonathan
     @PostMapping("/redigerbruger")
     public String redigerUser(@ModelAttribute User user) {
         userService.editUser(user);
-        return "redirect:/userprofile";
+        return REDIRECT + USERPROFILE;
     }
 
     @GetMapping("userprofile")
     public String userprofile(Model model) {
         model.addAttribute("userToBeViewed", new User());
-        return "userprofile";
+        return USERPROFILE;
     }
 
     //Mike
     @GetMapping("/sletbruger/{userid}")
     public String deleteUser(@PathVariable int userId) {
         userService.deleteUser(userId);
-        return "redirect:/redigerbruger";
+        return REDIRECT + REDIGERBRUGER;
+    }
 
     @GetMapping("/minebookings")
     public String userbookings(Model model, HttpSession session) {
@@ -109,7 +110,7 @@ public class FOController {
         List<Booking> bookings = bookingService.getBookingList(user.getUserId());
         model.addAttribute("bookings", bookings);
         model.addAttribute("user", user);
-        return "mybookings";
+        return MYBOOKINGS;
     }
 
     //Mike
@@ -117,9 +118,9 @@ public class FOController {
     public String deleteuserbooking(@PathVariable int bookingid) {
         taskResult = bookingService.deleteBooking(bookingid);
         if (taskResult) {
-            return "redirect:/minebookings";
+            return REDIRECT + MINEBOOKINGS;
         } else {
-            return "mybookings";
+            return MYBOOKINGS;
         }
     }
 
@@ -127,34 +128,38 @@ public class FOController {
     @GetMapping("vælgtreatment")
     public String vælgBooking(Model model) {
         model.addAttribute("booking", new Booking());
-        return "vælgtreatment";
+        return VÆLGTREATMENT;
     }
+
     //Jonathan
     @PostMapping("vælgtreatment")
     public String vælgBooking(HttpSession httpSession, @ModelAttribute Booking booking) {
         httpSession.setAttribute("booking", booking);//Sender Booking op i HttpSession
-        return "vælgtid";
+        return VÆLGTID;
     }
+
     //Jonathan
     @GetMapping("vælgtid")
     public String vælgTid(HttpSession httpSession, Model model) {
         Booking booking = (Booking) httpSession.getAttribute("booking");  //Henter Booking fra HttpSession
         model.addAttribute("booking", booking);
-        return "vælgtid";
+        return VÆLGTID;
     }
+
     //Jonathan
     @PostMapping("vælgtid")
     public String vælgTid(HttpSession httpSession, @ModelAttribute Booking booking) {
         httpSession.setAttribute("booking", booking); //Sender Booking op i HttpSession
         bookingService.addBooking(booking); //Gemmer booking
-        return "bookingconfirmation";
+        return BOOKINGCONFIRMATION;
     }
+
     //Jonathan
     @GetMapping("bookingconfirmation")
     public String bookingConfirmation(HttpSession httpSession, Model model) {
         Booking booking = (Booking) httpSession.getAttribute("booking"); //Henter Booking fra HttpSession
         model.addAttribute("booking", booking);
-        return "bookingconfirmation";
+        return BOOKINGCONFIRMATION;
 
     }
 

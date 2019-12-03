@@ -24,28 +24,53 @@ public class BOController {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
+    private String INDEX = "index";
     private String NEWSLETTER = "newsletter";
     private String REMINDER = "reminder";
-    private String REDIRECTNEWSLETTER = "redirect:/" + NEWSLETTER;
+    private String CREATEPRODUCT = "createProduct";
+    private String CREATEITEM = "createItem";
+    private String CREATETREATMENT = "createTreatment";
+    private String CONTROLPANEL = "controlpanel";
+    private String DISPLAYPRODUCTS = "displayProducts";
+    private String EDITTREATMENT = "editTreatment";
+    private String EDITITEM = "editItem";
+    private String ALLUSERS = "allusers";
+    private String EDITUSERHISTORY = "edituserhistory";
+    private String REDIRECT = "redirect:/";
+
     private boolean taskResult = false;
+
+    private boolean showConfirmation = false;
+    private String confirmationText = "";
+
     private ArrayList<Item> itemArrayList = new ArrayList<>();
     private ArrayList<Treatment> treatmentArrayList = new ArrayList<>();
-    private String REDIRECTREMINDER = "redirect:/" + REMINDER;
-  
+
     @Autowired
-    SMSServiceImpl smsServiceImpl;
+    SMSServiceImpl sMSServiceImpl;
 
     @Autowired
     UserServiceImpl userServiceImpl;
-  
+
     @Autowired
     ProductServiceImpl productServiceImpl;
 
     @Autowired
     BookingServiceImpl bookingServiceImpl;
 
-    private boolean showConfirmation = false;
-    private String confirmationText = "";
+
+    //Luca
+    public void confirmation(String text){
+        showConfirmation = true;
+        confirmationText = text;
+    }
+
+    //Luca
+    public void showConfirmation(Model model){
+        model.addAttribute("showconfirmation", true);
+        model.addAttribute("confirmationtext", confirmationText);
+        showConfirmation = false;
+    }
 
     //Luca
     @GetMapping("reminder")
@@ -53,9 +78,7 @@ public class BOController {
         log.info("get reminder action started...");
 
         if (showConfirmation) {
-            model.addAttribute("showconfirmation", true);
-            model.addAttribute("confirmationtext", confirmationText);
-            showConfirmation = false;
+            showConfirmation(model);
         }
 
         return REMINDER;
@@ -67,17 +90,14 @@ public class BOController {
         log.info("post sendreminder action started...");
 
         if(sMSServiceImpl.sendReminder()){
-
             log.info("sms reminder sent successfully...");
-            showConfirmation = true;
-            confirmationText = "SMS Reminder blev sendt.";
+            confirmation("SMS Reminder blev sendt.");
         } else{
             log.info("sms reminder failed to sent...");
-            showConfirmation = true;
-            confirmationText = "Der skete en fejl ved afsendelse af reminder.";
+            confirmation("Der skete en fejl ved afsendelse af reminder.");
         }
 
-        return REDIRECTREMINDER;
+        return REDIRECT + REMINDER;
     }
 
     //Luca
@@ -86,9 +106,7 @@ public class BOController {
         log.info("get newsletter action started...");
 
         if (showConfirmation) {
-            model.addAttribute("showconfirmation", true);
-            model.addAttribute("confirmationtext", confirmationText);
-            showConfirmation = false;
+            showConfirmation(model);
         }
 
         model.addAttribute("newsletter", new Newsletter());
@@ -101,58 +119,49 @@ public class BOController {
         log.info("post newsletter action started...");
 
         if(sMSServiceImpl.sendNewsletter(newsletter.getText())){
-
             log.info("newsletter was successfully sent...");
-
-            showConfirmation = true;
-            confirmationText = "Nyhedsbrev blev sendt.";
+            confirmation("Nyhedsbrev blev sendt.");
         } else{
             log.info("sms newsletter failed to sent...");
-            showConfirmation = true;
-            confirmationText = "Der skete en fejl ved afsendelse af nyhedsbrev.";
+            confirmation("Der skete en fejl ved afsendelse af nyhedsbrev.");
         }
 
-        return REDIRECTNEWSLETTER;
+        return REDIRECT + NEWSLETTER;
     }
 
     //Luca
     @PostMapping("sendtestnewsletter")
-    public String sendTestNewsletter(Model model, HttpSession session,
-                                     @ModelAttribute Newsletter newsletter) {
+    public String sendTestNewsletter(Model model, HttpSession session, @ModelAttribute Newsletter newsletter) {
         log.info("post newsletter action started...");
 
         if(sMSServiceImpl.sendNewsletterTest(newsletter.getTestNumber(), newsletter.getText())){
-
             log.info("newsletter was successfully sent...");
-
-            showConfirmation = true;
-            confirmationText = "Test nyhedsbrev blev sendt.";
+            confirmation("Test nyhedsbrev blev sendt.");
         } else{
             log.info("sms reminder failed to sent...");
-            showConfirmation = true;
-            confirmationText = "Der skete en fejl ved afsendelse af nyhedsbrev.";
+            confirmation("Der skete en fejl ved afsendelse af nyhedsbrev.");
         }
 
-        return REDIRECTNEWSLETTER;
+        return REDIRECT + NEWSLETTER;
     }
 
     //Asbjørn
     @GetMapping("/")
     public String index(Model model) {
-        return "index";
+        return INDEX;
     }
 
     //Asbjørn
     @GetMapping("/createProduct")
     public String createProduct(Model model, HttpSession session) {
-        return "createProduct";
+        return CREATEPRODUCT;
     }
 
     //Asbjørn
     @GetMapping("/createItem")
     public String createItem(Model model, HttpSession session) {
         model.addAttribute("item", new Item());
-        return "createItem";
+        return CREATEITEM;
     }
 
     //Asbjørn
@@ -160,9 +169,9 @@ public class BOController {
     public String createItem(@ModelAttribute Item item, Model model, HttpSession session) {
         taskResult = productServiceImpl.createItem(item);
         if (taskResult) {
-            return "redirect:/";
+            return REDIRECT;
         } else {
-            return "createItem";
+            return CREATEITEM;
         }
     }
 
@@ -170,7 +179,7 @@ public class BOController {
     @GetMapping("/createTreatment")
     public String createTreatment(Model model, HttpSession session) {
         model.addAttribute("treatment", new Treatment());
-        return "createTreatment";
+        return CREATETREATMENT;
     }
 
     //Asbjørn
@@ -178,19 +187,17 @@ public class BOController {
     public String createTreatment(@ModelAttribute Treatment treatment, Model model, HttpSession session) {
         taskResult = productServiceImpl.createTreatment(treatment);
         if (taskResult) {
-            return "redirect:/";
+            return REDIRECT;
         } else {
-            return "createTreatment";
+            return CREATETREATMENT;
         }
     }
 
     //Mike
     @GetMapping("/kontrolpanel")
     public String controlpanel() {
-        return "controlpanel";
+        return CONTROLPANEL;
     }
-}
-
   
     //Asbjørn
     @GetMapping ("/displayProducts")
@@ -199,14 +206,14 @@ public class BOController {
         model.addAttribute("treatments", treatmentArrayList);
         model.addAttribute("items", itemArrayList);
 
-        return "displayProducts";
+        return DISPLAYPRODUCTS;
     }
 
     //Asbjørn
     @GetMapping ("/editTreatment/{id}")
     public String editTreatment (@PathVariable ("id") int id, Model model, HttpSession session) {
         model.addAttribute("treatments", treatmentArrayList.get(id-1));
-        return "editTreatment";
+        return EDITTREATMENT;
     }
 
     //Asbjørn
@@ -214,9 +221,9 @@ public class BOController {
     public String editTreatment (@ModelAttribute Treatment treatment) {
         taskResult = productServiceImpl.editTreatment(treatment);
         if (taskResult) {
-            return "redirect:/";
+            return REDIRECT;
         } else {
-            return "displayProduct";
+            return DISPLAYPRODUCTS;
         }
     }
 
@@ -224,7 +231,7 @@ public class BOController {
     @GetMapping ("/editItem/{id}")
     public String editItem (@PathVariable ("id") int id, Model model, HttpSession session) {
         model.addAttribute("items", itemArrayList.get(id-1));
-        return "editItem";
+        return EDITITEM;
     }
 
     //Asbjørn
@@ -232,9 +239,9 @@ public class BOController {
     public String editItem (@ModelAttribute Item item) {
         taskResult = productServiceImpl.editItem(item);
         if (taskResult) {
-            return "redirect:/";
+            return REDIRECT;
         } else {
-            return "displayProduct";
+            return DISPLAYPRODUCTS;
         }
     }
     //Mike
@@ -242,7 +249,7 @@ public class BOController {
     public String userList(Model model, HttpSession session) {
         List<User> users = userServiceImpl.getAllUsers();
         model.addAttribute("users", users);
-        return "allusers";
+        return ALLUSERS;
     }
 
     //Mike
@@ -251,7 +258,7 @@ public class BOController {
         User user = userServiceImpl.getUserById(userid);
         user.setUserHistory(bookingServiceImpl.getBookingList(user.getUserId()));
         model.addAttribute("user", user);
-        return "edituserhistory";
+        return EDITUSERHISTORY;
     }
 
     //Mike
@@ -259,9 +266,9 @@ public class BOController {
     public String saveUserHistory(@ModelAttribute User user) {
         taskResult = userServiceImpl.editUserHistory(user);
         if (taskResult) {
-            return "edituserhistory";
+            return EDITUSERHISTORY;
         } else {
-            return "edituserhistory/" + user.getUserId();
+            return EDITUSERHISTORY + user.getUserId();
         }
     }
 }

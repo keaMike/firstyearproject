@@ -2,6 +2,7 @@ package com.firstyearproject.salontina.Repositories;
 
 import com.firstyearproject.salontina.Models.Item;
 import com.firstyearproject.salontina.Models.Treatment;
+import com.firstyearproject.salontina.Services.DatabaseLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class ProductRepoImpl implements ProductRepo{
+public class ProductRepoImpl implements ProductRepo {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     private PreparedStatement pstmt;
@@ -22,16 +23,20 @@ public class ProductRepoImpl implements ProductRepo{
     @Autowired
     MySQLConnector mySQLConnector;
 
+    @Autowired
+    DatabaseLogger databaseLogger;
+
     //Asbjørn
     @Override
-    public boolean createItem (Item item) {
+    public boolean createItem(Item item) {
         try {
+            String statement =  "INSERT INTO salon_tina_database.items " +
+                                "(items_name, items_price, items_description, items_active, items_quantity) " +
+                                "VALUES (?, ?, ?, TRUE, ?)";
+
             Connection connection = mySQLConnector.openConnection();
             pstmt = null;
-            pstmt = connection.prepareStatement
-                    ("INSERT INTO salon_tina_database.items " +
-                    "(items_name, items_price, items_description, items_active, items_quantity) " +
-                    "VALUES (?, ?, ?, TRUE, ?)");
+            pstmt = connection.prepareStatement(statement);
             pstmt.setString(1, item.getProductName());
             pstmt.setDouble(2, item.getProductPrice());
             pstmt.setString(3, item.getProductDescription());
@@ -43,6 +48,7 @@ public class ProductRepoImpl implements ProductRepo{
             mySQLConnector.closeConnection();
             repoTaskResult = true;
 
+            databaseLogger.writeToLogFile(statement);
         } catch (SQLException e) {
             e.printStackTrace();
             repoTaskResult = false;
@@ -52,14 +58,15 @@ public class ProductRepoImpl implements ProductRepo{
 
     //Asbjørn
     @Override
-    public boolean createTreatment (Treatment treatment) {
+    public boolean createTreatment(Treatment treatment) {
         try {
+            String statement =  "INSERT INTO salon_tina_database.treatments " +
+                                "(treatments_name, treatments_price, treatments_description, treatments_duration, treatments_active) " +
+                                "VALUES (?, ?, ?, ?, TRUE)";
+
             Connection connection = mySQLConnector.openConnection();
             pstmt = null;
-            pstmt = connection.prepareStatement
-                    ("INSERT INTO salon_tina_database.treatments " +
-                    "(treatments_name, treatments_price, treatments_description, treatments_duration, treatments_active) " +
-                    "VALUES (?, ?, ?, ?, TRUE)");
+            pstmt = connection.prepareStatement(statement);
             pstmt.setString(1, treatment.getProductName());
             pstmt.setDouble(2, treatment.getProductPrice());
             pstmt.setString(3, treatment.getProductDescription());
@@ -71,6 +78,7 @@ public class ProductRepoImpl implements ProductRepo{
             mySQLConnector.closeConnection();
             repoTaskResult = true;
 
+            databaseLogger.writeToLogFile(statement);
         } catch (SQLException e) {
             e.printStackTrace();
             repoTaskResult = false;
@@ -82,12 +90,14 @@ public class ProductRepoImpl implements ProductRepo{
     //Mike
     public List findAllTreatments() {
         try {
+            String statement = "SELECT * FROM treatments";
+
             Connection connection = mySQLConnector.openConnection();
             pstmt = null;
-            pstmt = connection.prepareStatement("SELECT * FROM treatments");
+            pstmt = connection.prepareStatement(statement);
             ResultSet rs = pstmt.executeQuery();
             ArrayList treatments = new ArrayList();
-            while(rs.next()) {
+            while (rs.next()) {
                 Treatment t = new Treatment();
                 t.setProductId(rs.getInt(1));
                 t.setProductName(rs.getString(2));
@@ -97,6 +107,9 @@ public class ProductRepoImpl implements ProductRepo{
                 t.setProductActive(rs.getBoolean(6));
                 treatments.add(t);
             }
+
+            databaseLogger.writeToLogFile(statement);
+
             return treatments;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -110,13 +123,13 @@ public class ProductRepoImpl implements ProductRepo{
     @Override
     public boolean createProductArrayLists(ArrayList<Item> itemArrayList, ArrayList<Treatment> treatmentArrayList) {
         stmt = null;
-        String itemQuery = "SELECT items_id, items_name, items_price, items_description, items_quantity, items_active " +
-                "FROM salon_tina_database.items";
+        String itemQuery =      "SELECT items_id, items_name, items_price, items_description, items_quantity, items_active " +
+                                "FROM salon_tina_database.items";
 
         String treatmentQuery = "SELECT treatments_id, treatments_name, treatments_price, treatments_description, " +
-                "treatments_duration, treatments_active " +
-                "FROM salon_tina_database.treatments";
-        try{
+                                "treatments_duration, treatments_active " +
+                                "FROM salon_tina_database.treatments";
+        try {
             Connection connection = mySQLConnector.openConnection();
 
             stmt = connection.createStatement();
@@ -125,6 +138,9 @@ public class ProductRepoImpl implements ProductRepo{
 
             ResultSet rsTreatments = stmt.executeQuery(treatmentQuery);
             insertIntoTreatmentArrayList(treatmentArrayList, rsTreatments);
+
+            databaseLogger.writeToLogFile(itemQuery);
+            databaseLogger.writeToLogFile(treatmentQuery);
 
             repoTaskResult = true;
         } catch (SQLException e) {
@@ -139,16 +155,16 @@ public class ProductRepoImpl implements ProductRepo{
     public void insertIntoItemArrayList(ArrayList<Item> itemArrayList, ResultSet rsItems) {
         try {
             itemArrayList.clear();
-            while (rsItems.next()){
+            while (rsItems.next()) {
                 int productID = rsItems.getInt("items_id");
                 String productName = rsItems.getString("items_name");
                 String productDescription = rsItems.getString("items_description");
-                double productPrice  = rsItems.getDouble("items_price");
+                double productPrice = rsItems.getDouble("items_price");
                 boolean productActive = rsItems.getBoolean("items_active");
                 int itemQuantity = rsItems.getInt("items_quantity");
                 itemArrayList.add(new Item(productID, productName, productDescription, productPrice, productActive, itemQuantity));
             }
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -157,16 +173,16 @@ public class ProductRepoImpl implements ProductRepo{
     public void insertIntoTreatmentArrayList(ArrayList<Treatment> treatmentArrayList, ResultSet rsTreatments) {
         try {
             treatmentArrayList.clear();
-            while (rsTreatments.next()){
+            while (rsTreatments.next()) {
                 int productID = rsTreatments.getInt("treatments_id");
                 String productName = rsTreatments.getString("treatments_name");
                 String productDescription = rsTreatments.getString("treatments_description");
-                double productPrice  = rsTreatments.getDouble("treatments_price");
+                double productPrice = rsTreatments.getDouble("treatments_price");
                 boolean productActive = rsTreatments.getBoolean("treatments_active");
                 int treatmentDuration = rsTreatments.getInt("treatments_duration");
                 treatmentArrayList.add(new Treatment(productID, productName, productDescription, productPrice, productActive, treatmentDuration));
             }
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -175,11 +191,13 @@ public class ProductRepoImpl implements ProductRepo{
     @Override
     public boolean editItem(Item item) {
         try {
+            String statement =  "UPDATE salon_tina_database.items " +
+                                "SET items_name = ?, items_price = ?, items_quantity = ?, items_description = ?, items_active = ? " +
+                                "WHERE items_id = ?";
+
             Connection connection = mySQLConnector.openConnection();
             pstmt = null;
-            pstmt = connection.prepareStatement("UPDATE salon_tina_database.items " +
-                    "SET items_name = ?, items_price = ?, items_quantity = ?, items_description = ?, items_active = ? " +
-                    "WHERE items_id = ?");
+            pstmt = connection.prepareStatement(statement);
             pstmt.setString(1, item.getProductName());
             pstmt.setDouble(2, item.getProductPrice());
             pstmt.setInt(3, item.getItemQuantity());
@@ -191,6 +209,7 @@ public class ProductRepoImpl implements ProductRepo{
             mySQLConnector.closeConnection();
             repoTaskResult = true;
 
+            databaseLogger.writeToLogFile(statement);
         } catch (SQLException e) {
             e.printStackTrace();
             repoTaskResult = false;
@@ -202,12 +221,14 @@ public class ProductRepoImpl implements ProductRepo{
     @Override
     public boolean editTreatment(Treatment treatment) {
         try {
+            String statement =  "UPDATE salon_tina_database.treatments " +
+                                "SET treatments_name = ?, treatments_price = ?, treatments_duration, treatments_description = ?, " +
+                                "treatments_active = ?, treatments_id = ? " +
+                                "WHERE treatments_id = ?";
+
             Connection connection = mySQLConnector.openConnection();
             pstmt = null;
-            pstmt = connection.prepareStatement("UPDATE salon_tina_database.treatments " +
-                    "SET treatments_name = ?, treatments_price = ?, treatments_duration, treatments_description = ?, " +
-                    "treatments_active = ?, treatments_id = ? " +
-                    "WHERE treatments_id = ?");
+            pstmt = connection.prepareStatement(statement);
             pstmt.setString(1, treatment.getProductName());
             pstmt.setDouble(2, treatment.getProductPrice());
             pstmt.setInt(3, treatment.getTreatmentDuration());
@@ -219,9 +240,11 @@ public class ProductRepoImpl implements ProductRepo{
             mySQLConnector.closeConnection();
             repoTaskResult = true;
 
+            databaseLogger.writeToLogFile(statement);
         } catch (SQLException e) {
             e.printStackTrace();
             repoTaskResult = false;
         }
         return repoTaskResult;
     }
+}
