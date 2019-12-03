@@ -2,6 +2,7 @@ package com.firstyearproject.salontina.Repositories;
 
 import com.firstyearproject.salontina.Models.*;
 
+import com.firstyearproject.salontina.Services.DatabaseLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +12,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import java.util.Random;
 
 @Repository
 public class UserRepoImpl implements UserRepo{
@@ -26,6 +24,9 @@ public class UserRepoImpl implements UserRepo{
 
     @Autowired
     MySQLConnector mySQLConnector;
+
+    @Autowired
+    DatabaseLogger databaseLogger;
 
     //Luca
     public List<String> getNewsletterList(){
@@ -43,10 +44,14 @@ public class UserRepoImpl implements UserRepo{
             while(rs.next()){
                 phonenumbers.add(rs.getString(1));
             }
+
+            databaseLogger.writeToLogFile(statement);
+
+            return phonenumbers;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return phonenumbers;
+        return null;
     }
 
     //Luca
@@ -75,10 +80,14 @@ public class UserRepoImpl implements UserRepo{
                 r.setReminderTime(rs.getString(4));
                 reminderList.add(r);
             }
+
+            databaseLogger.writeToLogFile(statement);
+
+            return reminderList;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return reminderList;
+        return null;
     }
 
     //Jonathan
@@ -200,6 +209,8 @@ public class UserRepoImpl implements UserRepo{
 
             ResultSet rs = pstmt.executeQuery();
 
+            databaseLogger.writeToLogFile(statement);
+
             return generateUserFromResultSet(rs);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -225,6 +236,8 @@ public class UserRepoImpl implements UserRepo{
             while(rs.next()){
                 userRoles.add(rs.getString(2));
             }
+
+            databaseLogger.writeToLogFile(statement);
 
             return userRoles;
         } catch (SQLException e) {
@@ -258,6 +271,8 @@ public class UserRepoImpl implements UserRepo{
                 booking.setBookingTreatmentList(getTreatmentsForBooking(booking.getBookingId()));
             }
 
+            databaseLogger.writeToLogFile(statement);
+
             return userHistory;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -287,6 +302,8 @@ public class UserRepoImpl implements UserRepo{
 
                 treatmentList.add(treatment);
             }
+
+            databaseLogger.writeToLogFile(statement);
 
             return treatmentList;
         } catch (SQLException e) {
