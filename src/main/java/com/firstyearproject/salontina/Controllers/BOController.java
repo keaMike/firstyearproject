@@ -65,7 +65,7 @@ public class BOController {
     public String sendreminder(Model model, HttpSession session){
         log.info("post sendreminder action started...");
 
-        if(sMSServiceImpl.sendReminder()){
+        if(smsServiceImpl.sendReminder()){
             log.info("sms reminder sent successfully...");
             showConfirmation = true;
             confirmationText = "SMS Reminder blev sendt.";
@@ -213,8 +213,16 @@ public class BOController {
     }
     //Mike
     @GetMapping("/edituserhistory")
-    public String editUserHistory(Model model, HttpSession session) {
-        User user = userServiceImpl.getDummyUser();
+    public String userList(Model model, HttpSession session) {
+        List<User> users = userServiceImpl.getAllUsers();
+        model.addAttribute("users", users);
+        return "allusers";
+    }
+
+    //Mike
+    @GetMapping("/edituserhistory/{userid}")
+    public String editUserHistory(@PathVariable int userid, Model model, HttpSession session) {
+        User user = userServiceImpl.getUserById(userid);
         List<Booking> bookings = bookingServiceImpl.getBookingList(user.getUserId());
         model.addAttribute("user", user);
         model.addAttribute("bookings", bookings);
@@ -222,9 +230,13 @@ public class BOController {
     }
 
     //Mike
-    @PostMapping("edituserhistory")
+    @PostMapping("/edituserhistory")
     public String saveUserHistory(@ModelAttribute User user) {
-        userServiceImpl.addUser(user);
-        return "edituserhistory";
+        taskResult = userServiceImpl.editUserHistory(user);
+        if (taskResult) {
+            return "redirect:/";
+        } else {
+            return "edituserhistory";
+        }
     }
 }

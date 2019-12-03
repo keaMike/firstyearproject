@@ -34,7 +34,7 @@ public class BookingRepoImpl implements BookingRepo{
                     "bookings_treatment.treatments_id = treatments.treatments_id WHERE users_id = ?");
             pstm.setInt(1, userid);
             ResultSet rs = pstm.executeQuery();
-            ArrayList<Booking> bookings = new ArrayList<>();
+            List<Booking> bookings = new ArrayList<>();
             while(rs.next()) {
                 Booking b = new Booking();
                 b.setBookingId(rs.getInt("bookings_id"));
@@ -52,7 +52,7 @@ public class BookingRepoImpl implements BookingRepo{
                 t.setProductActive(rs.getBoolean("treatments_active"));
 
                 //Initializing list
-                ArrayList<Treatment> treatments = new ArrayList<>();
+                List<Treatment> treatments = new ArrayList<>();
                 b.setBookingTreatmentList(treatments);
                 //Add treatments to a bookings treatment list
                 b.getBookingTreatmentList().add(t);

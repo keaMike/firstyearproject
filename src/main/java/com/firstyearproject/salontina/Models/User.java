@@ -13,7 +13,6 @@ public class User {
     private String userPreference;
     private List<String> userRoles; //Find out about enums
     private List<Booking> userHistory;
-    private String userPassword;
 
     public User() {
     }
@@ -121,4 +120,5 @@ public class User {
                 ", userRoles=" + userRoles +
                 ", userHistory=" + userHistory +
                 '}';
+    }
 }
