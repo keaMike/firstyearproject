@@ -2,11 +2,14 @@ package com.firstyearproject.salontina.Services;
 
 import com.firstyearproject.salontina.Models.Item;
 import com.firstyearproject.salontina.Models.Treatment;
+import com.firstyearproject.salontina.Repositories.ProductRepo;
 import com.firstyearproject.salontina.Repositories.ProductRepoImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ProductServiceImpl implements ProductService{
@@ -44,5 +47,6 @@ public class ProductServiceImpl implements ProductService{
     public boolean editItem(Item item){
         return false;
     }
+
 
 }

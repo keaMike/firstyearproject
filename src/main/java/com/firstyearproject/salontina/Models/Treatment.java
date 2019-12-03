@@ -1,5 +1,9 @@
 package com.firstyearproject.salontina.Models;
 
+import com.firstyearproject.salontina.Repositories.ProductRepoImpl;
+
+import java.util.List;
+
 public class Treatment extends Product {
 
     private int treatmentDuration;
@@ -19,4 +23,5 @@ public class Treatment extends Product {
     public void setTreatmentDuration(int treatmentDuration) {
         this.treatmentDuration = treatmentDuration;
     }
+
 }
