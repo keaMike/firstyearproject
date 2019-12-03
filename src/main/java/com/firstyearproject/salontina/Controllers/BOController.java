@@ -177,9 +177,8 @@ public class BOController {
     @GetMapping("/edituserhistory/{userid}")
     public String editUserHistory(@PathVariable int userid, Model model, HttpSession session) {
         User user = userServiceImpl.getUserById(userid);
-        List<Booking> bookings = bookingServiceImpl.getBookingList(user.getUserId());
+        user.setUserHistory(bookingServiceImpl.getBookingList(user.getUserId()));
         model.addAttribute("user", user);
-        model.addAttribute("bookings", bookings);
         return "edituserhistory";
     }
 
@@ -188,9 +187,9 @@ public class BOController {
     public String saveUserHistory(@ModelAttribute User user) {
         taskResult = userServiceImpl.editUserHistory(user);
         if (taskResult) {
-            return "redirect:/";
-        } else {
             return "edituserhistory";
+        } else {
+            return "edituserhistory/" + user.getUserId();
         }
     }
 }

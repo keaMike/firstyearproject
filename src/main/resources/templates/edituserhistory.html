@@ -18,7 +18,7 @@
             <label for="email">E-Mail</label>
             <input class="form-control" id="email" type="text" readonly th:field="${user.userEmail}">
 
-            <label for="pref">Preferences</label>
+            <label for="pref">Præferencer</label>
             <textarea class="form-control" rows = "10" cols = "50" id="pref" type="text" th:field="${user.userPreference}"></textarea>
             <br>
             <input class="btn btn-dark" value="Gem ændringer" type="submit">
@@ -33,7 +33,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="booking : ${bookings}" th:if="${booking.bookingUserId} == ${user.userId}">
+                    <tr th:each="booking : ${user.userHistory}">
                         <td th:text="${booking.bookingDate}"></td>
                         <td th:text="${booking.bookingComment}"></td>
                         <td th:each="treatment : ${booking.bookingTreatmentList}">
