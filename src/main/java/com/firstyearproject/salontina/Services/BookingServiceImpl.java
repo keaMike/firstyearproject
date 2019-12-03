@@ -1,10 +1,15 @@
 package com.firstyearproject.salontina.Services;
 
 import com.firstyearproject.salontina.Models.Booking;
+import com.firstyearproject.salontina.Models.Treatment;
 import com.firstyearproject.salontina.Repositories.BookingRepoImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -34,5 +39,6 @@ public class BookingServiceImpl implements BookingService{
     public List<Booking> getBookingList(int userId){
         return BR.findBookingsByUserId(userId);
     }
+
 
 }
