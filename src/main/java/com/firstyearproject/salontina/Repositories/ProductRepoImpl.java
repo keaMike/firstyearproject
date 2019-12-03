@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public class ProductRepoImpl implements ProductRepo{
@@ -75,6 +76,34 @@ public class ProductRepoImpl implements ProductRepo{
             repoTaskResult = false;
         }
         return repoTaskResult;
+    }
+
+
+    //Mike
+    public List findAllTreatments() {
+        try {
+            Connection connection = mySQLConnector.openConnection();
+            pstmt = null;
+            pstmt = connection.prepareStatement("SELECT * FROM treatments");
+            ResultSet rs = pstmt.executeQuery();
+            ArrayList treatments = new ArrayList();
+            while(rs.next()) {
+                Treatment t = new Treatment();
+                t.setProductId(rs.getInt(1));
+                t.setProductName(rs.getString(2));
+                t.setProductPrice(rs.getDouble(3));
+                t.setProductDescription(rs.getString(4));
+                t.setTreatmentDuration(rs.getInt(5));
+                t.setProductActive(rs.getBoolean(6));
+                treatments.add(t);
+            }
+            return treatments;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            mySQLConnector.closeConnection();
+        }
+        return null;
     }
 
     //Asbjørn
@@ -196,6 +225,3 @@ public class ProductRepoImpl implements ProductRepo{
         }
         return repoTaskResult;
     }
-
-
-}

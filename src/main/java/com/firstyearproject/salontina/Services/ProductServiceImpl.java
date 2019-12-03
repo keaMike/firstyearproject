@@ -2,12 +2,14 @@ package com.firstyearproject.salontina.Services;
 
 import com.firstyearproject.salontina.Models.Item;
 import com.firstyearproject.salontina.Models.Treatment;
+import com.firstyearproject.salontina.Repositories.ProductRepo;
 import com.firstyearproject.salontina.Repositories.ProductRepoImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.ArrayList;
 
 @Service
@@ -60,7 +62,7 @@ public class ProductServiceImpl implements ProductService{
 
         return pHandlerTaskResult;
     }
-
+  
     //Asbjørn
     @Override
     public boolean createProductArrayLists(ArrayList<Item> itemArrayList, ArrayList<Treatment> treatmentArrayList) {
@@ -69,4 +71,5 @@ public class ProductServiceImpl implements ProductService{
 
         return pHandlerTaskResult;
     }
+
 }

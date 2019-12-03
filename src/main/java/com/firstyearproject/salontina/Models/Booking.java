@@ -7,6 +7,7 @@ public class Booking {
 
     private int bookingId;
     private int bookingUserId;
+    private String bookingTime;
     private Date bookingDate;
     private String bookingComment;
     private List<Treatment> bookingTreatmentList;
@@ -14,9 +15,10 @@ public class Booking {
     public Booking() {
     }
 
-    public Booking(int id, int userId, Date date, String comment, List<Treatment> treatmentList) {
+    public Booking(int id, int userId, String bookingTime, Date date, String comment, List<Treatment> treatmentList) {
         this.bookingId = id;
         this.bookingUserId = userId;
+        this.bookingTime = bookingTime;
         this.bookingDate = date;
         this.bookingComment = comment;
         this.bookingTreatmentList = treatmentList;
@@ -36,6 +38,14 @@ public class Booking {
 
     public void setBookingUserId(int bookingUserId) {
         this.bookingUserId = bookingUserId;
+    }
+
+    public String getBookingTime() {
+        return bookingTime;
+    }
+
+    public void setBookingTime(String bookingTime) {
+        this.bookingTime = bookingTime;
     }
 
     public Date getBookingDate() {
