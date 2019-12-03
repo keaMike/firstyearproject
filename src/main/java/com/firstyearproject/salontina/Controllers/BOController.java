@@ -31,10 +31,9 @@ public class BOController {
     private ArrayList<Item> itemArrayList = new ArrayList<>();
     private ArrayList<Treatment> treatmentArrayList = new ArrayList<>();
     private String REDIRECTREMINDER = "redirect:/" + REMINDER;
-    private boolean taskResult = false;    
   
     @Autowired
-    SMSServiceImpl sMSServiceImpl;
+    SMSServiceImpl smsServiceImpl;
 
     @Autowired
     UserServiceImpl userServiceImpl;

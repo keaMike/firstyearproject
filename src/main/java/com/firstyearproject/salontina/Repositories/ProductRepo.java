@@ -2,7 +2,6 @@ package com.firstyearproject.salontina.Repositories;
 
 import com.firstyearproject.salontina.Models.Item;
 import com.firstyearproject.salontina.Models.Treatment;
-import com.mysql.cj.protocol.Resultset;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;

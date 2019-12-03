@@ -14,17 +14,17 @@ public class UserServiceImpl implements UserService {
     UserRepoImpl UR;
 
     public boolean addUser(User user){
-        boolean userCreated = UR.addUser(user);
-        return userCreated;
+        return UR.addUser(user);
+
     }
 
+    //Mike & Asbjørn
     public boolean deleteUser(int userId){
-        return false;
+        return UR.deleteUser(userId);
     }
 
     public boolean editUser(User user){
-        boolean userEdited = UR.editUser(user);
-        return userEdited;
+        return UR.editUser(user);
     }
 
     public boolean editUserHistory(User user){

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpSession;
@@ -38,7 +39,7 @@ public class FOController {
 
     @GetMapping("/redigerbruger")
     public String redigerUser(HttpSession session, Model model) {
-        User user = (User)session.getAttribute("user");
+        User user =  new User(); //(User)session.getAttribute("user");
         model.addAttribute("userToBeEdited", user);
         return "redigerbruger";
     }
@@ -53,6 +54,13 @@ public class FOController {
     public String userprofile(Model model) {
         model.addAttribute("userToBeViewed", new User());
         return "userprofile";
+    }
+
+    //Mike
+    @GetMapping("/sletbruger/{userid}")
+    public String deleteUser(@PathVariable int userId) {
+        userService.deleteUser(userId);
+        return "redirect:/redigerbruger";
     }
 
 }
