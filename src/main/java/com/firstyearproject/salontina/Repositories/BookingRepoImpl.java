@@ -2,6 +2,7 @@ package com.firstyearproject.salontina.Repositories;
 
 import com.firstyearproject.salontina.Models.Booking;
 import com.firstyearproject.salontina.Models.Treatment;
+import com.firstyearproject.salontina.Services.DatabaseLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +25,18 @@ public class BookingRepoImpl implements BookingRepo{
     @Autowired
     MySQLConnector mySQLConnector;
 
+    @Autowired
+    DatabaseLogger databaseLogger;
+
     //Mike
     public List findBookingsByUserId(int userid) {
         try {
+            String statement =  "SELECT * FROM bookings JOIN bookings_treatment ON " +
+                                "bookings.bookings_id = bookings_treatment.bookings_id JOIN treatments ON " +
+                                "bookings_treatment.treatments_id = treatments.treatments_id WHERE users_id = ?";
+
             con = mySQLConnector.openConnection();
-            pstm = con.prepareStatement("SELECT * FROM bookings JOIN bookings_treatment ON " +
-                    "bookings.bookings_id = bookings_treatment.bookings_id JOIN treatments ON " +
-                    "bookings_treatment.treatments_id = treatments.treatments_id WHERE users_id = ?");
+            pstm = con.prepareStatement(statement);
             pstm.setInt(1, userid);
             ResultSet rs = pstm.executeQuery();
             List<Booking> bookings = new ArrayList<>();
@@ -58,6 +64,9 @@ public class BookingRepoImpl implements BookingRepo{
                 //Add bookings to ArrayList
                 bookings.add(b);
             }
+
+            databaseLogger.writeToLogFile(statement);
+
             return bookings;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -70,10 +79,15 @@ public class BookingRepoImpl implements BookingRepo{
     //Mike
     public boolean deleteBooking(int bookingId) {
         try {
+            String statement = "DELETE FROM bookings WHERE bookings_id = ?";
+
             con = mySQLConnector.openConnection();
-            pstm = con.prepareStatement("DELETE FROM bookings WHERE bookings_id = ?");
+            pstm = con.prepareStatement(statement);
             pstm.setInt(1, bookingId);
             pstm.executeUpdate();
+
+            databaseLogger.writeToLogFile(statement);
+
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
