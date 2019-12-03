@@ -13,12 +13,15 @@ public class User {
     private String userPreference;
     private List<String> userRoles; //Find out about enums
     private List<Booking> userHistory;
+    private String userPassword;
 
     public User() {
     }
 
+
     public User(int userId, String username, String userPassword, int userPhonenumber, boolean userNewsLetter, String userEmail,
                 String userPreference, List<String> userRoles, List<Booking> userHistory) {
+
         this.userId = userId;
         this.username = username;
         this.userPassword = userPassword;
@@ -28,6 +31,8 @@ public class User {
         this.userPreference = userPreference;
         this.userRoles = userRoles;
         this.userHistory = userHistory;
+        this.userPassword = userPassword;
+
     }
 
     public int getUserId() {
@@ -102,6 +107,7 @@ public class User {
         this.userHistory = userHistory;
     }
 
+
     @Override
     public String toString() {
         return "User{" +
@@ -115,5 +121,4 @@ public class User {
                 ", userRoles=" + userRoles +
                 ", userHistory=" + userHistory +
                 '}';
-    }
 }

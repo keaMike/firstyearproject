@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>EditUser</title>
+</head>
+<body>
+<form method="Put" th:method="put" th:action="@{/register}" th:object="${userToBeEdited}">
+    <input type="hidden" th:field="${userToBeEdited.userId}"/>
+    <label class="label">Navn og Efternavn</label>
+    <input class="form-control" type="text" th:field="${userToBeEdited.username}">
+    <br>
+    <label class="label">Telefon nummer</label>
+    <input class="form-control" type="number" th:field="${userToBeEdited.userPhonenumber}">
+    <br>
+    <label class="label">Email</label>
+    <input class="form-control" type="text" th:field="${userToBeEdited.userEmail}">
+    <br>
+    <label class="label">Password</label>
+    <input class="form-control" type="password" th:field="${userToBeEdited.userPassword}">
+    <br>
+    <label class="label">Preferences</label>
+    <input class="form-control" type="text" th:field="${userToBeEdited.userPreference}">
+    <br>
+    <input class="btn btn-dark" type="submit" value="Edit">
+
+
+</form>
+</body>
+</html>

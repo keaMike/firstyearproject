@@ -21,7 +21,8 @@ public class UserServiceImpl implements UserService {
     }
 
     public boolean editUser(User user){
-        return false;
+        boolean userEdited = UR.editUser(user);
+        return userEdited;
     }
 
     public User getDummyUser() {

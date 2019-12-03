@@ -24,8 +24,10 @@ public class BOController {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     private String NEWSLETTER = "newsletter";
+    private String REMINDER = "reminder";
     private String REDIRECTNEWSLETTER = "redirect:/" + NEWSLETTER;
-  
+    private String REDIRECTREMINDER = "redirect:/" + REMINDER;
+
     private boolean taskResult = false;  
   
     @Autowired
@@ -40,10 +42,46 @@ public class BOController {
     @Autowired
     BookingServiceImpl bookingServiceImpl;
 
+    private boolean showConfirmation = false;
+    private String confirmationText = "";
+
+    //Luca
+    @GetMapping("reminder")
+    public String reminder(Model model, HttpSession session){
+        log.info("get reminder action started...");
+
+        if(showConfirmation){
+            model.addAttribute("showconfirmation", true);
+            model.addAttribute("confirmationtext", confirmationText);
+            showConfirmation = false;
+        }
+
+        return REMINDER;
+    }
+
+    @GetMapping("sendreminder")
+    public String sendreminder(Model model, HttpSession session){
+        log.info("post sendreminder action started...");
+
+        if(sMSServiceImpl.sendReminder()){
+            log.info("sms reminder sent successfully...");
+            showConfirmation = true;
+            confirmationText = "SMS Reminder blev sendt.";
+        }
+
+        return REDIRECTREMINDER;
+    }
+
     //Luca
     @GetMapping("newsletter")
     public String newsletter(Model model, HttpSession session){
         log.info("get newsletter action started...");
+
+        if(showConfirmation){
+            model.addAttribute("showconfirmation", true);
+            model.addAttribute("confirmationtext", confirmationText);
+            showConfirmation = false;
+        }
 
         model.addAttribute("newsletter", new Newsletter());
         return NEWSLETTER;
@@ -56,6 +94,9 @@ public class BOController {
 
         if(smsServiceImpl.sendNewsletter(newsletter.getText())){
             log.info("newsletter was successfully sent...");
+
+            showConfirmation = true;
+            confirmationText = "Nyhedsbrev blev sendt.";
         }
         return REDIRECTNEWSLETTER;
     }
@@ -68,29 +109,11 @@ public class BOController {
 
         if(smsServiceImpl.sendNewsletterTest(newsletter.getTestNumber(), newsletter.getText())){
             log.info("newsletter was successfully sent...");
+
+            showConfirmation = true;
+            confirmationText = "Test nyhedsbrev blev sendt.";
         }
         return REDIRECTNEWSLETTER;
-    }
-
-    //Jonathan
-    @GetMapping("/register")
-    public String createUser(Model model) {
-        model.addAttribute("userToBeRegistered", new User());
-        return "register";
-    }
-
-    //Jonathan
-    @PostMapping("/register")
-    public String createUser(@ModelAttribute User user) {
-        userServiceImpl.addUser(user);
-    return "redirect:/login";
-    }
-
-    //Jonathan
-    @GetMapping("/login")
-    public String login(Model model) {
-        model.addAttribute("userToBeRegistered", new User());
-        return "login";
     }
 
     //Asbjørn

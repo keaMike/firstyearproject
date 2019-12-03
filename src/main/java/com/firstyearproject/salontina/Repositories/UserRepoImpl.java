@@ -1,5 +1,7 @@
 package com.firstyearproject.salontina.Repositories;
 
+import com.firstyearproject.salontina.Models.Reminder;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import com.firstyearproject.salontina.Models.User;
@@ -47,16 +50,49 @@ public class UserRepoImpl implements UserRepo{
         return phonenumbers;
     }
 
+    //Luca
+    public List<Reminder> getReminderList(){
+        log.info("getReminderList method started...");
+
+        List<Reminder> reminderList = new ArrayList<>();
+
+        String statement =  "SELECT (SELECT users.users_phonenumber FROM users WHERE users.users_id = bookings.users_id) " +
+                            "AS booking_phonenumber, (SELECT users.users_fullName FROM users WHERE users.users_id = bookings.users_id) " +
+                            "AS booking_name, " +
+                            "bookings_date, " +
+                            "bookings_time " +
+                            "FROM bookings WHERE bookings_date BETWEEN DATE_ADD(CURDATE(), INTERVAL 1 day) AND DATE_ADD(CURDATE(), INTERVAL 1 day);";
+
+        try {
+            PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while(rs.next()){
+                Reminder r = new Reminder();
+                r.setReminderPhonenumber(rs.getString(1));
+                r.setReminderUsername(rs.getString(2));
+                r.setReminderDate(rs.getDate(3));
+                r.setReminderTime(rs.getString(4));
+                reminderList.add(r);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return reminderList;
+    }
+
+    //Jonathan
     public boolean addUser(User user){
-        System.out.println(user.getUsername());
         Boolean userCreated = false;
         try{
             Connection connection = mySQLConnector.openConnection();
-            PreparedStatement pstms = connection.prepareStatement("INSERT INTO users (users_fullName, users_phonenumber, users_email, users_preferences) VALUES(?, ?, ?, ?)");
+            PreparedStatement pstms = connection.prepareStatement("INSERT INTO users (users_fullName, users_phonenumber, users_email, users_preferences, users_password) VALUES(?, ?, ?, ?, ?)");
             pstms.setString(1, user.getUsername());
             pstms.setInt(2, user.getUserPhonenumber());
             pstms.setString(3, user.getUserEmail());
             pstms.setString(4, user.getUserPreference());
+            pstms.setString(5, user.getUserPassword());
             pstms.executeUpdate();
             userCreated = true;
         } catch (Exception E) {
@@ -64,7 +100,6 @@ public class UserRepoImpl implements UserRepo{
         }
         return userCreated;
     }
-
     //Mike
     public User findDummyUser() {
 
@@ -91,6 +126,26 @@ public class UserRepoImpl implements UserRepo{
         }
         log.info(u.toString());
         return u;
+
+    //Jonathan
+    public boolean editUser(User user) {
+        Boolean userEdited = false;
+        try{
+            Connection connection = mySQLConnector.openConnection();
+            PreparedStatement pstms = connection.prepareStatement("UPDATE users SET users_fullName = ?, users_phonenumber = ?, users_email = ?, users_preferences = ?, users_password = ? WHERE users_id = ?;");
+            pstms.setString(1, user.getUsername());
+            pstms.setInt(2,user.getUserPhonenumber());
+            pstms.setString(3,user.getUserEmail());
+            pstms.setString(4,user.getUserPreference());
+            pstms.setString(5, user.getUserPassword());
+            pstms.setInt(6,user.getUserId());
+            pstms.executeUpdate();
+            userEdited = true;
+        } catch (Exception E){
+            E.printStackTrace();
+        }
+
+        return userEdited;
     }
 
 
