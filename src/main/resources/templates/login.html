@@ -1,10 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>login</title>
+    <title>Login</title>
+
+    <link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet" media="screen"/>
+
+    <script th:src="@{/webjars/jquery/3.1.1/jquery.min.js}"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/popper.js/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </head>
 <body>
-login
+    <div class="container">
+        <form th:method="Post" th:action="@{/login}" th:object="${loginToken}">
+            <input type="text" class="form-control" th:field="${loginToken.loginTokenUsername}" required>
+            <input type="password" class="form-control" th:field="${loginToken.loginTokenPassword}" required>
+            <input class="btn btn-primary" type="submit" value="Login"/>
+        </form>
+    </div>
 </body>
 </html>
