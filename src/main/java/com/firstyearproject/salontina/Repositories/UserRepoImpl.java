@@ -1,6 +1,5 @@
 package com.firstyearproject.salontina.Repositories;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import com.firstyearproject.salontina.Models.User;
-import org.springframework.stereotype.Repository;
 
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.Random;
 
 @Repository
@@ -25,6 +20,7 @@ public class UserRepoImpl implements UserRepo{
 
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
+    private PreparedStatement pstm;
 
     @Autowired
     MySQLConnector mySQLConnector;
@@ -73,13 +69,14 @@ public class UserRepoImpl implements UserRepo{
     public User findDummyUser() {
 
         Random rand = new Random();
-        int randInt = rand.nextInt(18);
+        int randInt = rand.nextInt(17) + 1;
         User u = new User();
         try {
             Connection con = mySQLConnector.openConnection();
-            PreparedStatement pstm = con.prepareStatement("SELECT * FROM users WHERE users_id = " + randInt);
+            pstm = null;
+            pstm = con.prepareStatement("SELECT * FROM users WHERE users_id = ?");
+            pstm.setInt(1, randInt);
             ResultSet rs = pstm.executeQuery();
-            pstm.close();
             while(rs.next()) {
                 u.setUserId(rs.getInt(1));
                 u.setUsername(rs.getString(2));
@@ -87,6 +84,7 @@ public class UserRepoImpl implements UserRepo{
                 u.setUserEmail(rs.getString(4));
                 u.setUserPreference(rs.getString(5));
             }
+            pstm.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
