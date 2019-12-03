@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Opret Produkt</title>
+    <link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet" media="screen"/>
+    <script th:src="@{/webjars/jquery/3.1.1/jquery.min.js}"></script>
 </head>
 <body>
-
+<div th:include = "fragments/header :: navbar"></div>
 <a class="btn btn-success" th:href="${'/createTreatment'}">Opret behandling</a>
 <a class="btn btn-success" th:href="${'/createItem'}">Opret Produkt</a>
 

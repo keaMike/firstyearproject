@@ -183,6 +183,14 @@ public class BOController {
             return "createTreatment";
         }
     }
+
+    //Mike
+    @GetMapping("/kontrolpanel")
+    public String controlpanel() {
+        return "controlpanel";
+    }
+}
+
   
     //Asbjørn
     @GetMapping ("/displayProducts")

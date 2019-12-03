@@ -1,0 +1,83 @@
+.controlpaneltitle {
+    display: block;
+    text-align: center;
+    margin: 50px auto;
+}
+
+.boxcontainer {
+    position: relative;
+    width: 930px;
+    height: 300px;
+    margin: 50px auto;
+}
+
+.boxcontainer .box {
+    position: relative;
+    width: calc(300px - 30px);
+    height: calc(200px - 30px);
+    background: #555a5c;
+    float: left;
+    margin: 15px;
+    box-sizing: border-box;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.boxcontainer .box .boxicon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: 0.5s;
+    background: #292b2c;
+    z-index: 1;
+}
+
+.boxcontainer .box:hover .boxicon {
+    top: 20px;
+    left: calc(50% - 40px);
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+
+}
+
+.boxcontainer .box .boxicon .fas {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 80px;
+    transition: 0.5s;
+    color: white;
+}
+
+.boxcontainer .box:hover .boxicon .fas {
+    font-size: 40px;
+}
+
+.boxcontainer .box:hover .boxicon .fas .png {
+    padding: 20px;
+}
+
+.boxcontainer .box .boxcontent {
+    position: absolute;
+    top: 100%;
+    height: calc(100% - 100px);
+    padding: 20px;
+    box-sizing: border-box;
+    text-align: center;
+    transition: 0.5s;
+}
+
+.boxcontainer .box:hover .boxcontent {
+    top: 100px;
+}
+
+.boxcontainer .box .boxcontent h3 {
+    margin: 0 0 10px;
+    padding: 0;
+    color: white;
+    font-size: 24px;
+}
