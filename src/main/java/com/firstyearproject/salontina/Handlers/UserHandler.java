@@ -19,7 +19,8 @@ public class UserHandler {
     }
 
     public boolean editUser(User user){
-        return false;
+        boolean userEdited = UR.editUser(user);
+        return userEdited;
     }
 
 }

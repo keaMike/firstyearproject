@@ -13,11 +13,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import com.firstyearproject.salontina.Models.User;
-import org.springframework.stereotype.Repository;
 
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 
 @Repository
 public class UserRepo {
@@ -49,17 +45,17 @@ public class UserRepo {
         }
         return phonenumbers;
     }
-
+    //Jonathan
     public boolean addUser(User user){
-        System.out.println(user.getUsername());
         Boolean userCreated = false;
         try{
             Connection connection = mySQLConnector.openConnection();
-            PreparedStatement pstms = connection.prepareStatement("INSERT INTO users (users_fullName, users_phonenumber, users_email, users_preferences) VALUES(?, ?, ?, ?)");
+            PreparedStatement pstms = connection.prepareStatement("INSERT INTO users (users_fullName, users_phonenumber, users_email, users_preferences, users_password) VALUES(?, ?, ?, ?, ?)");
             pstms.setString(1, user.getUsername());
             pstms.setInt(2, user.getUserPhonenumber());
             pstms.setString(3, user.getUserEmail());
             pstms.setString(4, user.getUserPreference());
+            pstms.setString(5, user.getUserPassword());
             pstms.executeUpdate();
             userCreated = true;
         } catch (Exception E) {
@@ -68,5 +64,25 @@ public class UserRepo {
         return userCreated;
     }
 
+    //Jonathan
+    public boolean editUser(User user) {
+        Boolean userEdited = false;
+        try{
+            Connection connection = mySQLConnector.openConnection();
+            PreparedStatement pstms = connection.prepareStatement("UPDATE users SET users_fullName = ?, users_phonenumber = ?, users_email = ?, users_preferences = ?, users_password = ? WHERE users_id = ?;");
+            pstms.setString(1, user.getUsername());
+            pstms.setInt(2,user.getUserPhonenumber());
+            pstms.setString(3,user.getUserEmail());
+            pstms.setString(4,user.getUserPreference());
+            pstms.setString(5, user.getUserPassword());
+            pstms.setInt(6,user.getUserId());
+            pstms.executeUpdate();
+            userEdited = true;
+        } catch (Exception E){
+            E.printStackTrace();
+        }
+
+        return userEdited;
+    }
 
 }

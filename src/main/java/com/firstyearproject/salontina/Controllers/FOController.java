@@ -45,7 +45,7 @@ public class FOController {
 
     @PostMapping("/redigerbruger")
     public String redigerbruger(@ModelAttribute User user) {
-        userHandler.addUser(user);
+        userHandler.editUser(user);
         return "redirect:/userprofile";
     }
 
@@ -54,4 +54,5 @@ public class FOController {
         model.addAttribute("userToBeViewed", new User());
         return "userprofile";
     }
+
 }
