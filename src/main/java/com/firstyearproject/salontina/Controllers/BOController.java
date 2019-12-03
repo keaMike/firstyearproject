@@ -28,15 +28,14 @@ public class BOController {
 
     private String NEWSLETTER = "newsletter";
     private String REDIRECTNEWSLETTER = "redirect:/" + NEWSLETTER;
-  
-    private boolean taskResult = false;  
+    private boolean taskResult = false;
+    private ArrayList<Item> itemArrayList = new ArrayList<>();
+    private ArrayList<Treatment> treatmentArrayList = new ArrayList<>();
   
     @Autowired
     SMSServiceImpl sMSServiceImpl;
-  
     @Autowired
     UserServiceImpl userServiceImpl;
-
     @Autowired
     ProductServiceImpl productServiceImpl;
 
@@ -144,25 +143,23 @@ public class BOController {
     //Asbjørn
     @GetMapping ("/displayProducts")
     public String displayProducts (Model model, HttpSession session) {
-        ArrayList<Item> itemArrayList = new ArrayList<>();
-        ArrayList<Treatment> treatmentArrayList = new ArrayList<>();
-
         taskResult = productServiceImpl.createProductArrayLists(itemArrayList, treatmentArrayList);
         model.addAttribute("treatments", treatmentArrayList);
         model.addAttribute("items", itemArrayList);
+
         return "displayProducts";
     }
 
     //Asbjørn
     @GetMapping ("/editTreatment/{id}")
-    public String editProduct (@PathVariable ("id") int id, Model model, ArrayList treatmentArrayList) {
+    public String editTreatment (@PathVariable ("id") int id, Model model, HttpSession session) {
         model.addAttribute("treatments", treatmentArrayList.get(id-1));
-        return "editProduct";
+        return "editTreatment";
     }
 
     //Asbjørn
     @PostMapping ("/editTreatment")
-    public String editProduct (@ModelAttribute Treatment treatment) {
+    public String editTreatment (@ModelAttribute Treatment treatment) {
         taskResult = productServiceImpl.editTreatment(treatment);
         if (taskResult) {
             return "redirect:/";
@@ -173,9 +170,9 @@ public class BOController {
 
     //Asbjørn
     @GetMapping ("/editItem/{id}")
-    public String editItem (@PathVariable ("id") int id, Model model, ArrayList itemArrayList) {
+    public String editItem (@PathVariable ("id") int id, Model model, HttpSession session) {
         model.addAttribute("items", itemArrayList.get(id-1));
-        return "editProduct";
+        return "editItem";
     }
 
     //Asbjørn

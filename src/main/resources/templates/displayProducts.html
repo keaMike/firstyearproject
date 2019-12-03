@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Produkter</title>
+    <link th:href="@{/webjars/bootstrap/4.0.0/css/bootstrap.min.css}" rel="stylesheet" media="screen"/>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 </head>
 <body>
 
@@ -15,18 +17,20 @@
             <th>Pris</th>
             <th>Varighed</th>
             <th>Beskrivelse</th>
+            <th>Aktiv</th>
             <th>Rediger</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="treatment: ${treatments}">
-            <td th:text="${treatment.productID}"></td>
+            <td th:text="${treatment.productId}"></td>
             <td th:text="${treatment.productName}"></td>
             <td th:text="${treatment.productPrice} + DK"></td>
-            <td th:text="${treatment.treatmentDuration}"></td>
+            <td th:text="${treatment.treatmentDuration} +  min"></td>
             <td th:text="${treatment.productDescription}"></td>
+            <td th:text="${treatment.productActive}"></td>
             <td>
-                <a class="fa fa-pencil-square-o" th:href="${'editTreatment/' + treatment.productID}"></a>
+                <a class="fa fa-pencil-square-o" th:href="${'editTreatment/' + treatment.productId}"></a>
             </td>
         </tr>
         </tbody>
@@ -42,23 +46,28 @@
             <th>Pris</th>
             <th>Antal på lager</th>
             <th>Beskrivelse</th>
+            <th>Aktiv</th>
             <th>Rediger</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="item: ${items}">
-            <td th:text="${item.productID}"></td>
+            <td th:text="${item.productId}"></td>
             <td th:text="${item.productName}"></td>
             <td th:text="${item.productPrice} + DK"></td>
             <td th:text="${item.itemQuantity}"></td>
-            <td th:text="${treatment.productDescription}"></td>
+            <td th:text="${item.productDescription}"></td>
+            <td th:text="${item.productActive}"></td>
             <td>
-                <a class="fa fa-pencil-square-o" th:href="${'editItem/' + item.productID}"></a>
+                <a class="fa fa-pencil-square-o" th:href="${'editItem/' + item.productId}"></a>
             </td>
         </tr>
         </tbody>
     </table>
 </div>
+
+<script th:src="@{/webjars/jquery/3.1.1/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/4.0.0/bootstrap.js}"></script>
 
 </body>
 </html>

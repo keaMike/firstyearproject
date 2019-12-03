@@ -20,6 +20,7 @@ public class ProductServiceImpl implements ProductService{
     ProductRepoImpl productRepoImplManager;
 
     //Asbjørn
+    @Override
     public boolean createTreatment(Treatment treatment){
         pHandlerTaskResult = productRepoImplManager.createTreatment(treatment);
         log.info(String.valueOf(pHandlerTaskResult));
@@ -30,11 +31,17 @@ public class ProductServiceImpl implements ProductService{
         return false;
     }
 
+    //Asbjørn
+    @Override
     public boolean editTreatment(Treatment treatment){
-        return false;
+
+        pHandlerTaskResult = productRepoImplManager.editTreatment(treatment);
+
+        return pHandlerTaskResult;
     }
 
     //Asbjørn
+    @Override
     public boolean createItem(Item item){
         pHandlerTaskResult = productRepoImplManager.createItem(item);
         log.info(String.valueOf(pHandlerTaskResult));
@@ -45,8 +52,13 @@ public class ProductServiceImpl implements ProductService{
         return false;
     }
 
+    //Asbjørn
+    @Override
     public boolean editItem(Item item){
-        return false;
+
+        pHandlerTaskResult = productRepoImplManager.editItem(item);
+
+        return pHandlerTaskResult;
     }
 
     //Asbjørn
