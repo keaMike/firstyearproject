@@ -8,19 +8,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 @Repository
 public class ProductRepoImpl implements ProductRepo{
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     private PreparedStatement pstmt;
-    private Connection connection;
-    public boolean repoTaskResult = false;
+    private boolean repoTaskResult = false;
+    private Statement stmt;
 
     @Autowired
     MySQLConnector mySQLConnector;
 
     //Asbjørn
+    @Override
     public boolean createItem (Item item) {
         try {
             Connection connection = mySQLConnector.openConnection();
@@ -37,7 +39,7 @@ public class ProductRepoImpl implements ProductRepo{
             log.info(String.valueOf(pstmt));
 
             pstmt.executeUpdate();
-            pstmt.close();
+            mySQLConnector.closeConnection();
             repoTaskResult = true;
 
         } catch (SQLException e) {
@@ -48,6 +50,7 @@ public class ProductRepoImpl implements ProductRepo{
     }
 
     //Asbjørn
+    @Override
     public boolean createTreatment (Treatment treatment) {
         try {
             Connection connection = mySQLConnector.openConnection();
@@ -64,7 +67,7 @@ public class ProductRepoImpl implements ProductRepo{
             log.info(String.valueOf(pstmt));
 
             pstmt.executeUpdate();
-            pstmt.close();
+            mySQLConnector.closeConnection();
             repoTaskResult = true;
 
         } catch (SQLException e) {
@@ -73,4 +76,126 @@ public class ProductRepoImpl implements ProductRepo{
         }
         return repoTaskResult;
     }
+
+    //Asbjørn
+    @Override
+    public boolean createProductArrayLists(ArrayList<Item> itemArrayList, ArrayList<Treatment> treatmentArrayList) {
+        stmt = null;
+        String itemQuery = "SELECT items_id, items_name, items_price, items_description, items_quantity, items_active " +
+                "FROM salon_tina_database.items";
+
+        String treatmentQuery = "SELECT treatments_id, treatments_name, treatments_price, treatments_description, " +
+                "treatments_duration, treatments_active " +
+                "FROM salon_tina_database.treatments";
+        try{
+            Connection connection = mySQLConnector.openConnection();
+
+            stmt = connection.createStatement();
+            ResultSet rsItems = stmt.executeQuery(itemQuery);
+            insertIntoItemArrayList(itemArrayList, rsItems);
+
+            ResultSet rsTreatments = stmt.executeQuery(treatmentQuery);
+            insertIntoTreatmentArrayList(treatmentArrayList, rsTreatments);
+
+            repoTaskResult = true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            repoTaskResult = false;
+        }
+        return repoTaskResult;
+    }
+
+    //Asbjørn
+    @Override
+    public void insertIntoItemArrayList(ArrayList<Item> itemArrayList, ResultSet rsItems) {
+        try {
+            itemArrayList.clear();
+            while (rsItems.next()){
+                int productID = rsItems.getInt("items_id");
+                String productName = rsItems.getString("items_name");
+                String productDescription = rsItems.getString("items_description");
+                double productPrice  = rsItems.getDouble("items_price");
+                boolean productActive = rsItems.getBoolean("items_active");
+                int itemQuantity = rsItems.getInt("items_quantity");
+                itemArrayList.add(new Item(productID, productName, productDescription, productPrice, productActive, itemQuantity));
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void insertIntoTreatmentArrayList(ArrayList<Treatment> treatmentArrayList, ResultSet rsTreatments) {
+        try {
+            treatmentArrayList.clear();
+            while (rsTreatments.next()){
+                int productID = rsTreatments.getInt("treatments_id");
+                String productName = rsTreatments.getString("treatments_name");
+                String productDescription = rsTreatments.getString("treatments_description");
+                double productPrice  = rsTreatments.getDouble("treatments_price");
+                boolean productActive = rsTreatments.getBoolean("treatments_active");
+                int treatmentDuration = rsTreatments.getInt("treatments_duration");
+                treatmentArrayList.add(new Treatment(productID, productName, productDescription, productPrice, productActive, treatmentDuration));
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    //Asbjørn
+    @Override
+    public boolean editItem(Item item) {
+        try {
+            Connection connection = mySQLConnector.openConnection();
+            pstmt = null;
+            pstmt = connection.prepareStatement("UPDATE salon_tina_database.items " +
+                    "SET items_name = ?, items_price = ?, items_quantity = ?, items_description = ?, items_active = ? " +
+                    "WHERE items_id = ?");
+            pstmt.setString(1, item.getProductName());
+            pstmt.setDouble(2, item.getProductPrice());
+            pstmt.setInt(3, item.getItemQuantity());
+            pstmt.setString(4, item.getProductDescription());
+            pstmt.setBoolean(5, item.isProductActive());
+            pstmt.setInt(6, item.getProductId());
+
+            pstmt.executeUpdate();
+            mySQLConnector.closeConnection();
+            repoTaskResult = true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            repoTaskResult = false;
+        }
+        return repoTaskResult;
+    }
+
+    //Asbjørn
+    @Override
+    public boolean editTreatment(Treatment treatment) {
+        try {
+            Connection connection = mySQLConnector.openConnection();
+            pstmt = null;
+            pstmt = connection.prepareStatement("UPDATE salon_tina_database.treatments " +
+                    "SET treatments_name = ?, treatments_price = ?, treatments_duration, treatments_description = ?, " +
+                    "treatments_active = ?, treatments_id = ? " +
+                    "WHERE treatments_id = ?");
+            pstmt.setString(1, treatment.getProductName());
+            pstmt.setDouble(2, treatment.getProductPrice());
+            pstmt.setInt(3, treatment.getTreatmentDuration());
+            pstmt.setString(4, treatment.getProductDescription());
+            pstmt.setBoolean(5, treatment.isProductActive());
+            pstmt.setInt(6, treatment.getProductId());
+
+            pstmt.executeUpdate();
+            mySQLConnector.closeConnection();
+            repoTaskResult = true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            repoTaskResult = false;
+        }
+        return repoTaskResult;
+    }
+
+
 }

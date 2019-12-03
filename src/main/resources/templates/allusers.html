@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Salon-Tina</title>
+    <link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet" media="screen"/>
+    <script src="https://kit.fontawesome.com/af932a1361.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container">
+        <table class="table table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Fulde navn</th>
+                    <th>Telefon nr.</th>
+                    <th>E-Mail</th>
+                    <th>Rediger historik</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="user : ${users}">
+                    <td th:text="${user.username}"></td>
+                    <td th:text="${user.userPhonenumber}"></td>
+                    <td th:text="${user.userEmail}"></td>
+                    <td><a th:href="@{'/edituserhistory/' + ${user.userId}}"><i class="fas fa-book"></i></a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
