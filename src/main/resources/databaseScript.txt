@@ -5,29 +5,30 @@ USE salon_tina_database;
 CREATE TABLE IF NOT EXISTS users(
     users_id INT AUTO_INCREMENT UNIQUE NOT NULL,
     users_fullName VARCHAR(100) NOT NULL,
+    users_password VARCHAR(100) NOT NULL,
     users_phonenumber INT NOT NULL UNIQUE,
     users_email VARCHAR(50) NOT NULL UNIQUE,
     users_preferences TEXT
 );
 
-INSERT INTO users (users_fullName, users_phonenumber, users_email) VALUES
-('admin', 100000001, 'admin@admin.com'),
-('Frisør', 10000002, 'frisør@salon.dk'),
-('Adam Hansen', 67426732, 'AdamnHansen@gmail.com'),
-('Alexa Korsberg', 88214321, 'AlexaKorsberg@gmail.com'),
-('Andrea Munck', 56867845, 'AndreaMunch@gmail.com'),
-('Martin Lund', 75849762, 'MartinLund@gmail.com'),
-('Trine Zedeler', 23536148, 'TrineZedeler@gmail.com'),
-('Jonas Olczyk', 21135362, 'JonasOlczyk@gmail.com'),
-('Anders Steen Thranum', 86235142, 'AndersThranum@hotmail.com'),
-('Morten Brander Knudsen', 65221147, 'Morten@knudsen.dk'),
-('Christian De Freiesleben Røssel', 40025684, 'Christan@Røssel.dk'),
-('Wen Hao Xuan', 20124254, 'WenHaoXuan@gmail.com'),
-('Emilie Riisberg', 30689885, 'EmilieRis@gmail.com'),
-('Stefan Hansen', 45879586, 'Stefan@hansen.com'),
-('Otto Linnet', 78424006, 'OttoLinnet@gmail.com'),
-('Harald Welling', 62545212, 'Harald@Welling.com'),
-('Chris Raahauge DeStantis', 20024578, 'Chris@DeStantis.com');
+INSERT INTO users (users_fullName, users_password, users_phonenumber, users_email) VALUES
+('admin', 'admin', 100000001, 'admin@admin.com'),
+('Frisør', 'frisør', 10000002, 'frisør@salon.dk'),
+('Adam Hansen', 'AH' 67426732, 'AdamnHansen@gmail.com'),
+('Alexa Korsberg', 'AK', 88214321, 'AlexaKorsberg@gmail.com'),
+('Andrea Munck', 'AM', 56867845, 'AndreaMunch@gmail.com'),
+('Martin Lund', 'ML', 75849762, 'MartinLund@gmail.com'),
+('Trine Zedeler', 'TZ', 23536148, 'TrineZedeler@gmail.com'),
+('Jonas Olczyk', 'JO', 21135362, 'JonasOlczyk@gmail.com'),
+('Anders Steen Thranum', 'AST', 86235142, 'AndersThranum@hotmail.com'),
+('Morten Brander Knudsen', 'MBK', 65221147, 'Morten@knudsen.dk'),
+('Christian De Freiesleben Røssel', 'CDFR', 40025684, 'Christan@Røssel.dk'),
+('Wen Hao Xuan', 'WHX', 20124254, 'WenHaoXuan@gmail.com'),
+('Emilie Riisberg', 'ER', 30689885, 'EmilieRis@gmail.com'),
+('Stefan Hansen', 'SH', 45879586, 'Stefan@hansen.com'),
+('Otto Linnet', 'OL', 78424006, 'OttoLinnet@gmail.com'),
+('Harald Welling', 'HW', 62545212, 'Harald@Welling.com'),
+('Chris Raahauge DeStantis', 'CRD', 20024578, 'Chris@DeStantis.com');
 
 CREATE TABLE IF NOT EXISTS users_archive(
     users_id INT UNIQUE NOT NULL,

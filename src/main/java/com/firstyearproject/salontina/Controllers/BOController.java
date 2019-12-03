@@ -12,13 +12,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-
 public class BOController {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
@@ -26,16 +27,17 @@ public class BOController {
     private String NEWSLETTER = "newsletter";
     private String REMINDER = "reminder";
     private String REDIRECTNEWSLETTER = "redirect:/" + NEWSLETTER;
+    private boolean taskResult = false;
+    private ArrayList<Item> itemArrayList = new ArrayList<>();
+    private ArrayList<Treatment> treatmentArrayList = new ArrayList<>();
     private String REDIRECTREMINDER = "redirect:/" + REMINDER;
-
-    private boolean taskResult = false;  
+    private boolean taskResult = false;    
   
     @Autowired
-    SMSServiceImpl smsServiceImpl;
-  
+    SMSServiceImpl sMSServiceImpl;
+
     @Autowired
     UserServiceImpl userServiceImpl;
-
     @Autowired
     ProductServiceImpl productServiceImpl;
 
@@ -163,7 +165,52 @@ public class BOController {
             return "createTreatment";
         }
     }
+  
+    //Asbjørn
+    @GetMapping ("/displayProducts")
+    public String displayProducts (Model model, HttpSession session) {
+        taskResult = productServiceImpl.createProductArrayLists(itemArrayList, treatmentArrayList);
+        model.addAttribute("treatments", treatmentArrayList);
+        model.addAttribute("items", itemArrayList);
 
+        return "displayProducts";
+    }
+
+    //Asbjørn
+    @GetMapping ("/editTreatment/{id}")
+    public String editTreatment (@PathVariable ("id") int id, Model model, HttpSession session) {
+        model.addAttribute("treatments", treatmentArrayList.get(id-1));
+        return "editTreatment";
+    }
+
+    //Asbjørn
+    @PostMapping ("/editTreatment")
+    public String editTreatment (@ModelAttribute Treatment treatment) {
+        taskResult = productServiceImpl.editTreatment(treatment);
+        if (taskResult) {
+            return "redirect:/";
+        } else {
+            return "displayProduct";
+        }
+    }
+
+    //Asbjørn
+    @GetMapping ("/editItem/{id}")
+    public String editItem (@PathVariable ("id") int id, Model model, HttpSession session) {
+        model.addAttribute("items", itemArrayList.get(id-1));
+        return "editItem";
+    }
+
+    //Asbjørn
+    @PostMapping ("/editItem")
+    public String editItem (@ModelAttribute Item item) {
+        taskResult = productServiceImpl.editItem(item);
+        if (taskResult) {
+            return "redirect:/";
+        } else {
+            return "displayProduct";
+        }
+    }
     //Mike
     @GetMapping("/edituserhistory")
     public String editUserHistory(Model model, HttpSession session) {
