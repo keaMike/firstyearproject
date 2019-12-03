@@ -6,20 +6,24 @@ import com.firstyearproject.salontina.Models.User;
 import com.firstyearproject.salontina.Services.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 import javax.servlet.http.HttpSession;
-import java.awt.print.Book;
 import java.util.List;
 
 @Controller
 public class FOController {
+
+
+    private boolean taskResult = false;
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -30,8 +34,11 @@ public class FOController {
     private String REGISTER = "register";
     private String REDIRECTREGISTER = "redirect:/" + REGISTER;
 
+
     @Autowired
     UserServiceImpl userService;
+    @Autowired
+    BookingServiceImpl bookingService;
 
     @Autowired
     ProductServiceImpl productService;
@@ -89,6 +96,28 @@ public class FOController {
         return "userprofile";
     }
 
+    //Mike
+    @GetMapping("/minebookings")
+    public String userbookings(Model model, HttpSession session) {
+        //Test user
+        User user = userService.getUserById(3);
+        List<Booking> bookings = bookingService.getBookingList(user.getUserId());
+        model.addAttribute("bookings", bookings);
+        model.addAttribute("user", user);
+        return "mybookings";
+    }
+
+    //Mike
+    @GetMapping("/sletbooking/{bookingid}")
+    public String deleteuserbooking(@PathVariable int bookingid) {
+        taskResult = bookingService.deleteBooking(bookingid);
+        if (taskResult) {
+            return "redirect:/minebookings";
+        } else {
+            return "mybookings";
+        }
+    }
+
     //Jonathan
     @GetMapping("vælgtreatment")
     public String vælgBooking(Model model) {
@@ -122,4 +151,5 @@ public class FOController {
         model.addAttribute("booking", booking);
         return "bookingconfirmation";
     }
+
 }

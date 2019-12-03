@@ -21,6 +21,7 @@ public class UserServiceImpl implements UserService {
     @Value("${hashing.salt}")
     private String hashingSalt;
 
+    //Jonathan
     public boolean addUser(User user){
         user.setUserPassword(hashPassword(user.getUserPassword()));
         boolean userCreated = UR.addUser(user);
@@ -31,30 +32,37 @@ public class UserServiceImpl implements UserService {
         return false;
     }
 
+    //Jonathan
     public boolean editUser(User user){
         user.setUserPassword(hashPassword(user.getUserPassword()));
         boolean userEdited = UR.editUser(user);
         return userEdited;
     }
 
+    //Mike
+
     public User authenticateUser(LoginToken loginToken) {
         loginToken.setLoginTokenPassword(hashPassword(loginToken.getLoginTokenPassword()));
         return UR.authenticateUser(loginToken);
     }
+
 
     public boolean editUserHistory(User user){
         boolean userEdited = UR.editUserHistory(user);
         return userEdited;
     }
 
+    //Mike
     public List<User> getAllUsers() {
         return UR.findAllUsers();
     }
 
+    //Mike
     public User getUserById(int userid) {
         return UR.findUserById(userid);
     }
 
+    //Luca
     public String hashPassword(String password){
         if(password == null){
             return null;
