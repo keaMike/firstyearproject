@@ -6,27 +6,34 @@ public class User {
 
     private int userId;
     private String username;
+    private String userPassword;
     private int userPhonenumber;
     private boolean userNewsLetter;
     private String userEmail;
     private String userPreference;
     private List<String> userRoles; //Find out about enums
     private List<Booking> userHistory;
+    private String userPassword;
 
     public User() {
     }
 
-    public User(int userId, String username, int userPhonenumber, boolean userNewsLetter, String userEmail, String userPreference, List<String> userRoles, List<Booking> userHistory) {
+
+    public User(int userId, String username, String userPassword, int userPhonenumber, boolean userNewsLetter, String userEmail,
+                String userPreference, List<String> userRoles, List<Booking> userHistory) {
+
         this.userId = userId;
         this.username = username;
+        this.userPassword = userPassword;
         this.userPhonenumber = userPhonenumber;
         this.userNewsLetter = userNewsLetter;
         this.userEmail = userEmail;
         this.userPreference = userPreference;
         this.userRoles = userRoles;
         this.userHistory = userHistory;
-    }
+        this.userPassword = userPassword;
 
+    }
 
     public int getUserId() {
         return userId;
@@ -42,6 +49,14 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getUserPassword() {
+        return userPassword;
+    }
+
+    public void setUserPassword(String userPassword) {
+        this.userPassword = userPassword;
     }
 
     public int getUserPhonenumber() {
@@ -91,4 +106,19 @@ public class User {
     public void setUserHistory(List<Booking> userHistory) {
         this.userHistory = userHistory;
     }
+
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", username='" + username + '\'' +
+                ", userPassword='" + userPassword + '\'' +
+                ", userPhonenumber=" + userPhonenumber +
+                ", userNewsLetter=" + userNewsLetter +
+                ", userEmail='" + userEmail + '\'' +
+                ", userPreference='" + userPreference + '\'' +
+                ", userRoles=" + userRoles +
+                ", userHistory=" + userHistory +
+                '}';
 }

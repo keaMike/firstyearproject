@@ -1,12 +1,10 @@
 package com.firstyearproject.salontina.Controllers;
 
+import com.firstyearproject.salontina.Models.*;
+import com.firstyearproject.salontina.Services.BookingServiceImpl;
 import com.firstyearproject.salontina.Services.SMSServiceImpl;
-import com.firstyearproject.salontina.Models.Newsletter;
 import com.firstyearproject.salontina.Services.UserServiceImpl;
-import com.firstyearproject.salontina.Models.User;
 import com.firstyearproject.salontina.Services.ProductServiceImpl;
-import com.firstyearproject.salontina.Models.Item;
-import com.firstyearproject.salontina.Models.Treatment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,30 +17,73 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.List;
 
 @Controller
-
 public class BOController {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     private String NEWSLETTER = "newsletter";
+    private String REMINDER = "reminder";
     private String REDIRECTNEWSLETTER = "redirect:/" + NEWSLETTER;
     private boolean taskResult = false;
     private ArrayList<Item> itemArrayList = new ArrayList<>();
     private ArrayList<Treatment> treatmentArrayList = new ArrayList<>();
+    private String REDIRECTREMINDER = "redirect:/" + REMINDER;
+    private boolean taskResult = false;    
   
     @Autowired
     SMSServiceImpl sMSServiceImpl;
+
     @Autowired
     UserServiceImpl userServiceImpl;
     @Autowired
     ProductServiceImpl productServiceImpl;
 
+    @Autowired
+    BookingServiceImpl bookingServiceImpl;
+
+    private boolean showConfirmation = false;
+    private String confirmationText = "";
+
+    //Luca
+    @GetMapping("reminder")
+    public String reminder(Model model, HttpSession session){
+        log.info("get reminder action started...");
+
+        if(showConfirmation){
+            model.addAttribute("showconfirmation", true);
+            model.addAttribute("confirmationtext", confirmationText);
+            showConfirmation = false;
+        }
+
+        return REMINDER;
+    }
+
+    @GetMapping("sendreminder")
+    public String sendreminder(Model model, HttpSession session){
+        log.info("post sendreminder action started...");
+
+        if(sMSServiceImpl.sendReminder()){
+            log.info("sms reminder sent successfully...");
+            showConfirmation = true;
+            confirmationText = "SMS Reminder blev sendt.";
+        }
+
+        return REDIRECTREMINDER;
+    }
+
     //Luca
     @GetMapping("newsletter")
     public String newsletter(Model model, HttpSession session){
         log.info("get newsletter action started...");
+
+        if(showConfirmation){
+            model.addAttribute("showconfirmation", true);
+            model.addAttribute("confirmationtext", confirmationText);
+            showConfirmation = false;
+        }
 
         model.addAttribute("newsletter", new Newsletter());
         return NEWSLETTER;
@@ -53,8 +94,11 @@ public class BOController {
     public String sendNewsletter(Model model, HttpSession session, @ModelAttribute Newsletter newsletter){
         log.info("post newsletter action started...");
 
-        if(sMSServiceImpl.sendNewsletter(newsletter.getText())){
+        if(smsServiceImpl.sendNewsletter(newsletter.getText())){
             log.info("newsletter was successfully sent...");
+
+            showConfirmation = true;
+            confirmationText = "Nyhedsbrev blev sendt.";
         }
         return REDIRECTNEWSLETTER;
     }
@@ -65,31 +109,13 @@ public class BOController {
                                      @ModelAttribute Newsletter newsletter){
         log.info("post newsletter action started...");
 
-        if(sMSServiceImpl.sendNewsletterTest(newsletter.getTestNumber(), newsletter.getText())){
+        if(smsServiceImpl.sendNewsletterTest(newsletter.getTestNumber(), newsletter.getText())){
             log.info("newsletter was successfully sent...");
+
+            showConfirmation = true;
+            confirmationText = "Test nyhedsbrev blev sendt.";
         }
         return REDIRECTNEWSLETTER;
-    }
-
-    //Jonathan
-    @GetMapping("/register")
-    public String createUser(Model model) {
-        model.addAttribute("userToBeRegistered", new User());
-        return "register";
-    }
-
-    //Jonathan
-    @PostMapping("/register")
-    public String createUser(@ModelAttribute User user) {
-        userServiceImpl.addUser(user);
-    return "redirect:/login";
-    }
-
-    //Jonathan
-    @GetMapping("/login")
-    public String login(Model model) {
-        model.addAttribute("userToBeRegistered", new User());
-        return "login";
     }
 
     //Asbjørn
@@ -139,7 +165,7 @@ public class BOController {
             return "createTreatment";
         }
     }
-
+  
     //Asbjørn
     @GetMapping ("/displayProducts")
     public String displayProducts (Model model, HttpSession session) {
@@ -184,5 +210,21 @@ public class BOController {
         } else {
             return "displayProduct";
         }
+    }
+    //Mike
+    @GetMapping("/edituserhistory")
+    public String editUserHistory(Model model, HttpSession session) {
+        User user = userServiceImpl.getDummyUser();
+        List<Booking> bookings = bookingServiceImpl.getBookingList(user.getUserId());
+        model.addAttribute("user", user);
+        model.addAttribute("bookings", bookings);
+        return "edituserhistory";
+    }
+
+    //Mike
+    @PostMapping("edituserhistory")
+    public String saveUserHistory(@ModelAttribute User user) {
+        userServiceImpl.addUser(user);
+        return "edituserhistory";
     }
 }

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Salon-tina</title>
+    <link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet" media="screen"/>
+</head>
+<body>
+    <div class="container">
+        <form class="form-group" th:method="post" th:action="@{/edituserhistory}" th:object="${user}">
+            <label for="username">Kundenavn</label>
+            <input class="form-control" id="username" type="text" disabled th:field="${user.username}">
+
+            <label for="phoneNumber">Telefon nr.</label>
+            <input class="form-control" id="phoneNumber" type="text" disabled th:field="${user.userPhonenumber}">
+
+            <label for="email">E-Mail</label>
+            <input class="form-control" id="email" type="text" disabled th:field="${user.userEmail}">
+
+            <label for="pref">Preferences</label>
+            <textarea class="form-control" rows = "10" cols = "50" id="pref" type="text" th:field="${user.userPreference}"></textarea>
+            <br>
+            <input class="btn btn-dark" value="Gem ændringer" type="submit">
+        </form>
+            <br>
+            <table class="table table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Dato</th>
+                        <th>Kommentar</th>
+                        <th>Behandlinger</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="booking : ${bookings}" th:if="${booking.bookingUserId} == ${user.userId}">
+                        <td th:text="${booking.bookingDate}"></td>
+                        <td th:text="${booking.bookingComment}"></td>
+                        <td th:each="treatment : ${booking.bookingTreatmentList}">
+                            <span th:text="${treatment.productName}"></span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+    </div>
+</body>
+</html>
