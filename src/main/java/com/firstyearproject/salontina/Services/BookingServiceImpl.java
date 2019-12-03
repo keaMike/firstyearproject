@@ -5,6 +5,7 @@ import com.firstyearproject.salontina.Models.Treatment;
 import com.firstyearproject.salontina.Repositories.BookingRepoImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,8 @@ import java.util.List;
 @Service
 public class BookingServiceImpl implements BookingService{
 
-
+    @Autowired
+    BookingRepoImpl BR;
 
     public boolean addBooking(Booking booking){
         return false;
@@ -33,8 +35,9 @@ public class BookingServiceImpl implements BookingService{
         return null;
     }
 
+    //Mike
     public List<Booking> getBookingList(int userId){
-        return null;
+        return BR.findBookingsByUserId(userId);
     }
 
 

@@ -1,12 +1,10 @@
 package com.firstyearproject.salontina.Controllers;
 
+import com.firstyearproject.salontina.Models.*;
+import com.firstyearproject.salontina.Services.BookingServiceImpl;
 import com.firstyearproject.salontina.Services.SMSServiceImpl;
-import com.firstyearproject.salontina.Models.Newsletter;
 import com.firstyearproject.salontina.Services.UserServiceImpl;
-import com.firstyearproject.salontina.Models.User;
 import com.firstyearproject.salontina.Services.ProductServiceImpl;
-import com.firstyearproject.salontina.Models.Item;
-import com.firstyearproject.salontina.Models.Treatment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +12,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
-
 public class BOController {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
@@ -27,18 +27,21 @@ public class BOController {
     private String NEWSLETTER = "newsletter";
     private String REMINDER = "reminder";
     private String REDIRECTNEWSLETTER = "redirect:/" + NEWSLETTER;
+    private boolean taskResult = false;
+    private ArrayList<Item> itemArrayList = new ArrayList<>();
+    private ArrayList<Treatment> treatmentArrayList = new ArrayList<>();
     private String REDIRECTREMINDER = "redirect:/" + REMINDER;
-
-    private boolean taskResult = false;  
   
     @Autowired
     SMSServiceImpl sMSServiceImpl;
-  
-    @Autowired
-    UserServiceImpl userServiceImpl;
 
     @Autowired
+    UserServiceImpl userServiceImpl;
+    @Autowired
     ProductServiceImpl productServiceImpl;
+
+    @Autowired
+    BookingServiceImpl bookingServiceImpl;
 
     private boolean showConfirmation = false;
     private String confirmationText = "";
@@ -57,6 +60,7 @@ public class BOController {
         return REMINDER;
     }
 
+    //Luca
     @GetMapping("sendreminder")
     public String sendreminder(Model model, HttpSession session){
         log.info("post sendreminder action started...");
@@ -65,6 +69,10 @@ public class BOController {
             log.info("sms reminder sent successfully...");
             showConfirmation = true;
             confirmationText = "SMS Reminder blev sendt.";
+        } else{
+            log.info("sms reminder failed to sent...");
+            showConfirmation = true;
+            confirmationText = "Der skete en fejl ved afsendelse af reminder.";
         }
 
         return REDIRECTREMINDER;
@@ -95,7 +103,12 @@ public class BOController {
 
             showConfirmation = true;
             confirmationText = "Nyhedsbrev blev sendt.";
+        } else{
+            log.info("sms newsletter failed to sent...");
+            showConfirmation = true;
+            confirmationText = "Der skete en fejl ved afsendelse af nyhedsbrev.";
         }
+
         return REDIRECTNEWSLETTER;
     }
 
@@ -110,7 +123,12 @@ public class BOController {
 
             showConfirmation = true;
             confirmationText = "Test nyhedsbrev blev sendt.";
+        } else{
+            log.info("sms reminder failed to sent...");
+            showConfirmation = true;
+            confirmationText = "Der skete en fejl ved afsendelse af nyhedsbrev.";
         }
+
         return REDIRECTNEWSLETTER;
     }
 
@@ -159,6 +177,80 @@ public class BOController {
             return "redirect:/";
         } else {
             return "createTreatment";
+        }
+    }
+  
+    //Asbjørn
+    @GetMapping ("/displayProducts")
+    public String displayProducts (Model model, HttpSession session) {
+        taskResult = productServiceImpl.createProductArrayLists(itemArrayList, treatmentArrayList);
+        model.addAttribute("treatments", treatmentArrayList);
+        model.addAttribute("items", itemArrayList);
+
+        return "displayProducts";
+    }
+
+    //Asbjørn
+    @GetMapping ("/editTreatment/{id}")
+    public String editTreatment (@PathVariable ("id") int id, Model model, HttpSession session) {
+        model.addAttribute("treatments", treatmentArrayList.get(id-1));
+        return "editTreatment";
+    }
+
+    //Asbjørn
+    @PostMapping ("/editTreatment")
+    public String editTreatment (@ModelAttribute Treatment treatment) {
+        taskResult = productServiceImpl.editTreatment(treatment);
+        if (taskResult) {
+            return "redirect:/";
+        } else {
+            return "displayProduct";
+        }
+    }
+
+    //Asbjørn
+    @GetMapping ("/editItem/{id}")
+    public String editItem (@PathVariable ("id") int id, Model model, HttpSession session) {
+        model.addAttribute("items", itemArrayList.get(id-1));
+        return "editItem";
+    }
+
+    //Asbjørn
+    @PostMapping ("/editItem")
+    public String editItem (@ModelAttribute Item item) {
+        taskResult = productServiceImpl.editItem(item);
+        if (taskResult) {
+            return "redirect:/";
+        } else {
+            return "displayProduct";
+        }
+    }
+    //Mike
+    @GetMapping("/edituserhistory")
+    public String userList(Model model, HttpSession session) {
+        List<User> users = userServiceImpl.getAllUsers();
+        model.addAttribute("users", users);
+        return "allusers";
+    }
+
+    //Mike
+    @GetMapping("/edituserhistory/{userid}")
+    public String editUserHistory(@PathVariable int userid, Model model, HttpSession session) {
+        User user = userServiceImpl.getUserById(userid);
+        List<Booking> bookings = bookingServiceImpl.getBookingList(user.getUserId());
+        model.addAttribute("user", user);
+        model.addAttribute("bookings", bookings);
+        return "edituserhistory";
+    }
+
+    //Mike
+    @PostMapping("/edituserhistory")
+    public String saveUserHistory(@ModelAttribute User user) {
+        taskResult = userServiceImpl.editUserHistory(user);
+        if (taskResult) {
+            return "redirect:/";
+        } else {
+            return "edituserhistory";
         }
     }
 }

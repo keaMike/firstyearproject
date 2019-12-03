@@ -1,6 +1,7 @@
 package com.firstyearproject.salontina.Controllers;
 
 import com.firstyearproject.salontina.Models.Booking;
+import com.firstyearproject.salontina.Models.LoginToken;
 import com.firstyearproject.salontina.Models.User;
 import com.firstyearproject.salontina.Services.*;
 import org.slf4j.Logger;
@@ -25,6 +26,9 @@ public class FOController {
     private String LANDINGPAGE = "landingpage";
     private String ADDBOOKING = "addbooking";
     private String REDIRECT = "redirect:/";
+    private String LOGIN = "login";
+    private String REGISTER = "register";
+    private String REDIRECTREGISTER = "redirect:/" + REGISTER;
 
     @Autowired
     UserServiceImpl userService;
@@ -36,16 +40,28 @@ public class FOController {
     BookingService bookingService;
 
     @GetMapping("/login")
-    public String login(Model model) {
-        model.addAttribute("userToBeRegistered", new User());
-        return "login";
+    public String login(Model model, HttpSession session) {
+        model.addAttribute("loginToken", new LoginToken());
+        return LOGIN;
+    }
+
+    @PostMapping("/login")
+    public String login(Model model, HttpSession session, @ModelAttribute LoginToken loginToken) {
+        User user = userService.authenticateUser(loginToken);
+
+        if(user != null){
+            session.setAttribute("user", user);
+
+            return REDIRECTREGISTER;
+        }
+        return LOGIN;
     }
 
     //Jonathan
     @GetMapping("/register")
     public String createUser(Model model) {
         model.addAttribute("userToBeRegistered", new User());
-        return "register";
+        return REGISTER;
     }
     //Jonathan
     @PostMapping("/register")
