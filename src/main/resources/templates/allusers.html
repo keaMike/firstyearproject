@@ -3,10 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Salon-Tina</title>
+    <script src= "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <link rel = "stylesheet" type = "text/css" href = "/static/stylesheet.css" th:href = "@{/stylesheet.css}"/>
     <link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet" media="screen"/>
     <script src="https://kit.fontawesome.com/af932a1361.js" crossorigin="anonymous"></script>
 </head>
+<div th:include = "fragments/header :: navbar"></div>
 <body>
+    <div class = "controlpaneltitle">
+        <h1>Vælg hvilken kunde du vil rette
+            <i class = "fas fa-user"></i>
+        </h1>
+    </div>
     <div class="container">
         <table class="table table-striped">
             <thead class="thead-dark">
@@ -22,10 +30,17 @@
                     <td th:text="${user.username}"></td>
                     <td th:text="${user.userPhonenumber}"></td>
                     <td th:text="${user.userEmail}"></td>
-                    <td><a th:href="@{'/edituserhistory/' + ${user.userId}}"><i class="fas fa-book"></i></a></td>
+                    <td><a th:href="@{'/edituserhistory/' + ${user.userId}}"><i class="fas fa-book" data-toggle="tooltip" title="Rediger"></i></a></td>
                 </tr>
             </tbody>
         </table>
     </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
 </body>
 </html>

@@ -2,26 +2,34 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>createItem</title>
+    <title>Opret produkt</title>
+    <link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet" media="screen"/>
+    <link rel = "stylesheet" type = "text/css" href = "/static/stylesheet.css" th:href = "@{/stylesheet.css}"/>
+    <script src="https://kit.fontawesome.com/af932a1361.js" crossorigin="anonymous"></script>
+    <script th:src="@{/webjars/jquery/3.1.1/jquery.min.js}"></script>
 </head>
+<div th:include = "fragments/header :: navbar"></div>
 <body>
-
+<div class = "controlpaneltitle">
+    <h1>Opret produkt
+        <i class = "fas fa-flask"></i>
+    </h1>
+</div>
 <div class="container">
-    <h1>Opret et nyt produkt</h1>
-    <form th:method="post" th:action="@{/createItem}">
+    <form class="form-group" th:method="post" th:action="@{/createItem}">
         <div>Navn</div>
-        <input type="text" th:field="${item.productName}" placeholder="Produkt Navn" required/>
+        <input class="form-control" type="text" th:field="${item.productName}" placeholder="Produkt Navn" required/>
         <br>
         <div>Pris</div>
-        <input type="text" th:field="${item.productPrice}" placeholder="Pris" required/>
+        <input class="form-control" type="text" th:field="${item.productPrice}" placeholder="Pris" required/>
         <br>
         <div>Beskrivelse</div>
-        <input type="text" th:field="${item.productDescription}" placeholder="Produkt Beskrivelse" required/>
+        <input class="form-control" type="text" th:field="${item.productDescription}" placeholder="Produkt Beskrivelse" required/>
         <br>
         <div>Antal</div>
-        <input type="text" th:field="${item.itemQuantity}" placeholder="Antal" required/>
+        <input class="form-control" type="text" th:field="${item.itemQuantity}" placeholder="Antal" required/>
         <br>
-        <input class="btn btn-primary btn-danger" type="submit" value="create"/>
+        <input class="btn btn-dark" type="submit" value="Opret"/>
     </form>
 </div>
 

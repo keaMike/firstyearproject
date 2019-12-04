@@ -7,48 +7,54 @@
     <link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet" media="screen"/>
     <script src="https://kit.fontawesome.com/af932a1361.js" crossorigin="anonymous"></script>
 </head>
+<div th:include = "fragments/header :: navbar"></div>
 <body>
     <div class="container">
         <h1>Her vises dine bookings <span th:text="${user.username}"></span></h1>
         <br>
-        <table class="table table-striped">
-            <thead class="thead-dark">
-            <tr>
-                <th>Dato</th>
-                <th>Kommentar</th>
-                <th>Behandlinger</th>
-                <th>Slet booking</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="booking : ${bookings}">
-                <td th:text="${booking.bookingDate}"></td>
-                <td th:text="${booking.bookingComment}"></td>
-                <td th:each="treatment : ${booking.bookingTreatmentList}">
-                    <span th:text="${treatment.productName}"></span>
-                </td>
-                <td>
-                    <a data-toggle="modal" data-target="#deletemodal" th:attrappend="data-target=${booking.bookingId}">
-                        <i class = "fas fa-trash-alt" data-toggle="tooltip" title = "Slet booking" style="cursor: pointer;"></i>
-                        <!--Modal Content-->
-                        <div class="modal fade" id="deletemodal" th:attrappend="id=${booking.bookingId}">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h3>Er du sikker på du vil slette din tid d. <span th:text="${booking.bookingDate}"></span></h3>
-                                    </div>
-                                    <div class="modal-body">
-                                        <a th:href="@{'/sletbooking/' + ${booking.bookingId}}" class="btn btn-dark">Ja</a>
-                                        <a class="btn btn-dark" data-dismiss="modal" style="color: white">Nej</a>
+        <div class="controlpaneltitle">
+            <h3 th:if="${#lists.isEmpty(bookings)}">Du har ingen bookings</h3>
+        </div>
+        <div th:unless="${#lists.isEmpty(bookings)}">
+            <table class="table table-striped">
+                <thead class="thead-dark">
+                <tr>
+                    <th>Dato</th>
+                    <th>Kommentar</th>
+                    <th>Behandlinger</th>
+                    <th>Slet booking</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="booking : ${bookings}">
+                    <td th:text="${booking.bookingDate}"></td>
+                    <td th:text="${booking.bookingComment}"></td>
+                    <td th:each="treatment : ${booking.bookingTreatmentList}">
+                        <span th:text="${treatment.productName}"></span>
+                    </td>
+                    <td>
+                        <a data-toggle="modal" data-target="#deletemodal" th:attrappend="data-target=${booking.bookingId}">
+                            <i class = "fas fa-trash-alt" data-toggle="tooltip" title = "Slet booking" style="cursor: pointer;"></i>
+                            <!--Modal Content-->
+                            <div class="modal fade" id="deletemodal" th:attrappend="id=${booking.bookingId}">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h3>Er du sikker på du vil slette din tid d. <span th:text="${booking.bookingDate}"></span></h3>
+                                        </div>
+                                        <div class="modal-body">
+                                            <a th:href="@{'/sletbooking/' + ${booking.bookingId}}" class="btn btn-dark">Ja</a>
+                                            <a class="btn btn-dark" data-dismiss="modal" style="color: white">Nej</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
