@@ -14,4 +14,5 @@ public interface ProductRepo {
     void insertIntoTreatmentArrayList (ArrayList<Treatment> treatmentArrayList, ResultSet rs);
     boolean editItem(Item item);
     boolean editTreatment(Treatment treatment);
+    Treatment getTreatment(int treatmentId);
 }

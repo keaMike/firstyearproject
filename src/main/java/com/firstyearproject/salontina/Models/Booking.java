@@ -71,4 +71,16 @@ public class Booking {
     public void setBookingTreatmentList(List<Treatment> bookingTreatmentList) {
         this.bookingTreatmentList = bookingTreatmentList;
     }
+
+    @Override
+    public String toString() {
+        return "Booking{" +
+                "bookingId=" + bookingId +
+                ", bookingUserId=" + bookingUserId +
+                ", bookingTime='" + bookingTime + '\'' +
+                ", bookingDate=" + bookingDate +
+                ", bookingComment='" + bookingComment + '\'' +
+                ", bookingTreatmentList=" + bookingTreatmentList +
+                '}';
+    }
 }

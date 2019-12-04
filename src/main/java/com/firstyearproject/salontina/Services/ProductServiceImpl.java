@@ -72,4 +72,9 @@ public class ProductServiceImpl implements ProductService{
         return pHandlerTaskResult;
     }
 
+    //Luca
+    public Treatment getTreatment(int treatmentId){
+        return productRepoImplManager.getTreatment(treatmentId);
+    }
+
 }

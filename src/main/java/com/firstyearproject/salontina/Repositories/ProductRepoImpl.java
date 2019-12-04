@@ -37,6 +37,7 @@ public class ProductRepoImpl implements ProductRepo {
             Connection connection = mySQLConnector.openConnection();
             pstmt = null;
             pstmt = connection.prepareStatement(statement);
+
             pstmt.setString(1, item.getProductName());
             pstmt.setDouble(2, item.getProductPrice());
             pstmt.setString(3, item.getProductDescription());
@@ -66,6 +67,7 @@ public class ProductRepoImpl implements ProductRepo {
 
             Connection connection = mySQLConnector.openConnection();
             pstmt = null;
+
             pstmt = connection.prepareStatement(statement);
             pstmt.setString(1, treatment.getProductName());
             pstmt.setDouble(2, treatment.getProductPrice());
@@ -129,6 +131,7 @@ public class ProductRepoImpl implements ProductRepo {
         String treatmentQuery = "SELECT treatments_id, treatments_name, treatments_price, treatments_description, " +
                                 "treatments_duration, treatments_active " +
                                 "FROM salon_tina_database.treatments";
+
         try {
             Connection connection = mySQLConnector.openConnection();
 
@@ -246,5 +249,34 @@ public class ProductRepoImpl implements ProductRepo {
             repoTaskResult = false;
         }
         return repoTaskResult;
+    }
+
+    //Luca
+    public Treatment getTreatment(int treatmentId){
+        log.info("getTreatement method started...");
+
+        String statement = "SELECT * FROM treatments WHERE treatments_id = ?;";
+
+        try {
+            PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
+
+            pstmt.setInt(1, treatmentId);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            if(rs.next()){
+                Treatment treatment = new Treatment();
+                treatment.setProductId(rs.getInt(1));
+                treatment.setProductName(rs.getString(2));
+                treatment.setProductPrice(rs.getDouble(3));
+                treatment.setProductDescription(rs.getString(4));
+                treatment.setTreatmentDuration(rs.getInt(5));
+                treatment.setProductActive(rs.getBoolean(6));
+                return treatment;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

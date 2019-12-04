@@ -13,4 +13,5 @@ public interface ProductService{
     boolean createProductArrayLists(ArrayList<Item> itemArrayList, ArrayList<Treatment> treatmentArrayList);
     boolean deleteTreatment(int treatmentId);
     boolean deleteItem(int itemId);
+    Treatment getTreatment(int treatmentId);
 }
