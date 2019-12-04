@@ -138,7 +138,7 @@ public class UserRepoImpl implements UserRepo{
             pstm = null;
             Connection connection = mySQLConnector.openConnection();
             pstm = connection.prepareStatement(statement);
-            pstm.setInt(1, userId);
+            pstm.setInt(1, 3);
 
             pstm.executeUpdate();
             mySQLConnector.closeConnection();

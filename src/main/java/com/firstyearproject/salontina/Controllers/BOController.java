@@ -39,10 +39,8 @@ public class BOController {
     private String REDIRECT = "redirect:/";
 
     private boolean taskResult = false;
-
     private boolean showConfirmation = false;
     private String confirmationText = "";
-
     private ArrayList<Item> itemArrayList = new ArrayList<>();
     private ArrayList<Treatment> treatmentArrayList = new ArrayList<>();
 
@@ -60,12 +58,14 @@ public class BOController {
 
 
     //Luca
+    //Used in Java Methods/mappings
     public void confirmation(String text){
         showConfirmation = true;
         confirmationText = text;
     }
 
     //Luca
+    //Used in HTML-Modals
     public void showConfirmation(Model model){
         model.addAttribute("showconfirmation", true);
         model.addAttribute("confirmationtext", confirmationText);
@@ -169,8 +169,10 @@ public class BOController {
     public String createItem(@ModelAttribute Item item, Model model, HttpSession session) {
         taskResult = productServiceImpl.createItem(item);
         if (taskResult) {
+            confirmation(item.getProductName() + " er blevet oprettet i systemet");
             return REDIRECT;
         } else {
+            confirmation("Produktet kunne ikke oprettes i systemet");
             return CREATEITEM;
         }
     }
@@ -187,8 +189,10 @@ public class BOController {
     public String createTreatment(@ModelAttribute Treatment treatment, Model model, HttpSession session) {
         taskResult = productServiceImpl.createTreatment(treatment);
         if (taskResult) {
+            confirmation(treatment.getProductName() + " er blevet oprettet som behandling i systemet");
             return REDIRECT;
         } else {
+            confirmation("Behandlingen kunne ikke oprettes i systemet");
             return CREATETREATMENT;
         }
     }
@@ -221,8 +225,10 @@ public class BOController {
     public String editTreatment (@ModelAttribute Treatment treatment) {
         taskResult = productServiceImpl.editTreatment(treatment);
         if (taskResult) {
+            confirmation("Information på behandlingen: " + treatment.getProductName() + " er blevet ændret i systemet");
             return REDIRECT;
         } else {
+            confirmation("Behandlingens information kunne IKKE ændres i systemet");
             return DISPLAYPRODUCTS;
         }
     }
@@ -239,8 +245,10 @@ public class BOController {
     public String editItem (@ModelAttribute Item item) {
         taskResult = productServiceImpl.editItem(item);
         if (taskResult) {
+            confirmation("Information på " + item.getProductName() + " er blevet ændret i systemet");
             return REDIRECT;
         } else {
+            confirmation("Produktets information kunne IKKE ændres i systemet");
             return DISPLAYPRODUCTS;
         }
     }
