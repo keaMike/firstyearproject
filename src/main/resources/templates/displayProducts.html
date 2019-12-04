@@ -66,6 +66,11 @@
     </table>
 </div>
 
+<div th:if="${showconfirmation}">
+    <div th:include="fragments/confirmation :: modal"></div>
+    <div th:include="fragments/confirmation :: script"></div>
+</div>
+
 <script th:src="@{/webjars/jquery/3.1.1/jquery.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/4.0.0/bootstrap.js}"></script>
 

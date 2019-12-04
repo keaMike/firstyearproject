@@ -39,6 +39,8 @@ public class FOController {
     private String BOOKINGCONFIRMATION = "bookingconfirmation";
 
     private boolean taskResult = false;
+    private boolean showConfirmation = false;
+    private String confirmationText = "";
 
     private ArrayList<Item> itemArrayList = new ArrayList<>();
     private ArrayList<Treatment> treatmentArrayList = new ArrayList<>();
@@ -51,6 +53,21 @@ public class FOController {
 
     @Autowired
     ProductServiceImpl productService;
+
+    //Luca
+    //Used in Java Methods/mappings
+    public void confirmation(String text){
+        showConfirmation = true;
+        confirmationText = text;
+    }
+
+    //Luca
+    //Used in HTML-Modals
+    public void showConfirmation(Model model){
+        model.addAttribute("showconfirmation", true);
+        model.addAttribute("confirmationtext", confirmationText);
+        showConfirmation = false;
+    }
 
     @GetMapping("/login")
     public String login(Model model, HttpSession session) {
@@ -124,8 +141,10 @@ public class FOController {
     public String deleteuserbooking(@PathVariable int bookingid) {
         taskResult = bookingService.deleteBooking(bookingid);
         if (taskResult) {
+            confirmation("Din booking er blevet slettet");
             return REDIRECT + MINEBOOKINGS;
         } else {
+            confirmation("Din booking kunne ikke slettes. Prøv igen på et senere tidspunkt");
             return MYBOOKINGS;
         }
     }
@@ -179,15 +198,25 @@ public class FOController {
     //Asbjørn
     @PostMapping("subscribeNewsletter")
     public String subscribeNewsletter (@ModelAttribute User user) {
-        userService.subscribeNewsletter(user.getUserId());
+        taskResult = userService.subscribeNewsletter(user.getUserId());
+        if (taskResult) {
+            confirmation("Du er blevet tilmeldt nyhedsbrevet");
+            return "redigerbruger";
+        }
+        confirmation("Vi kunne IKKE tilmelde dig nyhedsbrevet. Prøv igen senere");
         return "redirect:/";
     }
 
     //Asbjørn
     @PostMapping("unsubscribeNewsletter")
     public String unsubscribeNewsletter (@ModelAttribute User user) {
-        userService.unsubscribeNewsletter(user.getUserId());
-        return "redirect:/";
+        taskResult = userService.unsubscribeNewsletter(user.getUserId());
+        if (taskResult) {
+            confirmation("Du er blevet afmeldt nyhedsbrevet");
+            return "redigerbruger";
+        }
+        confirmation("Vi kunne IKKE afmelde dig nyhedsbrevet. Prøv igen senere");
+        return "redigerbruger";
     }
 
     @GetMapping ("/kontakt")
