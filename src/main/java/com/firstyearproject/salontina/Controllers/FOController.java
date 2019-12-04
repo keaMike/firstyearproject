@@ -3,7 +3,6 @@ package com.firstyearproject.salontina.Controllers;
 import com.firstyearproject.salontina.Models.Booking;
 import com.firstyearproject.salontina.Models.LoginToken;
 import com.firstyearproject.salontina.Models.User;
-import com.firstyearproject.salontina.Repositories.UserRepoImpl;
 import com.firstyearproject.salontina.Services.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,20 +29,17 @@ public class FOController {
     private String REDIRECT = "redirect:/";
     private String LOGIN = "login";
     private String REGISTER = "register";
-    private String REDIGERBRUGER = "redigerbruger";
+    private String EDITUSER = "edituser";
     private String USERPROFILE = "userprofile";
     private String MYBOOKINGS = "mybookings";
-    private String MINEBOOKINGS = "minebookings";
-    private String VÆLGTREATMENT = "vælgtreatment";
-    private String VÆLGTID = "vælgtid";
+    private String CONTACT = "contact";
     private String BOOKINGCONFIRMATION = "bookingconfirmation";
+    private String CHOOSEBOOKINGTREATMENT = "chooseBookingTreatment";
+    private String CHOOSEBOOKINGTIME = "chooseBookingTime";
 
     private boolean taskResult = false;
     private boolean showConfirmation = false;
     private String confirmationText = "";
-
-    private ArrayList<Item> itemArrayList = new ArrayList<>();
-    private ArrayList<Treatment> treatmentArrayList = new ArrayList<>();
 
     @Autowired
     UserServiceImpl userService;
@@ -88,33 +84,33 @@ public class FOController {
     }
 
     //Jonathan
-    @GetMapping("/register")
-    public String createUser(Model model) {
+    @GetMapping("/registrer")
+    public String registrer(Model model) {
         model.addAttribute("userToBeRegistered", new User());
         return REGISTER;
     }
     //Jonathan
-    @PostMapping("/register")
-    public String createUser(@ModelAttribute User user) {
+    @PostMapping("/registrer")
+    public String registrer(@ModelAttribute User user) {
         userService.addUser(user);
         return REDIRECT + LOGIN;
     }
     //Jonathan
     @GetMapping("/redigerbruger")
-    public String redigerUser(HttpSession session, Model model) {
+    public String editUser(HttpSession session, Model model) {
         User user =  new User(); //(User)session.getAttribute("user");
         model.addAttribute("userToBeEdited", user);
-        return REDIGERBRUGER;
+        return EDITUSER;
     }
     //Jonathan
     @PostMapping("/redigerbruger")
-    public String redigerUser(@ModelAttribute User user) {
+    public String editUser(@ModelAttribute User user) {
         userService.editUser(user);
         return REDIRECT + USERPROFILE;
     }
 
-    @GetMapping("userprofile")
-    public String userprofile(Model model) {
+    @GetMapping("brugerprofil")
+    public String userProfile(Model model) {
         model.addAttribute("userToBeViewed", new User());
         return USERPROFILE;
     }
@@ -123,11 +119,11 @@ public class FOController {
     @GetMapping("/sletbruger/{userid}")
     public String deleteUser(@PathVariable int userId) {
         userService.deleteUser(userId);
-        return REDIRECT + REDIGERBRUGER;
+        return REDIRECT + EDITUSER;
     }
 
     @GetMapping("/minebookings")
-    public String userbookings(Model model, HttpSession session) {
+    public String userBookings(Model model, HttpSession session) {
         //Test user
         User user = userService.getUserById(3);
         List<Booking> bookings = bookingService.getBookingList(user.getUserId());
@@ -138,11 +134,11 @@ public class FOController {
 
     //Mike
     @GetMapping("/sletbooking/{bookingid}")
-    public String deleteuserbooking(@PathVariable int bookingid) {
+    public String deleteUserBooking(@PathVariable int bookingid) {
         taskResult = bookingService.deleteBooking(bookingid);
         if (taskResult) {
             confirmation("Din booking er blevet slettet");
-            return REDIRECT + MINEBOOKINGS;
+            return REDIRECT + MYBOOKINGS;
         } else {
             confirmation("Din booking kunne ikke slettes. Prøv igen på et senere tidspunkt");
             return MYBOOKINGS;
@@ -150,14 +146,12 @@ public class FOController {
     }
 
     //Jonathan & Luca
-    @GetMapping("vælgtreatment")
-    public String vælgBooking(Model model) {
+    @GetMapping("vælgbehandling")
+    public String chooseTreatment(Model model) {
         model.addAttribute("booking", new Booking());
 
-        productService.createProductArrayLists(itemArrayList, treatmentArrayList);
-
-        model.addAttribute("treatmentList", treatmentArrayList);
-        return "chooseBookingTreatment";
+        model.addAttribute("treatmentList", productService.createTreatmentArrayList());
+        return CHOOSEBOOKINGTREATMENT;
     }
 
     //Jonathan & Luca
@@ -176,7 +170,7 @@ public class FOController {
         List<Booking> bookingList = bookingService.getBookingList(date.toString());
 
         model.addAttribute("bookingList", bookingList);
-        return "chooseBookingTime";
+        return CHOOSEBOOKINGTIME;
     }
 
     //Jonathan & Luca
@@ -201,10 +195,10 @@ public class FOController {
         taskResult = userService.subscribeNewsletter(user.getUserId());
         if (taskResult) {
             confirmation("Du er blevet tilmeldt nyhedsbrevet");
-            return "redigerbruger";
+            return EDITUSER;
         }
         confirmation("Vi kunne IKKE tilmelde dig nyhedsbrevet. Prøv igen senere");
-        return "redirect:/";
+        return REDIRECT;
     }
 
     //Asbjørn
@@ -213,14 +207,14 @@ public class FOController {
         taskResult = userService.unsubscribeNewsletter(user.getUserId());
         if (taskResult) {
             confirmation("Du er blevet afmeldt nyhedsbrevet");
-            return "redigerbruger";
+            return EDITUSER;
         }
         confirmation("Vi kunne IKKE afmelde dig nyhedsbrevet. Prøv igen senere");
-        return "redigerbruger";
+        return EDITUSER;
     }
 
     @GetMapping ("/kontakt")
     public String kontakt () {
-        return "kontakt";
+        return CONTACT;
     }
 }

@@ -62,19 +62,23 @@ public class ProductServiceImpl implements ProductService{
 
         return pHandlerTaskResult;
     }
-  
-    //Asbjørn
-    @Override
-    public boolean createProductArrayLists(ArrayList<Item> itemArrayList, ArrayList<Treatment> treatmentArrayList) {
 
-        pHandlerTaskResult = productRepoImplManager.createProductArrayLists(itemArrayList, treatmentArrayList);
+    public List<Treatment> createTreatmentArrayList(){
+        return productRepoImplManager.createTreatmentArrayList();
+    }
 
-        return pHandlerTaskResult;
+    public List<Item> createItemArrayList(){
+        return productRepoImplManager.createItemArrayList();
     }
 
     //Luca
     public Treatment getTreatment(int treatmentId){
         return productRepoImplManager.getTreatment(treatmentId);
+    }
+
+    //Luca
+    public Item getItem(int itemId){
+        return productRepoImplManager.getItem(itemId);
     }
 
 }

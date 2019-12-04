@@ -122,40 +122,62 @@ public class ProductRepoImpl implements ProductRepo {
     }
 
     //Asbjørn
-    @Override
-    public boolean createProductArrayLists(ArrayList<Item> itemArrayList, ArrayList<Treatment> treatmentArrayList) {
+    public List<Treatment> createTreatmentArrayList(){
         stmt = null;
-        String itemQuery =      "SELECT items_id, items_name, items_price, items_description, items_quantity, items_active " +
-                                "FROM salon_tina_database.items";
 
         String treatmentQuery = "SELECT treatments_id, treatments_name, treatments_price, treatments_description, " +
-                                "treatments_duration, treatments_active " +
-                                "FROM salon_tina_database.treatments";
+                "treatments_duration, treatments_active " +
+                "FROM salon_tina_database.treatments";
 
         try {
             Connection connection = mySQLConnector.openConnection();
 
             stmt = connection.createStatement();
-            ResultSet rsItems = stmt.executeQuery(itemQuery);
-            insertIntoItemArrayList(itemArrayList, rsItems);
+
+            List<Treatment> treatmentList = new ArrayList<>();
 
             ResultSet rsTreatments = stmt.executeQuery(treatmentQuery);
-            insertIntoTreatmentArrayList(treatmentArrayList, rsTreatments);
+            insertIntoTreatmentArrayList(treatmentList, rsTreatments);
 
-            databaseLogger.writeToLogFile(itemQuery);
             databaseLogger.writeToLogFile(treatmentQuery);
 
-            repoTaskResult = true;
+            return treatmentList;
         } catch (SQLException e) {
             e.printStackTrace();
-            repoTaskResult = false;
+
         }
-        return repoTaskResult;
+        return null;
+    }
+
+    //Asbjørn
+    public List<Item> createItemArrayList(){
+        stmt = null;
+        String itemQuery =      "SELECT items_id, items_name, items_price, items_description, items_quantity, items_active " +
+                "FROM salon_tina_database.items";
+
+        try {
+            Connection connection = mySQLConnector.openConnection();
+
+            stmt = connection.createStatement();
+
+            List<Item> itemList = new ArrayList<>();
+
+            ResultSet rsItems = stmt.executeQuery(itemQuery);
+            insertIntoItemArrayList(itemList, rsItems);
+
+            databaseLogger.writeToLogFile(itemQuery);
+
+            return itemList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        return null;
     }
 
     //Asbjørn
     @Override
-    public void insertIntoItemArrayList(ArrayList<Item> itemArrayList, ResultSet rsItems) {
+    public void insertIntoItemArrayList(List<Item> itemArrayList, ResultSet rsItems) {
         try {
             itemArrayList.clear();
             while (rsItems.next()) {
@@ -173,7 +195,7 @@ public class ProductRepoImpl implements ProductRepo {
     }
 
     @Override
-    public void insertIntoTreatmentArrayList(ArrayList<Treatment> treatmentArrayList, ResultSet rsTreatments) {
+    public void insertIntoTreatmentArrayList(List<Treatment> treatmentArrayList, ResultSet rsTreatments) {
         try {
             treatmentArrayList.clear();
             while (rsTreatments.next()) {
@@ -273,6 +295,34 @@ public class ProductRepoImpl implements ProductRepo {
                 treatment.setTreatmentDuration(rs.getInt(5));
                 treatment.setProductActive(rs.getBoolean(6));
                 return treatment;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    //Luca
+    public Item getItem(int itemId){
+        log.info("getTreatement method started...");
+
+        String statement = "SELECT * FROM items WHERE items_id = ?;";
+
+        try {
+            PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
+
+            pstmt.setInt(1, itemId);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            if(rs.next()){
+                Item item = new Item();
+                item.setProductId(rs.getInt(1));
+                item.setProductName(rs.getString(2));
+                item.setProductDescription(rs.getString(3));
+                item.setProductActive(rs.getBoolean(4));
+                item.setItemQuantity(rs.getInt(5));
+                return item;
             }
         } catch (SQLException e) {
             e.printStackTrace();
