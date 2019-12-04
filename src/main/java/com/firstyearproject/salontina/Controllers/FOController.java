@@ -3,6 +3,7 @@ package com.firstyearproject.salontina.Controllers;
 import com.firstyearproject.salontina.Models.Booking;
 import com.firstyearproject.salontina.Models.LoginToken;
 import com.firstyearproject.salontina.Models.User;
+import com.firstyearproject.salontina.Repositories.UserRepoImpl;
 import com.firstyearproject.salontina.Services.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -163,4 +164,17 @@ public class FOController {
 
     }
 
+    //Asbjørn
+    @PostMapping("subscribeNewsletter")
+    public String subscribeNewsletter (@ModelAttribute User user) {
+        userService.subscribeNewsletter(user.getUserId());
+        return "redirect:/";
+    }
+
+    //Asbjørn
+    @PostMapping("unsubscribeNewsletter")
+    public String unsubscribeNewsletter (@ModelAttribute User user) {
+        userService.unsubscribeNewsletter(user.getUserId());
+        return "redirect:/";
+    }
 }

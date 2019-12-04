@@ -47,6 +47,21 @@
             </div>
         </a>
     </div>
+
+    <div>
+        <form method="post" th:action="@{/subscribeNewsletter}" >
+            <input type="hidden" th:field="${userToBeEdited.userId}"/>
+            <input class="btn btn-dark" type="submit" value="Tilmeld nyhedsbrev">
+        </form>
+    </div>
+
+    <div>
+        <form method="post" th:action="@{/unsubscribeNewsletter}" >
+            <input type="hidden" th:field="${userToBeEdited.userId}"/>
+            <input class="btn btn-dark" type="submit" value="Afmeld nyhedsbrev">
+        </form>
+    </div>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script>

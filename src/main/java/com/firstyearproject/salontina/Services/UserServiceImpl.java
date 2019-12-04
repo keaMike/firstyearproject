@@ -44,6 +44,20 @@ public class UserServiceImpl implements UserService {
         return UR.authenticateUser(loginToken);
     }
 
+    //Asbjørn
+    @Override
+    public boolean subscribeNewsletter(int userId) {
+        boolean userSerivceTaskResult = UR.subscribeNewsletter(userId);
+        return userSerivceTaskResult;
+    }
+
+    //Asbjørn
+    @Override
+    public boolean unsubscribeNewsletter(int userId) {
+        boolean userServiceTaskResult = UR.unsubscribeNewsletter(userId);
+        return userServiceTaskResult;
+    }
+
     //Mike
     public boolean editUserHistory(User user){
         boolean userEdited = UR.editUserHistory(user);

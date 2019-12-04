@@ -9,5 +9,6 @@ public interface UserRepo {
     List<Reminder> getReminderList();
     List<String> getNewsletterList();
     boolean addUser(User user);
-
+    boolean subscribeNewsletter(int userId);
+    boolean unsubscribeNewsletter(int userId);
 }
