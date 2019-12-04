@@ -18,7 +18,6 @@ public class SMSServiceImpl implements SMSService{
 
     @Autowired
     SMSConnector smsConnector;
-    private ApiException ApiException;
 
     //Luca
     public boolean sendReminder(){

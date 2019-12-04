@@ -21,40 +21,60 @@ public class UserServiceImpl implements UserService {
     @Value("${hashing.salt}")
     private String hashingSalt;
 
+    //Jonathan
     public boolean addUser(User user){
         user.setUserPassword(hashPassword(user.getUserPassword()));
-        boolean userCreated = UR.addUser(user);
-        return userCreated;
+        return UR.addUser(user);
     }
 
+    //Mike & Asbjørn
     public boolean deleteUser(int userId){
-        return false;
+        return UR.deleteUser(userId);
     }
 
+    //Jonathan
     public boolean editUser(User user){
         user.setUserPassword(hashPassword(user.getUserPassword()));
-        boolean userEdited = UR.editUser(user);
-        return userEdited;
+        return UR.editUser(user);
     }
 
+    //Mike
     public User authenticateUser(LoginToken loginToken) {
         loginToken.setLoginTokenPassword(hashPassword(loginToken.getLoginTokenPassword()));
         return UR.authenticateUser(loginToken);
     }
 
+    //Asbjørn
+    @Override
+    public boolean subscribeNewsletter(int userId) {
+        boolean userSerivceTaskResult = UR.subscribeNewsletter(userId);
+        return userSerivceTaskResult;
+    }
+
+    //Asbjørn
+    @Override
+    public boolean unsubscribeNewsletter(int userId) {
+        boolean userServiceTaskResult = UR.unsubscribeNewsletter(userId);
+        return userServiceTaskResult;
+    }
+
+    //Mike
     public boolean editUserHistory(User user){
         boolean userEdited = UR.editUserHistory(user);
         return userEdited;
     }
 
+    //Mike
     public List<User> getAllUsers() {
         return UR.findAllUsers();
     }
 
+    //Mike
     public User getUserById(int userid) {
         return UR.findUserById(userid);
     }
 
+    //Luca
     public String hashPassword(String password){
         if(password == null){
             return null;

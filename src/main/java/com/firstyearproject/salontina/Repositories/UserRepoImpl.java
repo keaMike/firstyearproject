@@ -2,20 +2,15 @@ package com.firstyearproject.salontina.Repositories;
 
 import com.firstyearproject.salontina.Models.*;
 
+import com.firstyearproject.salontina.Services.DatabaseLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.time.LocalDate;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import java.util.Random;
 
 @Repository
 public class UserRepoImpl implements UserRepo{
@@ -23,9 +18,13 @@ public class UserRepoImpl implements UserRepo{
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     private PreparedStatement pstm;
+    private boolean userRepoTaskResult;
 
     @Autowired
     MySQLConnector mySQLConnector;
+
+    @Autowired
+    DatabaseLogger databaseLogger;
 
     //Luca
     public List<String> getNewsletterList(){
@@ -43,10 +42,14 @@ public class UserRepoImpl implements UserRepo{
             while(rs.next()){
                 phonenumbers.add(rs.getString(1));
             }
+
+            databaseLogger.writeToLogFile(statement);
+
+            return phonenumbers;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return phonenumbers;
+        return null;
     }
 
     //Luca
@@ -75,24 +78,36 @@ public class UserRepoImpl implements UserRepo{
                 r.setReminderTime(rs.getString(4));
                 reminderList.add(r);
             }
+
+            databaseLogger.writeToLogFile(statement);
+
+            return reminderList;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return reminderList;
+        return null;
     }
 
     //Jonathan
     public boolean addUser(User user){
         Boolean userCreated = false;
         try{
+            String statement =  "INSERT INTO users " +
+                                "(users_fullName, users_phonenumber, users_email, users_preferences, users_password) " +
+                                "VALUES " +
+                                "(?, ?, ?, ?, ?)";
+
             Connection connection = mySQLConnector.openConnection();
-            PreparedStatement pstms = connection.prepareStatement("INSERT INTO users (users_fullName, users_phonenumber, users_email, users_preferences, users_password) VALUES(?, ?, ?, ?, ?)");
+            PreparedStatement pstms = connection.prepareStatement(statement);
             pstms.setString(1, user.getUsername());
             pstms.setInt(2, user.getUserPhonenumber());
             pstms.setString(3, user.getUserEmail());
             pstms.setString(4, user.getUserPreference());
             pstms.setString(5, user.getUserPassword());
             pstms.executeUpdate();
+
+            databaseLogger.writeToLogFile(statement);
+
             userCreated = true;
         } catch (Exception E) {
             E.printStackTrace();
@@ -100,12 +115,51 @@ public class UserRepoImpl implements UserRepo{
         return userCreated;
     }
 
-    //Mike
-    public List findAllUsers() {
-        List users = new ArrayList();
-        try {
+    //Asbjørn
+    @Override
+    public boolean subscribeNewsletter(int userId) {
+        String statement = "INSERT INTO salon_tina_database.newsletter (users_id) VALUES (?)";
+        userRepoTaskResult = newsletterQueries(userId, statement);
+        return userRepoTaskResult;
+    }
+
+    //Asbjørn
+    @Override
+    public boolean unsubscribeNewsletter(int userId) {
+        String statement = "DELETE FROM salon_tina_database.newsletter WHERE users_id = ?";
+        userRepoTaskResult = newsletterQueries(userId, statement);
+        return userRepoTaskResult;
+    }
+
+    //Asbjørn
+    //Both subscribe and unsubscribe use the same execute code
+    private boolean newsletterQueries(int userId, String statement) {
+        try{
+            pstm = null;
             Connection connection = mySQLConnector.openConnection();
-            PreparedStatement pstm = connection.prepareStatement("SELECT * FROM users");
+            pstm = connection.prepareStatement(statement);
+            pstm.setInt(1, userId);
+
+            pstm.executeUpdate();
+            mySQLConnector.closeConnection();
+            userRepoTaskResult = true;
+            databaseLogger.writeToLogFile(statement);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            userRepoTaskResult = false;
+        }
+        return userRepoTaskResult;
+    }
+
+    //Mike
+    public List<User> findAllUsers() {
+        List<User> users = new ArrayList();
+        try {
+            String statement = "SELECT * FROM users";
+
+            Connection connection = mySQLConnector.openConnection();
+            PreparedStatement pstm = connection.prepareStatement(statement);
             ResultSet rs = pstm.executeQuery();
             while(rs.next()) {
                 User u = new User();
@@ -117,19 +171,25 @@ public class UserRepoImpl implements UserRepo{
                 u.setUserPreference(rs.getString("users_preferences"));
                 users.add(u);
             }
+
+            databaseLogger.writeToLogFile(statement);
+
+            return users;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return users;
+        return null;
     }
 
     //Mike
     public User findUserById(int userid) {
         User u = new User();
         try {
+            String statement = "SELECT * FROM users WHERE users_id = ?";
+
             Connection con = mySQLConnector.openConnection();
             pstm = null;
-            pstm = con.prepareStatement("SELECT * FROM users WHERE users_id = ?");
+            pstm = con.prepareStatement(statement);
             pstm.setInt(1, userid);
             ResultSet rs = pstm.executeQuery();
             while (rs.next()) {
@@ -141,11 +201,14 @@ public class UserRepoImpl implements UserRepo{
                 u.setUserPreference(rs.getString(6));
             }
             pstm.close();
+
+            databaseLogger.writeToLogFile(statement);
+
+            return u;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        log.info(u.toString());
-        return u;
+        return null;
     }
 
     //Jonathan
@@ -153,8 +216,16 @@ public class UserRepoImpl implements UserRepo{
         Boolean userEdited = false;
         log.info(user.toString());
         try{
+            String statement =  "UPDATE users " +
+                                "SET users_fullName = ?, " +
+                                "users_phonenumber = ?, " +
+                                "users_email = ?, " +
+                                "users_preferences = ?, " +
+                                "users_password = ? " +
+                                "WHERE users_id = ?;";
+
             Connection connection = mySQLConnector.openConnection();
-            PreparedStatement pstms = connection.prepareStatement("UPDATE users SET users_fullName = ?, users_phonenumber = ?, users_email = ?, users_preferences = ?, users_password = ? WHERE users_id = ?;");
+            PreparedStatement pstms = connection.prepareStatement(statement);
             pstms.setString(1, user.getUsername());
             pstms.setInt(2,user.getUserPhonenumber());
             pstms.setString(3,user.getUserEmail());
@@ -163,26 +234,32 @@ public class UserRepoImpl implements UserRepo{
             pstms.setInt(6,user.getUserId());
             pstms.executeUpdate();
             userEdited = true;
+
+            databaseLogger.writeToLogFile(statement);
         } catch (Exception E){
             E.printStackTrace();
         }
         return userEdited;
     }
 
+    //Mike
     public boolean editUserHistory(User user) {
-        Boolean userEdited = false;
-        log.info(user.toString());
         try{
+            String statement = "UPDATE users SET users_preferences = ? WHERE users_id = ?";
+
             Connection connection = mySQLConnector.openConnection();
-            PreparedStatement pstm = connection.prepareStatement("UPDATE users SET users_preferences = ? WHERE users_id = ?");
+            PreparedStatement pstm = connection.prepareStatement(statement);
             pstm.setString(1,user.getUserPreference());
             pstm.setInt(2,user.getUserId());
             pstm.executeUpdate();
-            userEdited = true;
+
+            databaseLogger.writeToLogFile(statement);
+
+            return true;
         } catch (Exception E){
             E.printStackTrace();
         }
-        return userEdited;
+        return false;
     }
 
     //Luca
@@ -199,6 +276,8 @@ public class UserRepoImpl implements UserRepo{
             pstmt.setString(3, loginToken.getLoginTokenPassword());
 
             ResultSet rs = pstmt.executeQuery();
+
+            databaseLogger.writeToLogFile(statement);
 
             return generateUserFromResultSet(rs);
         } catch (SQLException e) {
@@ -225,6 +304,8 @@ public class UserRepoImpl implements UserRepo{
             while(rs.next()){
                 userRoles.add(rs.getString(2));
             }
+
+            databaseLogger.writeToLogFile(statement);
 
             return userRoles;
         } catch (SQLException e) {
@@ -258,6 +339,8 @@ public class UserRepoImpl implements UserRepo{
                 booking.setBookingTreatmentList(getTreatmentsForBooking(booking.getBookingId()));
             }
 
+            databaseLogger.writeToLogFile(statement);
+
             return userHistory;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -288,6 +371,8 @@ public class UserRepoImpl implements UserRepo{
                 treatmentList.add(treatment);
             }
 
+            databaseLogger.writeToLogFile(statement);
+
             return treatmentList;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -312,5 +397,31 @@ public class UserRepoImpl implements UserRepo{
         user.setUserHistory(getUserHistory(user.getUserId()));
 
         return user;
+    }
+
+    //Mike & Asbjørn
+    public boolean deleteUser(int userId) {
+        try {
+            String statement =  "INSERT INTO users_archive SELECT users_id, users_fullName, " +
+                                "users_phonenumber, users_email, users_preferences " +
+                                "FROM users WHERE users_id = ?";
+
+            Connection connection = mySQLConnector.openConnection();
+            PreparedStatement pstm = connection.prepareStatement(statement);
+            pstm.setInt(1, userId);
+            pstm.executeUpdate();
+
+            pstm = connection.prepareStatement("DELETE FROM users WHERE users_id = ?");
+            pstm.setInt(1, userId);
+            pstm.executeUpdate();
+            pstm.close();
+
+            databaseLogger.writeToLogFile(statement);
+
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
