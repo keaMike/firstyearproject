@@ -20,8 +20,6 @@ public class DatabaseLogger {
             FileOutputStream fos = new FileOutputStream(logFile, true);
             PrintStream pS = new PrintStream(fos);
 
-            System.out.println(statement);
-
             pS.println(date);
             pS.println(statement);
             pS.println();

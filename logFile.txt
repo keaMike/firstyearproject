@@ -7,3 +7,12 @@ SELECT * FROM users_roles WHERE users_id = ?;
 Tue Dec 03 18:06:11 CET 2019
 SELECT * FROM bookings WHERE users_id = ?;
 
+Wed Dec 04 08:43:00 CET 2019
+SELECT * FROM users WHERE users_phonenumber = ? OR users_email = ? AND users_password = ?;
+
+Wed Dec 04 08:43:00 CET 2019
+SELECT * FROM users_roles WHERE users_id = ?;
+
+Wed Dec 04 08:43:00 CET 2019
+SELECT * FROM bookings WHERE users_id = ?;
+
