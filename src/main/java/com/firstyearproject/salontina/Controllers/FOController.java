@@ -177,4 +177,9 @@ public class FOController {
         userService.unsubscribeNewsletter(user.getUserId());
         return "redirect:/";
     }
+
+    @GetMapping ("/kontakt")
+    public String kontakt () {
+        return "kontakt";
+    }
 }
