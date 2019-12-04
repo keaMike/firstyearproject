@@ -9,4 +9,6 @@ public interface UserService {
     boolean deleteUser(int userId);
     boolean editUser(User user);
     User authenticateUser(LoginToken loginToken);
+    boolean subscribeNewsletter(int userId);
+    boolean unsubscribeNewsletter(int userId);
 }

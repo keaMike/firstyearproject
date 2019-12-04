@@ -8,10 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +18,7 @@ public class UserRepoImpl implements UserRepo{
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     private PreparedStatement pstm;
+    private boolean userRepoTaskResult;
 
     @Autowired
     MySQLConnector mySQLConnector;
@@ -115,6 +113,43 @@ public class UserRepoImpl implements UserRepo{
             E.printStackTrace();
         }
         return userCreated;
+    }
+
+    //Asbjørn
+    @Override
+    public boolean subscribeNewsletter(int userId) {
+        String statement = "INSERT INTO salon_tina_database.newsletter (users_id) VALUES (?)";
+        userRepoTaskResult = newsletterQueries(userId, statement);
+        return userRepoTaskResult;
+    }
+
+    //Asbjørn
+    @Override
+    public boolean unsubscribeNewsletter(int userId) {
+        String statement = "DELETE FROM salon_tina_database.newsletter WHERE users_id = ?";
+        userRepoTaskResult = newsletterQueries(userId, statement);
+        return userRepoTaskResult;
+    }
+
+    //Asbjørn
+    //Both subscribe and unsubscribe use the same execute code
+    private boolean newsletterQueries(int userId, String statement) {
+        try{
+            pstm = null;
+            Connection connection = mySQLConnector.openConnection();
+            pstm = connection.prepareStatement(statement);
+            pstm.setInt(1, userId);
+
+            pstm.executeUpdate();
+            mySQLConnector.closeConnection();
+            userRepoTaskResult = true;
+            databaseLogger.writeToLogFile(statement);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            userRepoTaskResult = false;
+        }
+        return userRepoTaskResult;
     }
 
     //Mike
