@@ -3,6 +3,8 @@ package com.firstyearproject.salontina.Controllers;
 import com.firstyearproject.salontina.Models.Booking;
 import com.firstyearproject.salontina.Models.LoginToken;
 import com.firstyearproject.salontina.Models.User;
+import com.firstyearproject.salontina.Models.Item;
+import com.firstyearproject.salontina.Models.Treatment;
 import com.firstyearproject.salontina.Repositories.UserRepoImpl;
 import com.firstyearproject.salontina.Services.*;
 import org.slf4j.Logger;
@@ -26,6 +28,7 @@ import java.util.List;
 public class FOController {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
+    //TODO logging in mappings
 
     private String REDIRECT = "redirect:/";
     private String LOGIN = "login";
