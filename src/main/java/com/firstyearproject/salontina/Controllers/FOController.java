@@ -1,8 +1,6 @@
 package com.firstyearproject.salontina.Controllers;
 
-import com.firstyearproject.salontina.Models.Booking;
-import com.firstyearproject.salontina.Models.LoginToken;
-import com.firstyearproject.salontina.Models.User;
+import com.firstyearproject.salontina.Models.*;
 import com.firstyearproject.salontina.Services.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,11 +9,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.SessionAttribute;
 
 import javax.servlet.http.HttpSession;
-import java.awt.print.Book;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 @Controller
@@ -29,6 +29,9 @@ public class FOController {
     private String LOGIN = "login";
     private String REGISTER = "register";
     private String REDIRECTREGISTER = "redirect:/" + REGISTER;
+
+    private ArrayList<Item> itemArrayList = new ArrayList<>();
+    private ArrayList<Treatment> treatmentArrayList = new ArrayList<>();
 
     @Autowired
     UserServiceImpl userService;
@@ -89,36 +92,46 @@ public class FOController {
         return "userprofile";
     }
 
-    //Jonathan
+    //Jonathan & Luca
     @GetMapping("vælgtreatment")
     public String vælgBooking(Model model) {
         model.addAttribute("booking", new Booking());
-        return "vælgtreatment";
+
+        productService.createProductArrayLists(itemArrayList, treatmentArrayList);
+
+        model.addAttribute("treatmentList", treatmentArrayList);
+        return "chooseBookingTreatment";
     }
-    //Jonathan
-    @PostMapping("vælgtreatment")
-    public String vælgBooking(HttpSession httpSession, @ModelAttribute Booking booking) {
-        httpSession.setAttribute("booking", booking);//Sender Booking op i HttpSession
-        return "vælgtid";
+
+    //Jonathan & Luca
+    @GetMapping("vælgtid/{treatmentId}")
+    public String vælgTid(HttpSession session, Model model, @PathVariable int treatmentId) {
+        Date date = new Date(Calendar.getInstance().getTimeInMillis());
+
+        Booking booking = new Booking();
+        booking.setBookingTreatmentList(new ArrayList<>());
+        booking.getBookingTreatmentList().add(productService.getTreatment(treatmentId));
+        booking.setBookingDate(date);
+        //TODO set userId from httpsession user
+
+        session.setAttribute("booking", booking);
+
+        List<Booking> bookingList = bookingService.getBookingList(date.toString());
+
+        model.addAttribute("bookingList", bookingList);
+        return "chooseBookingTime";
     }
-    //Jonathan
-    @GetMapping("vælgtid")
-    public String vælgTid(HttpSession httpSession, Model model) {
-        Booking booking = (Booking) httpSession.getAttribute("booking");  //Henter Booking fra HttpSession
-        model.addAttribute("booking", booking);
-        return "vælgtid";
-    }
-    //Jonathan
-    @PostMapping("vælgtid")
-    public String vælgTid(HttpSession httpSession, @ModelAttribute Booking booking) {
-        httpSession.setAttribute("booking", booking); //Sender Booking op i HttpSession
-        bookingService.addBooking(booking); //Gemmer booking
-        return "bookingconfirmation";
-    }
-    //Jonathan
-    @GetMapping("bookingconfirmation")
-    public String bookingConfirmation(HttpSession httpSession, Model model) {
-        Booking booking = (Booking) httpSession.getAttribute("booking"); //Henter Booking fra HttpSession
+
+    //Jonathan & Luca
+    @GetMapping("bookingconfirmation/{time}")
+    public String bookingConfirmation(HttpSession session, Model model, @PathVariable String time) {
+        Booking booking = (Booking) session.getAttribute("booking");
+
+        booking.setBookingTime(time);
+
+        System.out.println(booking);
+
+        bookingService.addBooking(booking);
         model.addAttribute("booking", booking);
         return "bookingconfirmation";
     }

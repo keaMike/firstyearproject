@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.sql.Date;
 import java.util.List;
 
 @Repository
@@ -26,7 +27,7 @@ public class BookingRepoImpl implements BookingRepo{
 
 
     //Mike
-    public List findBookingsByUserId(int userid) {
+    public List<Booking> findBookingsByUserId(int userid) {
         try {
             con = mySQLConnector.openConnection();
             pstm = con.prepareStatement("SELECT * FROM bookings JOIN bookings_treatment ON " +
@@ -39,7 +40,7 @@ public class BookingRepoImpl implements BookingRepo{
                 Booking b = new Booking();
                 b.setBookingId(rs.getInt("bookings_id"));
                 b.setBookingUserId(rs.getInt("users_id"));
-                //setTime?
+                //TODO setTime?
                 b.setBookingDate(rs.getDate("bookings_date"));
                 b.setBookingComment(rs.getString("bookings_comment"));
 
@@ -64,6 +65,75 @@ public class BookingRepoImpl implements BookingRepo{
             e.printStackTrace();
         } finally {
             mySQLConnector.closeConnection();
+        }
+        return null;
+    }
+
+    //Luca
+    public List<Booking> getBookingList(Date startDate, Date endDate){
+        String statement =  "SELECT * FROM bookings " +
+                            "WHERE bookings_date BETWEEN DATE(?) AND DATE(?) " +
+                            "ORDER BY bookings_date, bookings_time;";
+
+        List<Booking> bookingList = new ArrayList<>();
+
+        try {
+            PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
+
+            pstmt.setDate(1, startDate);
+            pstmt.setDate(2, endDate);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while(rs.next()){
+                Booking booking = new Booking();
+                booking.setBookingId(rs.getInt(1));
+                booking.setBookingUserId(rs.getInt(2));
+                booking.setBookingTime(rs.getString(3));
+                booking.setBookingDate(rs.getDate(4));
+                booking.setBookingComment(rs.getString(5));
+                bookingList.add(booking);
+            }
+
+            //TODO tilføj databaseLogger
+
+            return bookingList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    //Luca
+    public List<Booking> getBookingList(Date date){
+        String statement =  "SELECT * FROM bookings " +
+                            "WHERE bookings_date = ? " +
+                            "ORDER BY bookings_time;";
+
+        List<Booking> bookingList = new ArrayList<>();
+
+        try {
+            PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
+
+            pstmt.setDate(1, date);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while(rs.next()){
+                Booking booking = new Booking();
+                booking.setBookingId(rs.getInt(1));
+                booking.setBookingUserId(rs.getInt(2));
+                booking.setBookingTime(rs.getString(3));
+                booking.setBookingDate(rs.getDate(4));
+                booking.setBookingComment(rs.getString(5));
+                bookingList.add(booking);
+            }
+
+            //TODO tilføj databaseLogger
+
+            return bookingList;
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return null;
     }
