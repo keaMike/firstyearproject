@@ -12,10 +12,11 @@ public interface ProductRepo {
     boolean createItem (Item item);
     List<Treatment> createTreatmentArrayList();
     List<Item> createItemArrayList();
-    void insertIntoItemArrayList (List<Item> itemArrayList, ResultSet rs);
-    void insertIntoTreatmentArrayList (List<Treatment> treatmentArrayList, ResultSet rs);
     boolean editItem(Item item);
     boolean editTreatment(Treatment treatment);
     Treatment getTreatment(int treatmentId);
     Item getItem(int itemId);
+    boolean deleteTreatment(int treatmentId);
+    boolean deleteItem(int itemId);
+    List findAllTreatments();
 }

@@ -30,6 +30,7 @@ public class BookingRepoImpl implements BookingRepo{
     DatabaseLogger databaseLogger;
 
     //Luca
+    @Override
     public boolean addBooking(Booking booking){
         String statement =  "INSERT INTO bookings " +
                             "(bookings_date, bookings_time, users_id, bookings_comment) " +
@@ -56,6 +57,7 @@ public class BookingRepoImpl implements BookingRepo{
     }
 
     //Luca
+    @Override
     public boolean addTreatmentsToBooking(List<Treatment> treatmentList, Booking booking){
         String statement =  "INSERT INTO bookings_treatment " +
                             "(bookings_id, treatments_id) " +
@@ -100,6 +102,7 @@ public class BookingRepoImpl implements BookingRepo{
     }
 
     //Mike
+    @Override
     public List<Booking> findBookingsByUserId(int userid) {
         try {
             String statement =  "SELECT * FROM bookings JOIN bookings_treatment ON " +
@@ -148,6 +151,7 @@ public class BookingRepoImpl implements BookingRepo{
     }
 
     //Luca
+    @Override
     public List<Booking> getBookingList(Date startDate, Date endDate){
         String statement =  "SELECT * FROM bookings " +
                             "WHERE bookings_date BETWEEN DATE(?) AND DATE(?) " +
@@ -183,6 +187,7 @@ public class BookingRepoImpl implements BookingRepo{
     }
 
     //Luca
+    @Override
     public List<Booking> getBookingList(Date date){
         String statement =  "SELECT * FROM bookings " +
                             "WHERE bookings_date = ? " +
@@ -217,6 +222,7 @@ public class BookingRepoImpl implements BookingRepo{
     }
 
     //Luca
+    @Override
     public boolean addVacationDate(Date date, int userId){
         log.info("addVacation method started...");
 
@@ -239,6 +245,7 @@ public class BookingRepoImpl implements BookingRepo{
     }
   
     //Mike
+    @Override
     public boolean deleteBooking(int bookingId) {
         try {
             String statement = "DELETE FROM bookings WHERE bookings_id = ?";
@@ -250,17 +257,14 @@ public class BookingRepoImpl implements BookingRepo{
 
             databaseLogger.writeToLogFile(statement);
 
-            deleteTreatmentByBookingId(bookingId);
-
-            databaseLogger.writeToLogFile(statement);
-
-            return true;
+            return deleteTreatmentByBookingId(bookingId);
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
     }
 
+    @Override
     public boolean deleteTreatmentByBookingId(int bookingId){
         String statement = "DELETE FROM bookings_treatment WHERE bookings_id = ?";
 

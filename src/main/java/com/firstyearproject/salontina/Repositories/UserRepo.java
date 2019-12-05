@@ -1,7 +1,7 @@
 package com.firstyearproject.salontina.Repositories;
 
-import com.firstyearproject.salontina.Models.Reminder;
-import com.firstyearproject.salontina.Models.User;
+import com.firstyearproject.salontina.Models.*;
+
 import java.util.List;
 
 public interface UserRepo {
@@ -11,4 +11,11 @@ public interface UserRepo {
     boolean addUser(User user);
     boolean subscribeNewsletter(int userId);
     boolean unsubscribeNewsletter(int userId);
+    List<User> findAllUsers();
+    User findUserById(int userid);
+    boolean editUser(User user);
+    boolean editUserHistory(User user);
+    User authenticateUser(LoginToken loginToken);
+    boolean deleteUser(int userId);
+
 }
