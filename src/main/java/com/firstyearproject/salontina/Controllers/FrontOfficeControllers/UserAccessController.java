@@ -69,6 +69,7 @@ public class UserAccessController {
         return model;
     }
 
+
     //Mike
     @GetMapping("/")
     public String index(Model model, HttpSession session) {
