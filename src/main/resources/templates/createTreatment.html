@@ -8,7 +8,7 @@
 
 <div class="container">
     <h1>Opret ny behandling</h1>
-    <form th:method="post" th:action="@{/createTreatment}">
+    <form th:method="post" th:action="@{/createtreatment}">
         <div>Navn</div>
         <input type="text" th:field="${treatment.productName}" placeholder="Behandlings Navn" required/>
         <br>

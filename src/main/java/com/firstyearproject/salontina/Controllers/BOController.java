@@ -71,7 +71,7 @@ public class BOController {
     }
 
     //Luca
-    @GetMapping("påmindelse")
+    @GetMapping("reminder")
     public String reminder(Model model, HttpSession session) {
         log.info("get reminder action started...");
 
@@ -83,7 +83,7 @@ public class BOController {
     }
 
     //Luca
-    @GetMapping("sendpåmindelse")
+    @GetMapping("sendreminder")
     public String sendreminder(Model model, HttpSession session) {
         log.info("post sendreminder action started...");
 
@@ -99,7 +99,7 @@ public class BOController {
     }
 
     //Luca
-    @GetMapping("nyhedsbrev")
+    @GetMapping("newsletter")
     public String newsletter(Model model, HttpSession session) {
         log.info("get newsletter action started...");
 
@@ -112,7 +112,7 @@ public class BOController {
     }
 
     //Luca
-    @PostMapping("sendnyhedsbrev")
+    @PostMapping("sendnewsletter")
     public String sendNewsletter(Model model, HttpSession session, @ModelAttribute Newsletter newsletter) {
         log.info("post newsletter action started...");
 
@@ -128,7 +128,7 @@ public class BOController {
     }
 
     //Luca
-    @PostMapping("sendtestnyhedsbrev")
+    @PostMapping("sendtestnewsletter")
     public String sendTestNewsletter(Model model, HttpSession session, @ModelAttribute Newsletter newsletter) {
         log.info("post newsletter action started...");
 
@@ -150,20 +150,20 @@ public class BOController {
     }
 
     //Asbjørn
-    @GetMapping("/tilføjprodukt")
+    @GetMapping("/createproduct")
     public String createProduct(Model model, HttpSession session) {
         return CREATEPRODUCT;
     }
 
     //Asbjørn
-    @GetMapping("/tilføjvare")
+    @GetMapping("/createitem")
     public String createItem(Model model, HttpSession session) {
         model.addAttribute("item", new Item());
         return CREATEITEM;
     }
 
     //Asbjørn
-    @PostMapping("/tilføjvare")
+    @PostMapping("/createitem")
     public String createItem(@ModelAttribute Item item, Model model, HttpSession session) {
         taskResult = productServiceImpl.createItem(item);
         if (taskResult) {
@@ -176,14 +176,14 @@ public class BOController {
     }
 
     //Asbjørn
-    @GetMapping("/tilføjbehandling")
+    @GetMapping("/createtreatment")
     public String createTreatment(Model model, HttpSession session) {
         model.addAttribute("treatment", new Treatment());
         return CREATETREATMENT;
     }
 
     //Asbjørn
-    @PostMapping("/tilføjbehandling")
+    @PostMapping("/createtreatment")
     public String createTreatment(@ModelAttribute Treatment treatment, Model model, HttpSession session) {
         taskResult = productServiceImpl.createTreatment(treatment);
         if (taskResult) {
@@ -196,13 +196,13 @@ public class BOController {
     }
 
     //Mike
-    @GetMapping("/kontrolpanel")
+    @GetMapping("/controlpanel")
     public String controlpanel() {
         return CONTROLPANEL;
     }
   
     //Asbjørn
-    @GetMapping ("/visprodukter")
+    @GetMapping ("/displayproducts")
     public String displayProducts (Model model, HttpSession session) {
         model.addAttribute("treatments", productServiceImpl.createTreatmentArrayList());
         model.addAttribute("items", productServiceImpl.createItemArrayList());
@@ -211,14 +211,14 @@ public class BOController {
     }
 
     //Asbjørn
-    @GetMapping ("/redigerbehandling/{id}")
+    @GetMapping ("/edittreatment/{id}")
     public String editTreatment (@PathVariable ("id") int id, Model model, HttpSession session) {
         model.addAttribute("treatments", productServiceImpl.getTreatment(id));
         return EDITTREATMENT;
     }
 
     //Asbjørn
-    @PostMapping ("/redigerbehandling")
+    @PostMapping ("/edittreatment")
     public String editTreatment (@ModelAttribute Treatment treatment) {
         taskResult = productServiceImpl.editTreatment(treatment);
         if (taskResult) {
@@ -231,14 +231,14 @@ public class BOController {
     }
 
     //Asbjørn
-    @GetMapping ("/redigervare/{id}")
+    @GetMapping ("/edititem/{id}")
     public String editItem (@PathVariable ("id") int id, Model model, HttpSession session) {
         model.addAttribute("items", productServiceImpl.getTreatment(id));
         return EDITITEM;
     }
 
     //Asbjørn
-    @PostMapping ("/redigervare")
+    @PostMapping ("/edititem")
     public String editItem (@ModelAttribute Item item) {
         taskResult = productServiceImpl.editItem(item);
         if (taskResult) {
@@ -251,7 +251,7 @@ public class BOController {
     }
 
     //Mike
-    @GetMapping("/redigerbrugerhistorik")
+    @GetMapping("/userlist")
     public String userList(Model model, HttpSession session) {
         List<User> users = userServiceImpl.getAllUsers();
         model.addAttribute("users", users);
@@ -259,7 +259,7 @@ public class BOController {
     }
 
     //Mike
-    @GetMapping("/redigerbrugerhistorik/{userid}")
+    @GetMapping("/edituserhistory/{userid}")
     public String editUserHistory(@PathVariable int userid, Model model, HttpSession session) {
         User user = userServiceImpl.getUserById(userid);
         user.setUserHistory(bookingServiceImpl.getBookingList(user.getUserId()));
@@ -268,7 +268,7 @@ public class BOController {
     }
 
     //Mike
-    @PostMapping("/redigerbrugerhistorik")
+    @PostMapping("/saveuserhistory")
     public String saveUserHistory(@ModelAttribute User user) {
         taskResult = userServiceImpl.editUserHistory(user);
         if (taskResult) {

@@ -8,8 +8,8 @@
 </head>
 <body>
 <div th:include = "fragments/header :: navbar"></div>
-<a class="btn btn-success" th:href="${'/createTreatment'}">Opret behandling</a>
-<a class="btn btn-success" th:href="${'/createItem'}">Opret Produkt</a>
+<a class="btn btn-success" th:href="${'/createtreatment'}">Opret behandling</a>
+<a class="btn btn-success" th:href="${'/createitem'}">Opret Produkt</a>
 
 <div th:if="${showconfirmation}">
     <div th:include="fragments/confirmation :: modal"></div>

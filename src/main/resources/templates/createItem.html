@@ -8,7 +8,7 @@
 
 <div class="container">
     <h1>Opret et nyt produkt</h1>
-    <form th:method="post" th:action="@{/createItem}">
+    <form th:method="post" th:action="@{/createitem}">
         <div>Navn</div>
         <input type="text" th:field="${item.productName}" placeholder="Produkt Navn" required/>
         <br>

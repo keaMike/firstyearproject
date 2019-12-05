@@ -8,7 +8,7 @@
 
 <div class="container">
     <h1>Details</h1>
-    <form th:method="post" th:action="@{/editItem}" th:object ="${items}">
+    <form th:method="post" th:action="@{/edititem}" th:object ="${items}">
         <input type="number" th:field="${items.productId}" readonly/>
         <br>
         <div>Navn: </div>

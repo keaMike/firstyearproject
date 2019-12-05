@@ -14,7 +14,7 @@
             <tr th:each="treatment : ${treatmentList}">
                 <td th:text="${treatment.productName}"></td>
                 <td>
-                    <a th:href="'/vælgtid/' + ${treatment.productId}">Vælg behandling</a>
+                    <a th:href="'/choosetime/' + ${treatment.productId}">Vælg behandling</a>
                 </td>
             </tr>
         </tbody>

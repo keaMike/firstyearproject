@@ -34,8 +34,8 @@ public class FOController {
     private String MYBOOKINGS = "mybookings";
     private String CONTACT = "contact";
     private String BOOKINGCONFIRMATION = "bookingconfirmation";
-    private String CHOOSEBOOKINGTREATMENT = "chooseBookingTreatment";
-    private String CHOOSEBOOKINGTIME = "chooseBookingTime";
+    private String CHOOSEBOOKINGTREATMENT = "choosebookingtreatment";
+    private String CHOOSEBOOKINGTIME = "choosebookingtime";
 
     private boolean taskResult = false;
     private boolean showConfirmation = false;
@@ -84,45 +84,45 @@ public class FOController {
     }
 
     //Jonathan
-    @GetMapping("/registrer")
-    public String registrer(Model model) {
+    @GetMapping("/register")
+    public String register(Model model) {
         model.addAttribute("userToBeRegistered", new User());
         return REGISTER;
     }
     //Jonathan
-    @PostMapping("/registrer")
-    public String registrer(@ModelAttribute User user) {
+    @PostMapping("/register")
+    public String register(@ModelAttribute User user) {
         userService.addUser(user);
         return REDIRECT + LOGIN;
     }
     //Jonathan
-    @GetMapping("/redigerbruger")
+    @GetMapping("/editUser")
     public String editUser(HttpSession session, Model model) {
         User user =  new User(); //(User)session.getAttribute("user");
         model.addAttribute("userToBeEdited", user);
         return EDITUSER;
     }
     //Jonathan
-    @PostMapping("/redigerbruger")
+    @PostMapping("/editUser")
     public String editUser(@ModelAttribute User user) {
         userService.editUser(user);
         return REDIRECT + USERPROFILE;
     }
 
-    @GetMapping("brugerprofil")
+    @GetMapping("userProfile")
     public String userProfile(Model model) {
         model.addAttribute("userToBeViewed", new User());
         return USERPROFILE;
     }
 
     //Mike
-    @GetMapping("/sletbruger/{userid}")
+    @GetMapping("/deleteuser/{userid}")
     public String deleteUser(@PathVariable int userId) {
         userService.deleteUser(userId);
         return REDIRECT + EDITUSER;
     }
 
-    @GetMapping("/minebookings")
+    @GetMapping("/mybookings")
     public String userBookings(Model model, HttpSession session) {
         //Test user
         User user = userService.getUserById(3);
@@ -133,7 +133,7 @@ public class FOController {
     }
 
     //Mike
-    @GetMapping("/sletbooking/{bookingid}")
+    @GetMapping("/deletebooking/{bookingid}")
     public String deleteUserBooking(@PathVariable int bookingid) {
         taskResult = bookingService.deleteBooking(bookingid);
         if (taskResult) {
@@ -146,7 +146,7 @@ public class FOController {
     }
 
     //Jonathan & Luca
-    @GetMapping("vælgbehandling")
+    @GetMapping("choosetreatment")
     public String chooseTreatment(Model model) {
         model.addAttribute("booking", new Booking());
 
@@ -155,8 +155,8 @@ public class FOController {
     }
 
     //Jonathan & Luca
-    @GetMapping("vælgtid/{treatmentId}")
-    public String vælgTid(HttpSession session, Model model, @PathVariable int treatmentId) {
+    @GetMapping("choosetime/{treatmentId}")
+    public String chooseTime(HttpSession session, Model model, @PathVariable int treatmentId) {
         Date date = new Date(Calendar.getInstance().getTimeInMillis());
 
         Booking booking = new Booking();
@@ -213,8 +213,8 @@ public class FOController {
         return EDITUSER;
     }
 
-    @GetMapping ("/kontakt")
-    public String kontakt () {
+    @GetMapping ("/contact")
+    public String contact () {
         return CONTACT;
     }
 }
