@@ -55,7 +55,7 @@ INSERT INTO users_roles (users_id, role) VALUES
 (2, 'Frisør');
 
 CREATE TABLE IF NOT EXISTS newsletter (
-    users_id INT NOT NULL,
+    users_id INT UNIQUE NOT NULL,
     CONSTRAINT newsletter_fk_users FOREIGN KEY (users_id) REFERENCES salon_tina_database.users (users_id)
 );
 

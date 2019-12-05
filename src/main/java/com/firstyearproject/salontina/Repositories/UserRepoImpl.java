@@ -108,11 +108,33 @@ public class UserRepoImpl implements UserRepo{
 
             databaseLogger.writeToLogFile(statement);
 
+            if(user.isUserNewsLetter()){
+                addToNewsletter(user);
+            }
+
             userCreated = true;
         } catch (Exception E) {
             E.printStackTrace();
         }
         return userCreated;
+    }
+
+    //Luca
+    public void addToNewsletter(User user){
+        User foundUser = authenticateUser(new LoginToken(user.getUsername(), user.getUserPassword()));
+
+        String statement =  "INSERT INTO newsletter " +
+                            "(users_id) " +
+                            "VALUES " +
+                            "(?);";
+
+        try {
+            PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
+
+            pstmt.setInt(1, foundUser.getUserId());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     //Asbjørn
