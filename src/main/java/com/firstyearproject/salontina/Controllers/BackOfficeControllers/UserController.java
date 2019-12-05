@@ -23,8 +23,8 @@ public class UserController {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    private String ALLUSERS = "allusers";
-    private String EDITUSERHISTORY = "edituserhistory";
+    private String ALLUSERS = "users/allusers";
+    private String EDITUSERHISTORY = "users/edituserhistory";
 
     private boolean taskResult = false;
     private boolean showConfirmation = false;

@@ -22,9 +22,9 @@ public class SMSController {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    private String NEWSLETTER = "newsletter";
-    private String REMINDER = "reminder";
-    private String NEWSLETTERORREMINDER = "newsletterOrReminder";
+    private String NEWSLETTER = "sms/newsletter";
+    private String REMINDER = "sms/reminder";
+    private String NEWSLETTERORREMINDER = "sms/newsletterOrReminder";
     private String REDIRECT = "redirect:/";
 
     private boolean showConfirmation = false;

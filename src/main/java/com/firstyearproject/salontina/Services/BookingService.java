@@ -13,4 +13,5 @@ public interface BookingService {
     List<Booking> getBookingList(String startDate, String endDate);
     List<Booking> getBookingList(String date);
     List<Booking> getBookingList(int userid);
+    boolean addVacationDate(String dateString, int userId);
 }
