@@ -209,12 +209,7 @@ public class UserRepoImpl implements UserRepo{
             pstm.setInt(1, userid);
             ResultSet rs = pstm.executeQuery();
             while (rs.next()) {
-                u.setUserId(rs.getInt(1));
-                u.setUsername(rs.getString(2));
-                u.setUserPassword(rs.getString(3));
-                u.setUserPhonenumber(rs.getInt(4));
-                u.setUserEmail(rs.getString(5));
-                u.setUserPreference(rs.getString(6));
+                generateUserFromResultSet(u, rs);
             }
             pstm.close();
 
@@ -225,6 +220,16 @@ public class UserRepoImpl implements UserRepo{
             e.printStackTrace();
         }
         return null;
+    }
+
+    //Luca
+    private void generateUserFromResultSet(User u, ResultSet rs) throws SQLException {
+        u.setUserId(rs.getInt(1));
+        u.setUsername(rs.getString(2));
+        u.setUserPassword(rs.getString(3));
+        u.setUserPhonenumber(rs.getInt(4));
+        u.setUserEmail(rs.getString(5));
+        u.setUserPreference(rs.getString(6));
     }
 
     //Jonathan
@@ -406,12 +411,7 @@ public class UserRepoImpl implements UserRepo{
         }
         User user = new User();
 
-        user.setUserId(rs.getInt(1));
-        user.setUsername(rs.getString(2));
-        user.setUserPassword(rs.getString(3));
-        user.setUserPhonenumber(rs.getInt(4));
-        user.setUserEmail(rs.getString(5));
-        user.setUserPreference(rs.getString(6));
+        generateUserFromResultSet(user, rs);
         user.setUserRoles(getUserRoles(user.getUserId()));
         user.setUserHistory(getUserHistory(user.getUserId()));
 
