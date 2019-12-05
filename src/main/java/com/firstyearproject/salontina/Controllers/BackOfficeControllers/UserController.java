@@ -1,10 +1,7 @@
 package com.firstyearproject.salontina.Controllers.BackOfficeControllers;
 
 import com.firstyearproject.salontina.Models.User;
-import com.firstyearproject.salontina.Services.BookingServiceImpl;
-import com.firstyearproject.salontina.Services.ProductServiceImpl;
-import com.firstyearproject.salontina.Services.SMSServiceImpl;
-import com.firstyearproject.salontina.Services.UserServiceImpl;
+import com.firstyearproject.salontina.Services.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +22,7 @@ public class UserController {
 
     private String ALLUSERS = "users/allusers";
     private String EDITUSERHISTORY = "users/edituserhistory";
+    private String REDIRECT = "redirect:/";
 
     private boolean taskResult = false;
     private boolean showConfirmation = false;
@@ -36,6 +34,9 @@ public class UserController {
 
     @Autowired
     BookingServiceImpl bookingServiceImpl;
+
+    @Autowired
+    UserAuthenticator userAuthenticator;
 
     //Luca
     //Used in Java Methods/mappings
@@ -55,6 +56,9 @@ public class UserController {
     //Mike
     @GetMapping("/userlist")
     public String userList(Model model, HttpSession session) {
+        if(!userAuthenticator.userIsAdmin(session)){
+            return REDIRECT;
+        }
         User user = (User)session.getAttribute("user");
         List<User> users = userServiceImpl.getAllUsers();
         model.addAttribute("user", user);
@@ -65,6 +69,9 @@ public class UserController {
     //Mike
     @GetMapping("/edituserhistory/{userid}")
     public String editUserHistory(@PathVariable int userid, Model model, HttpSession session) {
+        if(!userAuthenticator.userIsAdmin(session)){
+            return REDIRECT;
+        }
         User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);
         User editedUser = userServiceImpl.getUserById(userid);
@@ -75,7 +82,10 @@ public class UserController {
 
     //Mike
     @PostMapping("/saveuserhistory")
-    public String saveUserHistory(@ModelAttribute User user) {
+    public String saveUserHistory(@ModelAttribute User user, HttpSession session) {
+        if(!userAuthenticator.userIsAdmin(session)){
+            return REDIRECT;
+        }
         taskResult = userServiceImpl.editUserHistory(user);
         if (taskResult) {
             return EDITUSERHISTORY;
