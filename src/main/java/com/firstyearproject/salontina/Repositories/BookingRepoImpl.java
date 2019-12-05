@@ -145,7 +145,7 @@ public class BookingRepoImpl implements BookingRepo{
         }
         return null;
     }
-}
+
     //Mike
     public boolean deleteBooking(int bookingId) {
         try {
