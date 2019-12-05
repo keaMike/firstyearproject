@@ -1,0 +1,57 @@
+<div th:fragment="footer" xmlns:th="http://www.w3.org/1999/xhtml">
+    <footer class="page-footer font-small unique-color-dark footer">
+        <div>
+            <div class="container text-center text-md-left mt-5">
+                <div class="row mt-3">
+                    <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+                        <h6 class="text-uppercase font-weight-bold">Salon-Tina</h6>
+                        <hr class="deep-purple accent-2 mb-4 mt-0 d-inline-block mx-auto underline">
+                        <p>Velkommen til min hjemmeside! Mit navn er Tina jeg har været uddannet frisør siden 1979,
+                        så du er i gode hænder. Hvis du bestiller en tid hos mig kan jeg love dig en hyggelig samtale,
+                        en god kop kaffe/te, samt lidt sødt til tanden. Kærlig hilsen Tina</p>
+
+                    </div>
+                    <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+                        <h6 class="text-uppercase font-weight-bold">Produkter</h6>
+                        <hr class="deep-purple accent-2 mb-4 mt-0 d-inline-block mx-auto underline">
+                        <p>
+                            <a th:href="@{/treatments}">Behandlinger</a>
+                        </p>
+                        <p>
+                            <a th:href="@{/products}">Produkter</a>
+                        </p>
+
+                    </div>
+                    <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+                        <h6 class="text-uppercase font-weight-bold">Åbningstider</h6>
+                        <hr class="deep-purple accent-2 mb-4 mt-0 d-inline-block mx-auto underline">
+                            <p>Mandag: 08-16</p>
+                            <p>Tirsdag: 08-16</p>
+                            <p>Onsdag: 08-16</p>
+                            <p>Torsdag: 08-16</p>
+                            <p>Fredag: 08-16</p>
+                            <p>Lørdag: 08-16</p>
+                            <p>Søndag: 08-16</p>
+                    </div>
+                    <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+                        <h6 class="text-uppercase font-weight-bold">Kontakt</h6>
+                        <hr class="deep-purple accent-2 mb-4 mt-0 d-inline-block mx-auto underline">
+                        <p>
+                            <i class="fas fa-home mr-3"></i>Bavnevej 3, Hvidovre 2650</p>
+                        <p>
+                            <i class="fas fa-envelope mr-3"></i> salon-tina@oncable.dk</p>
+                        <p>
+                            <i class="fas fa-phone mr-3"></i> 36 78 09 00</p>
+                        <p>
+                            <a href="https://www.facebook.com/pages/category/Hair-Salon/SALON-TINA-267664170055182/">
+                                <i class="fab fa-facebook-square mr-3"></i>Følg mig på facebook</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-copyright text-center py-3">© 2019 Copyright:
+                <a class="noDecoration" th:href="@{/}"> Salon-Tina</a>
+            </div>
+        </div>
+    </footer>
+</div>

@@ -3,13 +3,8 @@ body, html {
 }
 
 .backgroundimage {
-    /* The image used */
     background: url("https://cdn.pixabay.com/photo/2015/10/26/20/46/haircut-1007891_1280.jpg");
-
-    /* Full height */
     height: 100%;
-
-    /* Center and scale the image nicely */
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -211,6 +206,28 @@ body, html {
     display: inline-block;
     padding-right: 10px;
 }
+
+.footer {
+    background-color: #292b2c;
+    color: white;
+    padding: 0;
+    margin: 0;
+}
+
+.footer a {
+    text-decoration: none;
+}
+
+.footer h6 {
+    padding-top: 10px;
+}
+
+.footer .underline {
+    width: 60px;
+    background-color: white
+}
+
+
 
 input[type='number'] {
     -moz-appearance:textfield;

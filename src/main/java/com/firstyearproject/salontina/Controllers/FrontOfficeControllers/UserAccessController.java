@@ -65,8 +65,8 @@ public class UserAccessController {
         } else {
             model.addAttribute("user", new User());
             model.addAttribute("loginToken", new LoginToken());
-            return model;
         }
+        return model;
     }
 
     //Mike
