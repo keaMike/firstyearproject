@@ -2,12 +2,14 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Salon-Tina</title>
+    <div th:include="fragments/header :: scripts"></div>
 </head>
+<div th:include = "fragments/header :: navbar"></div>
 <body>
-
-<a class="btn btn-success" th:href="${'/displayProducts'}">Rediger Produkt</a>
-<a class="btn btn-success" th:href="${'/createProduct'}">Opret nyt produkt eller behandling</a>
-
+    <div class="backgroundimage">
+        <h1 class="landingpage">Velkommen til Salon-Tina</h1>
+    </div>
 </body>
+    <script type = "text/javascript" src = "/static/js/login.js" th:src = "@{/js/login.js}"></script>
 </html>

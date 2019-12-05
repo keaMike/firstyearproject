@@ -1,27 +1,149 @@
 <div th:fragment="navbar" xmlns:th="http://www.w3.org/1999/xhtml">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <!--LOGO/TITLE-->
-        <a class="navbar-brand" href="#">Salon-Tina</a>
+        <a class="navbar-brand" th:href="@{/}">Salon-Tina</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Book <span class="sr-only">(current)</span></a>
+                <li class="nav-item active" th:if="${user.userId} != 0">
+                    <a class="nav-link" href="#">Bestil tid <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item" th:if="${user.userId} != 0">
+                    <a class="nav-link" th:href="@{/minprofil}">Min Profil</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Min Profil</a>
+                    <a class = "nav-link" th:href="@{/behandlinger}">Behandlinger</a>
                 </li>
                 <li class="nav-item">
-                    <a class = "nav-link" th:href="@{/mybookings}" >Mine Bookings</a>
+                    <a class = "nav-link" th:href="@{/produkter}">Produkter</a>
                 </li>
                 <li class="nav-item">
-                    <a class = "nav-link" th:href="@{/kontrolpanel}">Kontrolpanel</a>
+                    <a class = "nav-link" th:href="@{/kontakt}" >Kontakt</a>
                 </li>
+                <div th:each="role : ${user.userRoles}">
+                    <li class="nav-item" th:if="${role} == 'Admin'">
+                        <a class = "nav-link" th:href="@{/kontrolpanel}">Kontrol panel</a>
+                    </li>
+                </div>
             </ul>
-            <button class = "btn btn-primary btn-dark loginmodalbtn" id = "loginmodalbtn">Logud</button>
+            <div th:if="${user.userId} == 0">
+                <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#loginmodal">Log ind</button>
+                <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#signupmodal">Opret profil</button>
+            </div>
+            <div th:unless="${user.userId} == 0">
+                <button type="button" class="btn btn-dark" id="logoutmodalbtn">Log ud</button>
+            </div>
         </div>
     </nav>
+
+    <div th:if="${user.userId} == 0">
+        <!--Modal Content-->
+        <div class="modal fade" id="signupmodal" role="dialog" aria-labelledby="signupmodal" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" id="signupmodal-content">
+                    <div class="modal-body">
+                        <form th:method="post" th:action="@{/register}" th:object="${user}">
+
+                            <div class="input-div one">
+                                <div class="i">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div>
+                                    <h5>Fulde Navn</h5>
+                                    <input type="password" class="input" id="username" th:field="${user.username}" required>
+                                </div>
+                            </div>
+
+                            <div class="input-div two">
+                                <div class="i">
+                                    <i class="fas fa-at"></i>
+                                </div>
+                                <div>
+                                    <h5>E-Mail</h5>
+                                    <input type="text" class="input" id="email" th:field="${user.userEmail}" required>
+                                </div>
+                            </div>
+
+                            <div class="input-div three">
+                                <div class="i">
+                                    <i class="fas fa-phone"></i>
+                                </div>
+                                <div>
+                                    <h5>Telefon Nummer</h5>
+                                    <input type="password" class="input" id="phonenumber" th:field="${user.userPhonenumber}" required>
+                                </div>
+                            </div>
+
+                            <div class="input-div four">
+                                <div class="i">
+                                    <i class="fas fa-lock"></i>
+                                </div>
+                                <div>
+                                    <h5>Kodeord</h5>
+                                    <input type="password" class="input" id="password" th:field="${user.userPassword}" required>
+                                </div>
+                            </div>
+
+                            <div class="input-div five">
+                                <div class="i">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div>
+                                    <h5>Bekræft kodeord</h5>
+                                    <input type="password" class="input" id="confirmpassword" required>
+                                </div>
+                            </div>
+                            <input type="submit" class="btn btn-dark" value="Opret profil">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${user.userId} == 0">
+        <!--Modal Content-->
+        <div class="modal fade" id="loginmodal" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" id="loginmodal-content">
+                    <div class="modal-body">
+                        <form th:method="post" th:action="@{/}" th:object="${loginToken}">
+                            <div class="input-div one">
+                                <div class="i">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div>
+                                    <h5>Brugernavn</h5>
+                                    <input type="text" class="input" name="username" th:field="${loginToken.loginTokenUsername}"  required>
+                                </div>
+                            </div>
+                            <div class="input-div two">
+                                <div class="i">
+                                    <i class="fas fa-lock"></i>
+                                </div>
+                                <div>
+                                    <h5>Kodeord</h5>
+                                    <input type="password" class="input" name="password" th:field="${loginToken.loginTokenPassword}" required>
+                                </div>
+                            </div>
+                            <input type="submit" class="btn btn-dark" value="Log ind">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="scripts"  xmlns:th="http://www.w3.org/1999/xhtml">
+    <script src= "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet" media="screen"/>
+    <script th:src="@{/webjars/jquery/3.1.1/jquery.min.js}"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <link rel = "stylesheet" type = "text/css" href = "/static/stylesheet.css" th:href = "@{/stylesheet.css}"/>
+    <script src="https://kit.fontawesome.com/af932a1361.js" crossorigin="anonymous"></script>
 </div>

@@ -3,23 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Salon-tina</title>
-    <link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet" media="screen"/>
+    <div th:include="fragments/header :: scripts"></div>
 </head>
+<div th:include = "fragments/header :: navbar"></div>
 <body>
     <div class="container">
         <form class="form-group" th:method="post" th:action="@{/edituserhistory}" th:object="${user}">
             <input type="hidden" th:field="${user.userId}">
             <label for="username">Kundenavn</label>
-            <input class="form-control" id="username" type="text" readonly th:field="${user.username}">
+            <input class="form-control" id="username" type="text" readonly th:field="${editedUser.username}">
 
             <label for="phoneNumber">Telefon nr.</label>
-            <input class="form-control" id="phoneNumber" type="text" readonly th:field="${user.userPhonenumber}">
+            <input class="form-control" id="phoneNumber" type="text" readonly th:field="${editedUser.userPhonenumber}">
 
             <label for="email">E-Mail</label>
-            <input class="form-control" id="email" type="text" readonly th:field="${user.userEmail}">
+            <input class="form-control" id="email" type="text" readonly th:field="${editedUser.userEmail}">
 
             <label for="pref">Præferencer</label>
-            <textarea class="form-control" rows = "10" cols = "50" id="pref" type="text" th:field="${user.userPreference}"></textarea>
+            <textarea class="form-control" rows = "10" cols = "50" id="pref" type="text" th:field="${editedUser.userPreference}"></textarea>
             <br>
             <input class="btn btn-dark" value="Gem ændringer" type="submit">
         </form>

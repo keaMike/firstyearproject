@@ -2,27 +2,27 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Opret Produkt</title>
+    <title>Min Profil</title>
     <div th:include="fragments/header :: scripts"></div>
 </head>
 <div th:include = "fragments/header :: navbar"></div>
 <body>
 <div class = "controlpaneltitle">
-    <h1>Vælg hvilken slags du vil oprette
-        <i class = "fas fa-question"></i>
+    <h1>Min profil
+        <i class = "fas fa-user"></i>
     </h1>
 </div>
 <div class = "container boxcontainer">
-    <a th:href="@{/createTreatment}" class = "box">
-        <div class = "boxicon"><i class = "fas fa-cut"></i></div>
+    <a th:href="@{/minebookings}" class = "box">
+        <div class = "boxicon"><i class = "fas fa-book"></i></div>
         <div class = "boxcontent">
-            <h3>Opret behandling</h3>
+            <h3>Mine bookings</h3>
         </div>
     </a>
-    <a th:href="@{/createItem}" class = "box">
-        <div class = "boxicon"><i class = "fas fa-flask"></i></div>
+    <a th:href="@{/redigerbruger}" class = "box">
+        <div class = "boxicon"><i class = "fas fa-user-edit"></i></div>
         <div class = "boxcontent">
-            <h3>Opret produkt</h3>
+            <h3>Rediger oplysninger</h3>
         </div>
     </a>
 </div>

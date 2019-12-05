@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Register</title>
+    <div th:include="fragments/header :: scripts"></div>
 </head>
+<div th:include = "fragments/header :: navbar"></div>
 <!--Jonathan-->
 <body>
     <form action="#" th:action="@{/register}" method="post">

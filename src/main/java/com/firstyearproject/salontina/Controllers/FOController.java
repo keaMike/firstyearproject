@@ -1,9 +1,7 @@
 package com.firstyearproject.salontina.Controllers;
 
-import com.firstyearproject.salontina.Models.Booking;
-import com.firstyearproject.salontina.Models.LoginToken;
-import com.firstyearproject.salontina.Models.User;
 import com.firstyearproject.salontina.Repositories.UserRepoImpl;
+import com.firstyearproject.salontina.Models.*;
 import com.firstyearproject.salontina.Services.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,12 +25,16 @@ public class FOController {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
+    private String INDEX = "index";
     private String REDIRECT = "redirect:/";
     private String LOGIN = "login";
     private String REGISTER = "register";
     private String REDIGERBRUGER = "redigerbruger";
     private String USERPROFILE = "userprofile";
     private String MYBOOKINGS = "mybookings";
+    private String MYPROFILE = "myprofile";
+    private String CONTACT = "contact";
+    private String DISPLAYPRODUCTS = "displayProducts";
     private String MINEBOOKINGS = "minebookings";
     private String VÆLGTREATMENT = "vælgtreatment";
     private String VÆLGTID = "vælgtid";
@@ -45,6 +47,9 @@ public class FOController {
     private ArrayList<Item> itemArrayList = new ArrayList<>();
     private ArrayList<Treatment> treatmentArrayList = new ArrayList<>();
 
+    private ArrayList<Item> itemArrayList = new ArrayList<>();
+    private ArrayList<Treatment> treatmentArrayList = new ArrayList<>();
+
     @Autowired
     UserServiceImpl userService;
 
@@ -53,6 +58,7 @@ public class FOController {
 
     @Autowired
     ProductServiceImpl productService;
+
 
     //Luca
     //Used in Java Methods/mappings
@@ -68,23 +74,32 @@ public class FOController {
         model.addAttribute("confirmationtext", confirmationText);
         showConfirmation = false;
     }
-
-    @GetMapping("/login")
-    public String login(Model model, HttpSession session) {
-        model.addAttribute("loginToken", new LoginToken());
-        return LOGIN;
+    
+    //Mike
+    @GetMapping("/")
+    public String index(Model model, HttpSession session) {
+        if(session.getAttribute("user") != null) {
+            User user = (User)session.getAttribute("user");
+            model.addAttribute("user", user);
+            log.info(user.toString());
+        } else {
+            model.addAttribute("user", new User());
+            model.addAttribute("loginToken", new LoginToken());
+        }
+        return INDEX;
     }
 
-    @PostMapping("/login")
+    //Luca
+    @PostMapping("/")
     public String login(Model model, HttpSession session, @ModelAttribute LoginToken loginToken) {
         User user = userService.authenticateUser(loginToken);
 
         if(user != null){
             session.setAttribute("user", user);
 
-            return REDIRECT + REGISTER;
+            return REDIRECT;
         }
-        return LOGIN;
+        return INDEX;
     }
 
     //Jonathan
@@ -102,8 +117,8 @@ public class FOController {
     //Jonathan
     @GetMapping("/redigerbruger")
     public String redigerUser(HttpSession session, Model model) {
-        User user =  new User(); //(User)session.getAttribute("user");
-        model.addAttribute("userToBeEdited", user);
+        User user = (User)session.getAttribute("user");
+        model.addAttribute("user", user);
         return REDIGERBRUGER;
     }
     //Jonathan
@@ -114,8 +129,9 @@ public class FOController {
     }
 
     @GetMapping("userprofile")
-    public String userprofile(Model model) {
-        model.addAttribute("userToBeViewed", new User());
+    public String userprofile(Model model, HttpSession session) {
+        User user = (User)session.getAttribute("user");
+        model.addAttribute("user", user);
         return USERPROFILE;
     }
 
@@ -126,12 +142,11 @@ public class FOController {
         return REDIRECT + REDIGERBRUGER;
     }
 
+    //Mike
     @GetMapping("/minebookings")
     public String userbookings(Model model, HttpSession session) {
-        //Test user
-        User user = userService.getUserById(3);
-        List<Booking> bookings = bookingService.getBookingList(user.getUserId());
-        model.addAttribute("bookings", bookings);
+        User user = (User)session.getAttribute("user");
+        user.setUserHistory(bookingService.getBookingList(user.getUserId()));
         model.addAttribute("user", user);
         return MYBOOKINGS;
     }
@@ -149,7 +164,29 @@ public class FOController {
         }
     }
 
-    //Jonathan & Luca
+    //Mike
+    @GetMapping("/minprofil")
+    public String myprofil(Model model, HttpSession session) {
+        User user = (User)session.getAttribute("user");
+        model.addAttribute("user", user);
+        return MYPROFILE;
+    }
+
+    //Mike
+    @GetMapping("/kontakt")
+    public String contact(Model model, HttpSession session) {
+        if(session.getAttribute("user") != null) {
+            User user = (User)session.getAttribute("user");
+            model.addAttribute("user", user);
+        } else {
+            model.addAttribute("user", new User());
+            model.addAttribute("loginToken", new LoginToken());
+        }
+        return CONTACT;
+    }
+
+    //Jonathan
+
     @GetMapping("vælgtreatment")
     public String vælgBooking(Model model) {
         model.addAttribute("booking", new Booking());

@@ -24,14 +24,15 @@ public class BOController {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    private String INDEX = "index";
     private String NEWSLETTER = "newsletter";
     private String REMINDER = "reminder";
+    private String NEWSLETTERORREMINDER = "newsletterOrReminder";
     private String CREATEPRODUCT = "createProduct";
     private String CREATEITEM = "createItem";
     private String CREATETREATMENT = "createTreatment";
     private String CONTROLPANEL = "controlpanel";
     private String DISPLAYPRODUCTS = "displayProducts";
+    private String EDITPRODUCT = "editproduct";
     private String EDITTREATMENT = "editTreatment";
     private String EDITITEM = "editItem";
     private String ALLUSERS = "allusers";
@@ -76,7 +77,8 @@ public class BOController {
     @GetMapping("reminder")
     public String reminder(Model model, HttpSession session) {
         log.info("get reminder action started...");
-
+        User user = (User)session.getAttribute("user");
+        model.addAttribute("user", user);
         if (showConfirmation) {
             showConfirmation(model);
         }
@@ -88,7 +90,8 @@ public class BOController {
     @GetMapping("sendreminder")
     public String sendreminder(Model model, HttpSession session) {
         log.info("post sendreminder action started...");
-
+        User user = (User)session.getAttribute("user");
+        model.addAttribute("user", user);
         if(sMSServiceImpl.sendReminder()){
             log.info("sms reminder sent successfully...");
             confirmation("SMS Reminder blev sendt.");
@@ -104,7 +107,8 @@ public class BOController {
     @GetMapping("newsletter")
     public String newsletter(Model model, HttpSession session) {
         log.info("get newsletter action started...");
-
+        User user = (User)session.getAttribute("user");
+        model.addAttribute("user", user);
         if (showConfirmation) {
             showConfirmation(model);
         }
@@ -145,21 +149,27 @@ public class BOController {
         return REDIRECT + NEWSLETTER;
     }
 
-    //Asbjørn
-    @GetMapping("/")
-    public String index(Model model) {
-        return INDEX;
+    //Mike
+    @GetMapping("/sendbesked")
+    public String sendMessage(Model model, HttpSession session) {
+        User user = (User)session.getAttribute("user");
+        model.addAttribute("user", user);
+        return NEWSLETTERORREMINDER;
     }
 
     //Asbjørn
     @GetMapping("/createProduct")
     public String createProduct(Model model, HttpSession session) {
+        User user = (User)session.getAttribute("user");
+        model.addAttribute("user", user);
         return CREATEPRODUCT;
     }
 
     //Asbjørn
     @GetMapping("/createItem")
     public String createItem(Model model, HttpSession session) {
+        User user = (User)session.getAttribute("user");
+        model.addAttribute("user", user);
         model.addAttribute("item", new Item());
         return CREATEITEM;
     }
@@ -180,6 +190,8 @@ public class BOController {
     //Asbjørn
     @GetMapping("/createTreatment")
     public String createTreatment(Model model, HttpSession session) {
+        User user = (User)session.getAttribute("user");
+        model.addAttribute("user", user);
         model.addAttribute("treatment", new Treatment());
         return CREATETREATMENT;
     }
@@ -199,23 +211,61 @@ public class BOController {
 
     //Mike
     @GetMapping("/kontrolpanel")
-    public String controlpanel() {
+    public String controlpanel(Model model, HttpSession session) {
+        User user = (User)session.getAttribute("user");
+        model.addAttribute("user", user);
         return CONTROLPANEL;
     }
   
     //Asbjørn
-    @GetMapping ("/displayProducts")
-    public String displayProducts (Model model, HttpSession session) {
+    @GetMapping ("/behandlinger")
+    public String displayTreatments (Model model, HttpSession session) {
         taskResult = productServiceImpl.createProductArrayLists(itemArrayList, treatmentArrayList);
+        if(session.getAttribute("user") != null) {
+            User user = (User)session.getAttribute("user");
+            model.addAttribute("user", user);
+        } else {
+            model.addAttribute("user", new User());
+        }
+        model.addAttribute("loginToken", new LoginToken());
         model.addAttribute("treatments", treatmentArrayList);
         model.addAttribute("items", itemArrayList);
-
+        model.addAttribute("showTreatments", true);
+        model.addAttribute("showProducts", false);
         return DISPLAYPRODUCTS;
+    }
+
+    //Asbjørn
+    @GetMapping ("/produkter")
+    public String displayProducts (Model model, HttpSession session) {
+        taskResult = productServiceImpl.createProductArrayLists(itemArrayList, treatmentArrayList);
+        if(session.getAttribute("user") != null) {
+            User user = (User)session.getAttribute("user");
+            model.addAttribute("user", user);
+        } else {
+            model.addAttribute("user", new User());
+        }
+        model.addAttribute("loginToken", new LoginToken());
+        model.addAttribute("treatments", treatmentArrayList);
+        model.addAttribute("items", itemArrayList);
+        model.addAttribute("showProducts", true);
+        model.addAttribute("showTreatments", false);
+        return DISPLAYPRODUCTS;
+    }
+
+    //Mike
+    @GetMapping("/editProduct")
+    public String editProduct(Model model, HttpSession session) {
+        User user = (User)session.getAttribute("user");
+        model.addAttribute("user", user);
+        return EDITPRODUCT;
     }
 
     //Asbjørn
     @GetMapping ("/editTreatment/{id}")
     public String editTreatment (@PathVariable ("id") int id, Model model, HttpSession session) {
+        User user = (User)session.getAttribute("user");
+        model.addAttribute("user", user);
         model.addAttribute("treatments", treatmentArrayList.get(id-1));
         return EDITTREATMENT;
     }
@@ -236,6 +286,8 @@ public class BOController {
     //Asbjørn
     @GetMapping ("/editItem/{id}")
     public String editItem (@PathVariable ("id") int id, Model model, HttpSession session) {
+        User user = (User)session.getAttribute("user");
+        model.addAttribute("user", user);
         model.addAttribute("items", itemArrayList.get(id-1));
         return EDITITEM;
     }
@@ -255,7 +307,9 @@ public class BOController {
     //Mike
     @GetMapping("/edituserhistory")
     public String userList(Model model, HttpSession session) {
+        User user = (User)session.getAttribute("user");
         List<User> users = userServiceImpl.getAllUsers();
+        model.addAttribute("user", user);
         model.addAttribute("users", users);
         return ALLUSERS;
     }
@@ -263,9 +317,11 @@ public class BOController {
     //Mike
     @GetMapping("/edituserhistory/{userid}")
     public String editUserHistory(@PathVariable int userid, Model model, HttpSession session) {
-        User user = userServiceImpl.getUserById(userid);
-        user.setUserHistory(bookingServiceImpl.getBookingList(user.getUserId()));
+        User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);
+        User editedUser = userServiceImpl.getUserById(userid);
+        user.setUserHistory(bookingServiceImpl.getBookingList(user.getUserId()));
+        model.addAttribute("editedUser", editedUser);
         return EDITUSERHISTORY;
     }
 
