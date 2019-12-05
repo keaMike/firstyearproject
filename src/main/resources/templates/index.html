@@ -5,11 +5,12 @@
     <title>Salon-Tina</title>
     <div th:include="fragments/header :: scripts"></div>
 </head>
-<div th:include = "fragments/header :: navbar"></div>
+<div th:include="fragments/header :: navbar"></div>
 <body>
     <div class="backgroundimage">
         <h1 class="landingpage">Velkommen til Salon-Tina</h1>
     </div>
+    <div th:include="fragments/footer :: footer"></div>
 </body>
     <script type = "text/javascript" src = "/static/js/login.js" th:src = "@{/js/login.js}"></script>
 </html>

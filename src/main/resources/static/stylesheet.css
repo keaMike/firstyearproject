@@ -1,15 +1,6 @@
-body, html {
-    height: 100%;
-}
-
 .backgroundimage {
-    /* The image used */
     background: url("https://cdn.pixabay.com/photo/2015/10/26/20/46/haircut-1007891_1280.jpg");
-
-    /* Full height */
-    height: 100%;
-
-    /* Center and scale the image nicely */
+    height: 948px;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -35,7 +26,7 @@ body, html {
     position: relative;
     width: 930px;
     height: 300px;
-    margin: 50px auto;
+    margin: 50px auto 150px;
 }
 
 .boxcontainer .box {
@@ -153,7 +144,7 @@ body, html {
     margin-top: 0;
 }
 
-.input-div.two, .input-div.three, .input-div.four, .input-div.five {
+.input-div.two, .input-div.three, .input-div.four, .input-div.five, .input-div-six{
     margin-bottom: 4px;
 }
 
@@ -198,6 +189,17 @@ body, html {
     color: #555;
 }
 
+.checkbox {
+    margin-left: 190px;
+    margin-top: 15px;
+    height: 20px;
+    width: 20px;
+}
+
+.edituser {
+    margin-bottom: 20px;
+}
+
 .close {
     position: absolute;
     top: 0;
@@ -212,6 +214,35 @@ body, html {
     padding-right: 10px;
 }
 
+.footer {
+    background-color: #292b2c;
+    color: white;
+    padding: 0;
+    margin: 0;
+}
+
+.footer a {
+    text-decoration: none;
+    color: white;
+}
+
+.footer a:hover {
+    color: #d8d8d8;
+}
+
+.footer h6 {
+    padding-top: 10px;
+}
+
+.footer .underline {
+    width: 60px;
+    background-color: white
+}
+
+#map {
+    margin-bottom: 25px;
+}
+
 input[type='number'] {
     -moz-appearance:textfield;
 }
@@ -219,4 +250,9 @@ input[type='number'] {
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
+}
+
+#map {
+    height: 500px;
+    width: 1080px;
 }

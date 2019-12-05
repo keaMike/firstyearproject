@@ -90,6 +90,7 @@ public class ProductRepoImpl implements ProductRepo {
 
 
     //Mike
+    @Override
     public List findAllTreatments() {
         try {
             String statement = "SELECT * FROM treatments";
@@ -122,6 +123,7 @@ public class ProductRepoImpl implements ProductRepo {
     }
 
     //Asbjørn
+    @Override
     public List<Treatment> createTreatmentArrayList(){
         stmt = null;
 
@@ -150,6 +152,7 @@ public class ProductRepoImpl implements ProductRepo {
     }
 
     //Asbjørn
+    @Override
     public List<Item> createItemArrayList(){
         stmt = null;
         String itemQuery =      "SELECT items_id, items_name, items_price, items_description, items_quantity, items_active " +
@@ -176,8 +179,7 @@ public class ProductRepoImpl implements ProductRepo {
     }
 
     //Asbjørn
-    @Override
-    public void insertIntoItemArrayList(List<Item> itemArrayList, ResultSet rsItems) {
+    private void insertIntoItemArrayList(List<Item> itemArrayList, ResultSet rsItems) {
         try {
             itemArrayList.clear();
             while (rsItems.next()) {
@@ -194,8 +196,8 @@ public class ProductRepoImpl implements ProductRepo {
         }
     }
 
-    @Override
-    public void insertIntoTreatmentArrayList(List<Treatment> treatmentArrayList, ResultSet rsTreatments) {
+    //Asbjørn
+    private void insertIntoTreatmentArrayList(List<Treatment> treatmentArrayList, ResultSet rsTreatments) {
         try {
             treatmentArrayList.clear();
             while (rsTreatments.next()) {
@@ -274,6 +276,7 @@ public class ProductRepoImpl implements ProductRepo {
     }
 
     //Luca
+    @Override
     public Treatment getTreatment(int treatmentId){
         log.info("getTreatement method started...");
 
@@ -303,6 +306,7 @@ public class ProductRepoImpl implements ProductRepo {
     }
 
     //Luca
+    @Override
     public Item getItem(int itemId){
         log.info("getTreatement method started...");
 
@@ -332,6 +336,7 @@ public class ProductRepoImpl implements ProductRepo {
     }
 
     //Mike
+    @Override
     public boolean deleteTreatment(int treatmentId) {
         log.info("deleteTreatment method started...");
 
@@ -341,6 +346,7 @@ public class ProductRepoImpl implements ProductRepo {
     }
 
     //Mike
+    @Override
     public boolean deleteItem(int itemId) {
         log.info("deleteItem method started...");
 

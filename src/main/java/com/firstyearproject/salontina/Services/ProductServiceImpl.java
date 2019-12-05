@@ -30,6 +30,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     //Mike
+    @Override
     public boolean deleteTreatment(int treatmentId){
         return productRepoImplManager.deleteTreatment(treatmentId);
     }
@@ -52,6 +53,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     //Mike
+    @Override
     public boolean deleteItem(int itemId){
         return productRepoImplManager.deleteItem(itemId);
     }
@@ -65,20 +67,24 @@ public class ProductServiceImpl implements ProductService{
         return pHandlerTaskResult;
     }
 
+    @Override
     public List<Treatment> createTreatmentArrayList(){
         return productRepoImplManager.createTreatmentArrayList();
     }
 
+    @Override
     public List<Item> createItemArrayList(){
         return productRepoImplManager.createItemArrayList();
     }
 
     //Luca
+    @Override
     public Treatment getTreatment(int treatmentId){
         return productRepoImplManager.getTreatment(treatmentId);
     }
 
     //Luca
+    @Override
     public Item getItem(int itemId){
         return productRepoImplManager.getItem(itemId);
     }

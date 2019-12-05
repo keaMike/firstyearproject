@@ -27,6 +27,7 @@ public class UserRepoImpl implements UserRepo{
     DatabaseLogger databaseLogger;
 
     //Luca
+    @Override
     public List<String> getNewsletterList(){
         log.info("getNewsletterList method started...");
 
@@ -53,6 +54,7 @@ public class UserRepoImpl implements UserRepo{
     }
 
     //Luca
+    @Override
     public List<Reminder> getReminderList(){
         log.info("getReminderList method started...");
 
@@ -89,6 +91,7 @@ public class UserRepoImpl implements UserRepo{
     }
 
     //Jonathan
+    @Override
     public boolean addUser(User user){
         Boolean userCreated = false;
         try{
@@ -153,6 +156,7 @@ public class UserRepoImpl implements UserRepo{
     }
 
     //Mike
+    @Override
     public List<User> findAllUsers() {
         List<User> users = new ArrayList();
         try {
@@ -182,6 +186,7 @@ public class UserRepoImpl implements UserRepo{
     }
 
     //Mike
+    @Override
     public User findUserById(int userid) {
         User u = new User();
         try {
@@ -212,6 +217,7 @@ public class UserRepoImpl implements UserRepo{
     }
 
     //Jonathan
+    @Override
     public boolean editUser(User user) {
         Boolean userEdited = false;
         log.info(user.toString());
@@ -243,6 +249,7 @@ public class UserRepoImpl implements UserRepo{
     }
 
     //Mike
+    @Override
     public boolean editUserHistory(User user) {
         try{
             String statement = "UPDATE users SET users_preferences = ? WHERE users_id = ?";
@@ -263,6 +270,7 @@ public class UserRepoImpl implements UserRepo{
     }
 
     //Luca
+    @Override
     public User authenticateUser(LoginToken loginToken){
         log.info("authenticateUser method started...");
 
@@ -287,7 +295,7 @@ public class UserRepoImpl implements UserRepo{
     }
 
     //Luca
-    public List<String> getUserRoles(int userId){
+    private List<String> getUserRoles(int userId){
         log.info("getUserRoles method started...");
 
         List<String> userRoles = new ArrayList<>();
@@ -315,7 +323,7 @@ public class UserRepoImpl implements UserRepo{
     }
 
     //Luca
-    public List<Booking> getUserHistory(int userId){
+    private List<Booking> getUserHistory(int userId){
         log.info("getUserHistory method started...");
 
         List<Booking> userHistory = new ArrayList<>();
@@ -349,7 +357,7 @@ public class UserRepoImpl implements UserRepo{
     }
 
     //Luca
-    public List<Treatment> getTreatmentsForBooking(int bookingId){
+    private List<Treatment> getTreatmentsForBooking(int bookingId){
         log.info("getTreatmentsForBooking method started...");
 
         List<Treatment> treatmentList = new ArrayList<>();
@@ -381,7 +389,7 @@ public class UserRepoImpl implements UserRepo{
     }
 
     //Luca
-    public User generateUserFromResultSet(ResultSet rs) throws SQLException{
+    private User generateUserFromResultSet(ResultSet rs) throws SQLException{
         if(!rs.next()){
             return null;
         }
@@ -390,7 +398,7 @@ public class UserRepoImpl implements UserRepo{
         user.setUserId(rs.getInt(1));
         user.setUsername(rs.getString(2));
         user.setUserPassword(rs.getString(3));
-        user.setUserPassword(rs.getString(4));
+        user.setUserPhonenumber(rs.getInt(4));
         user.setUserEmail(rs.getString(5));
         user.setUserPreference(rs.getString(6));
         user.setUserRoles(getUserRoles(user.getUserId()));
@@ -400,6 +408,7 @@ public class UserRepoImpl implements UserRepo{
     }
 
     //Mike & Asbjørn
+    @Override
     public boolean deleteUser(int userId) {
         try {
             String statement =  "INSERT INTO users_archive SELECT users_id, users_fullName, " +

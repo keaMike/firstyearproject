@@ -2,11 +2,14 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>bookingconfirmation</title>
+    <title>Tillykke</title>
     <div th:include="fragments/header :: scripts"></div>
+    <div th:include = "fragments/header :: navbar"></div>
 </head>
-<div th:include = "fragments/header :: navbar"></div>
 <body>
-<p th:text="'tillykke du har booket en tid d.' + ${booking.bookingDate} + ' kl. ' + ${booking.bookingTime}"></p>
+<div class="container">
+    <h3 th:text="'Tillykke, ' + ${user.username} + ', du har booket en behandling d.' + ${booking.bookingDate} + ' kl. ' + ${booking.bookingTime}"></h3>
+</div>
+<div th:include="fragments/footer :: footer"></div>
 </body>
 </html>

@@ -17,8 +17,9 @@ public class BookingServiceImpl implements BookingService{
     @Autowired
     BookingRepoImpl BR;
 
+    //Luca
     public boolean addBooking(Booking booking){
-        return addBooking(booking);
+        return BR.addBooking(booking);
     }
 
     //Mike
@@ -31,6 +32,7 @@ public class BookingServiceImpl implements BookingService{
     }
 
     //Luca
+    @Override
     public List<Booking> getBookingList(String startDateString, String endDateString){
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -46,6 +48,7 @@ public class BookingServiceImpl implements BookingService{
     }
 
     //Luca
+    @Override
     public List<Booking> getBookingList(String dateString){
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -85,6 +88,7 @@ public class BookingServiceImpl implements BookingService{
     }
 
     //Luca
+    @Override
     public boolean addVacationDate(String dateString, int userId){
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -98,6 +102,7 @@ public class BookingServiceImpl implements BookingService{
     }
 
     //Mike
+    @Override
     public List<Booking> getBookingList(int userId){
         return BR.findBookingsByUserId(userId);
     }

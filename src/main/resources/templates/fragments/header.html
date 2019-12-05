@@ -9,7 +9,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active" th:if="${user.userId} != 0">
-                    <a class="nav-link" href="#">Bestil tid</span></a>
+                    <a class="nav-link" th:href="@{/choosetreatment}">Bestil tid <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item" th:if="${user.userId} != 0">
                     <a class="nav-link" th:href="@{/userprofile}">Min Profil</a>
@@ -94,6 +94,15 @@
                                 <div>
                                     <h5>Bekræft kodeord</h5>
                                     <input type="password" class="input" id="confirmpassword" required>
+                                </div>
+                            </div>
+                            <div class="input-div six">
+                                <div class="i">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div>
+                                    <h5>Tilmeld nyhedsbrev</h5>
+                                    <input type="checkbox" class="check-box checkbox" id="newsletter" th:field="${user.userNewsLetter}" required>
                                 </div>
                             </div>
                             <input type="submit" class="btn btn-dark" value="Opret profil">

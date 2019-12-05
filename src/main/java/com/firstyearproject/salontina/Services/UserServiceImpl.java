@@ -22,23 +22,27 @@ public class UserServiceImpl implements UserService {
     private String hashingSalt;
 
     //Jonathan
+    @Override
     public boolean addUser(User user){
         user.setUserPassword(hashPassword(user.getUserPassword()));
         return UR.addUser(user);
     }
 
     //Mike & Asbjørn
+    @Override
     public boolean deleteUser(int userId){
         return UR.deleteUser(userId);
     }
 
     //Jonathan
+    @Override
     public boolean editUser(User user){
         user.setUserPassword(hashPassword(user.getUserPassword()));
         return UR.editUser(user);
     }
 
     //Mike
+    @Override
     public User authenticateUser(LoginToken loginToken) {
         loginToken.setLoginTokenPassword(hashPassword(loginToken.getLoginTokenPassword()));
         return UR.authenticateUser(loginToken);
@@ -59,23 +63,26 @@ public class UserServiceImpl implements UserService {
     }
 
     //Mike
+    @Override
     public boolean editUserHistory(User user){
         boolean userEdited = UR.editUserHistory(user);
         return userEdited;
     }
 
     //Mike
+    @Override
     public List<User> getAllUsers() {
         return UR.findAllUsers();
     }
 
     //Mike
+    @Override
     public User getUserById(int userid) {
         return UR.findUserById(userid);
     }
 
     //Luca
-    public String hashPassword(String password){
+    private String hashPassword(String password){
         if(password == null){
             return null;
         }
