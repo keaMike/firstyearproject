@@ -2,22 +2,27 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Vælg behandling</title>
+
+    <div th:include="fragments/header :: navbar"></div>
+    <div th:include="fragments/header :: scripts"></div>
 </head>
 <body>
-    <table class="table">
-        <thead>
-            <th>Behandlinger</th>
-            <th>Vælg</th>
-        </thead>
-        <tbody>
+    <div class="container">
+        <table class="table table-striped table-hover">
+            <thead class="thead-dark">
+                <th>Behandlinger</th>
+                <th>Vælg</th>
+            </thead>
+            <tbody>
             <tr th:each="treatment : ${treatmentList}">
                 <td th:text="${treatment.productName}"></td>
                 <td>
-                    <a th:href="'/choosetime/' + ${treatment.productId}">Vælg behandling</a>
+                    <a class="btn btn-primary" th:href="'/choosetime/' + ${treatment.productId}">Vælg behandling</a>
                 </td>
             </tr>
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>

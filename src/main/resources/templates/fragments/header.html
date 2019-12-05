@@ -9,7 +9,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active" th:if="${user.userId} != 0">
-                    <a class="nav-link" href="#">Bestil tid <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" th:href="@{/choosetreatment}">Bestil tid <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item" th:if="${user.userId} != 0">
                     <a class="nav-link" th:href="@{/minprofil}">Min Profil</a>
