@@ -124,20 +124,9 @@ public class UserRepoImpl implements UserRepo{
 
     //Luca
     public void addToNewsletter(User user){
-        User foundUser = authenticateUser(new LoginToken(user.getUsername(), user.getUserPassword()));
+        User foundUser = authenticateUser(new LoginToken(user.getUserEmail(), user.getUserPassword()));
 
-        String statement =  "INSERT INTO newsletter " +
-                            "(users_id) " +
-                            "VALUES " +
-                            "(?);";
-
-        try {
-            PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
-
-            pstmt.setInt(1, foundUser.getUserId());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        subscribeNewsletter(foundUser.getUserId());
     }
 
     //Asbjørn
@@ -163,7 +152,7 @@ public class UserRepoImpl implements UserRepo{
             pstm = null;
             Connection connection = mySQLConnector.openConnection();
             pstm = connection.prepareStatement(statement);
-            pstm.setInt(1, 3);
+            pstm.setInt(1, userId);
 
             pstm.executeUpdate();
             mySQLConnector.closeConnection();
