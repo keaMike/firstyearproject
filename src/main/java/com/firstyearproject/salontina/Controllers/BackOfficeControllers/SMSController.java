@@ -16,15 +16,16 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpSession;
+import javax.swing.text.html.HTML;
 
 @Controller
 public class SMSController {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    private String NEWSLETTER = "newsletter";
-    private String REMINDER = "reminder";
-    private String NEWSLETTERORREMINDER = "newsletterOrReminder";
+    private String NEWSLETTER = "sms/newsletter";
+    private String REMINDER = "sms/reminder";
+    private String NEWSLETTERORREMINDER = "sms/newsletterOrReminder";
     private String REDIRECT = "redirect:/";
 
     private boolean showConfirmation = false;
@@ -132,4 +133,17 @@ public class SMSController {
         return NEWSLETTERORREMINDER;
     }
 
+    //Asbjørn
+    @PostMapping ("/startAutoReminder")
+    public String startAutoReminder() { //Manually starts the autoReminder
+        sMSServiceImpl.initiateAutoReminder("Initiate");
+        return REDIRECT + REMINDER;
+    }
+
+    //Asbjørn
+    @PostMapping ("/stopAutoReminder")
+    public String stopAutoReminde(Model model, HttpSession session){ //Manually stops the autoReminder
+        sMSServiceImpl.initiateAutoReminder("cancel");
+        return REDIRECT + REMINDER;
+    }
 }

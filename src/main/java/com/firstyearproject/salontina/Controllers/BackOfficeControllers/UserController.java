@@ -23,8 +23,8 @@ public class UserController {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    private String ALLUSERS = "allusers";
-    private String EDITUSERHISTORY = "edituserhistory";
+    private String ALLUSERS = "users/allusers";
+    private String EDITUSERHISTORY = "users/edituserhistory";
 
     private boolean taskResult = false;
     private boolean showConfirmation = false;
@@ -68,7 +68,7 @@ public class UserController {
         User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);
         User editedUser = userServiceImpl.getUserById(userid);
-        user.setUserHistory(bookingServiceImpl.getBookingList(user.getUserId()));
+        user.setUserHistory(bookingServiceImpl.getBookingList(editedUser.getUserId()));
         model.addAttribute("editedUser", editedUser);
         return EDITUSERHISTORY;
     }

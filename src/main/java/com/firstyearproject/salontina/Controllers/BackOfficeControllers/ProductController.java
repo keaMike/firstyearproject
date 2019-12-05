@@ -25,13 +25,13 @@ public class ProductController {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    private String CREATEPRODUCT = "createProduct";
-    private String CREATEITEM = "createItem";
-    private String CREATETREATMENT = "createTreatment";
-    private String DISPLAYPRODUCTS = "displayProducts";
-    private String EDITPRODUCT = "editproduct";
-    private String EDITTREATMENT = "editTreatment";
-    private String EDITITEM = "editItem";
+    private String CREATEPRODUCT = "products/createProduct";
+    private String CREATEITEM = "products/createItem";
+    private String CREATETREATMENT = "products/createTreatment";
+    private String DISPLAYPRODUCTS = "products/displayProducts";
+    private String EDITPRODUCT = "products/editproduct";
+    private String EDITTREATMENT = "products/editTreatment";
+    private String EDITITEM = "products/editItem";
     private String REDIRECT = "redirect:/";
 
     private boolean taskResult = false;
@@ -143,7 +143,7 @@ public class ProductController {
     }
 
     //Mike
-    @GetMapping("/editProduct")
+    @GetMapping("/editproduct")
     public String editProduct(Model model, HttpSession session) {
         User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);
@@ -177,7 +177,7 @@ public class ProductController {
     public String editItem (@PathVariable ("id") int id, Model model, HttpSession session) {
         User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);
-        model.addAttribute("items", productServiceImpl.getTreatment(id));
+        model.addAttribute("items", productServiceImpl.getItem(id));
         return EDITITEM;
     }
 

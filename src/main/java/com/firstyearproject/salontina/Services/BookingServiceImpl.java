@@ -18,7 +18,7 @@ public class BookingServiceImpl implements BookingService{
     BookingRepoImpl BR;
 
     public boolean addBooking(Booking booking){
-        return false;
+        return addBooking(booking);
     }
 
     //Mike
@@ -63,7 +63,7 @@ public class BookingServiceImpl implements BookingService{
                     bookingList.add(i, new Booking());
                     bookingList.get(i).setBookingId(0);
                     bookingList.get(i).setBookingTime(time);
-                    bookingList.get(i).setBookingDate(date);
+                    bookingList.get(i).setBookingDate(new Date(date.getTime()));
                 }
             }
 
@@ -80,6 +80,19 @@ public class BookingServiceImpl implements BookingService{
             if(b.getBookingTime() != null && b.getBookingTime().equals(time)){
                 return true;
             }
+        }
+        return false;
+    }
+
+    //Luca
+    public boolean addVacationDate(String dateString, int userId){
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            java.util.Date date = sdf.parse(dateString);
+
+            return BR.addVacationDate(new Date(date.getTime()), userId);
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
         return false;
     }

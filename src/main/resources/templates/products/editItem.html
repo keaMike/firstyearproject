@@ -2,33 +2,36 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Rediger Item</title>
+    <title>Rediger produkt</title>
     <div th:include="fragments/header :: scripts"></div>
 </head>
 <div th:include = "fragments/header :: navbar"></div>
 <body>
 
 <div class="container">
-    <h1>Details</h1>
-    <form th:method="post" th:action="@{/edititem}" th:object ="${items}">
-        <input type="number" th:field="${items.productId}" readonly/>
+    <h1>Produkt detaljer<i class = "fas fa-flask"></i></h1>
+    <form class="form-group" th:method="post" th:action="@{/edititem}" th:object ="${items}">
+        <label for="id">ID</label>
+        <input class="form-control" type="number" id="id" th:field="${items.productId}" readonly/>
+
+        <label for="name">Navn</label>
+        <input class="form-control" type="text" id="name" th:field="${items.productName}"/>
+
+        <label for="price">Pris</label>
+        <input class="form-control" type="text" id="price" th:field="${items.productPrice}"/>
+
+        <label for="stock">Antal på lager</label>
+        <input class="form-control" type="number" id="stock" th:field="${items.itemQuantity}"/>
+
+        <label for="desc">Beskrivelse</label>
+        <textarea class="form-control" cols="10" rows="20" type="text" id="desc" th:field="${items.productDescription}"></textarea>
+
+        <div class="form-check">
+            <input class="form-check-input" id="active" type="checkbox" th:field="${items.productActive}"/>
+            <label class="form-check-label" for="active">Aktiv</label>
+        </div>
         <br>
-        <div>Navn: </div>
-        <input type="text" th:field="${items.productName}"/>
-        <br>
-        <div>Pris:</div>
-        <input type="text" th:field="${items.productPrice}"/>
-        <br>
-        <div>Antal på lager:</div>
-        <input type="text" th:field="${items.itemQuantity}"/>
-        <br>
-        <div>Beskrivelse</div>
-        <input type="text" th:field="${items.productDescription}"/>
-        <br>
-        <div>Aktiv:</div>
-        <input type="text" th:field="${items.productActive}"/>
-        <br>
-        <input class="btn btn-primary btn-danger" type="submit" value="edit"/>
+        <input class="btn btn-dark" type="submit" value="Gem ændringer"/>
     </form>
 </div>
 

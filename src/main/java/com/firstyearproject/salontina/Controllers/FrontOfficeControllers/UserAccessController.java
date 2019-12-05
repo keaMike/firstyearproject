@@ -1,5 +1,6 @@
 package com.firstyearproject.salontina.Controllers.FrontOfficeControllers;
 
+import com.firstyearproject.salontina.Models.Booking;
 import com.firstyearproject.salontina.Models.LoginToken;
 import com.firstyearproject.salontina.Models.User;
 import com.firstyearproject.salontina.Services.BookingServiceImpl;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 public class UserAccessController {
@@ -25,10 +27,10 @@ public class UserAccessController {
     private String INDEX = "index";
     private String REDIRECT = "redirect:/";
     private String LOGIN = "login";
-    private String REGISTER = "register";
-    private String EDITUSER = "edituser";
-    private String USERPROFILE = "userprofile";
-    private String MYPROFILE = "myprofile";
+    private String REGISTER = "users/register";
+    private String EDITUSER = "users/edituser";
+    private String USERPROFILE = "users/userprofile";
+    private String MYPROFILE = "users/myprofile";
     private String CONTACT = "contact";
 
     private boolean taskResult = false;
@@ -37,6 +39,9 @@ public class UserAccessController {
 
     @Autowired
     UserServiceImpl userService;
+
+    @Autowired
+    BookingServiceImpl bookingService;
 
     //Luca
     //Used in Java Methods/mappings
@@ -87,16 +92,10 @@ public class UserAccessController {
     }
 
     //Jonathan
-    @GetMapping("/register")
-    public String register(Model model) {
-        model.addAttribute("userToBeRegistered", new User());
-        return REGISTER;
-    }
-    //Jonathan
     @PostMapping("/register")
     public String register(@ModelAttribute User user) {
         userService.addUser(user);
-        return REDIRECT + LOGIN;
+        return REDIRECT;
     }
     //Jonathan
     @GetMapping("/editUser")
