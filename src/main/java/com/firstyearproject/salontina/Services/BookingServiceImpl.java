@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 @Service
@@ -75,6 +76,11 @@ public class BookingServiceImpl implements BookingService{
             e.printStackTrace();
         }
         return null;
+    }
+
+    //Luca
+    public List<Booking> getFutureBookings(){
+        return BR.getFutureBookings();
     }
 
     //Luca

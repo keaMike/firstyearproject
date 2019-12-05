@@ -205,13 +205,7 @@ public class BookingRepoImpl implements BookingRepo{
             ResultSet rs = pstmt.executeQuery();
 
             while(rs.next()){
-                Booking booking = new Booking();
-                booking.setBookingId(rs.getInt(1));
-                booking.setBookingUserId(rs.getInt(2));
-                booking.setBookingTime(rs.getString(3));
-                booking.setBookingDate(rs.getDate(4));
-                booking.setBookingComment(rs.getString(5));
-                bookingList.add(booking);
+                bookingList.add(generateBookingFromResultSet(rs));
             }
 
             databaseLogger.writeToLogFile(statement);
@@ -221,6 +215,41 @@ public class BookingRepoImpl implements BookingRepo{
             e.printStackTrace();
         }
         return null;
+    }
+
+    //Luca
+    public List<Booking> getFutureBookings(){
+        String statement = "SELECT * FROM bookings " +
+                            "WHERE bookings_date BETWEEN DATE_ADD(CURDATE(), INTERVAL 1 day) AND DATE_ADD(CURDATE(), INTERVAL 30 day) " +
+                            "ORDER BY bookings_date;";
+
+        List<Booking> bookingList = new ArrayList<>();
+        try{
+            PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while(rs.next()){
+                bookingList.add(generateBookingFromResultSet(rs));
+            }
+
+            return bookingList;
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    //Luca
+    public Booking generateBookingFromResultSet(ResultSet rs) throws SQLException{
+        Booking booking = new Booking();
+        booking.setBookingId(rs.getInt(1));
+        booking.setBookingUserId(rs.getInt(2));
+        booking.setBookingTime(rs.getString(3));
+        booking.setBookingDate(rs.getDate(4));
+        booking.setBookingComment(rs.getString(5));
+        return booking;
     }
 
     //Luca

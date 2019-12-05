@@ -104,7 +104,7 @@ public class UserAccessController {
     //Jonathan
     @GetMapping("/editUser")
     public String editUser(HttpSession session, Model model) {
-        if(!userAuthenticator.userIsAdmin(session) || !userAuthenticator.userIsUser(session)){
+        if(!userAuthenticator.userIsUser(session)){
              return REDIRECT;
         }
         User user = (User)session.getAttribute("user");
@@ -114,7 +114,7 @@ public class UserAccessController {
     //Jonathan
     @PostMapping("/editUser")
     public String editUser(@ModelAttribute User user, HttpSession session) {
-        if(!userAuthenticator.userIsAdmin(session) || !userAuthenticator.userIsUser(session)){
+        if(!userAuthenticator.userIsUser(session)){
             return REDIRECT;
         }
         userService.editUser(user);
@@ -123,9 +123,11 @@ public class UserAccessController {
 
     @GetMapping("userprofile")
     public String userprofile(Model model, HttpSession session) {
-        if(!userAuthenticator.userIsAdmin(session) || !userAuthenticator.userIsUser(session)){
+        log.info("userprofile action started...");
+        if(!userAuthenticator.userIsUser(session)){
             return REDIRECT;
         }
+        log.info("user is admin or user...");
         User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);
         return USERPROFILE;
@@ -134,7 +136,7 @@ public class UserAccessController {
     //Mike
     @GetMapping("/deleteuser/{userid}")
     public String deleteUser(@PathVariable int userId, HttpSession session) {
-        if(!userAuthenticator.userIsAdmin(session) || !userAuthenticator.userIsUser(session)){
+        if(!userAuthenticator.userIsUser(session)){
             return REDIRECT;
         }
         userService.deleteUser(userId);
@@ -144,7 +146,7 @@ public class UserAccessController {
     //Mike
     @GetMapping("/myprofile")
     public String myprofil(Model model, HttpSession session) {
-        if(!userAuthenticator.userIsAdmin(session) || !userAuthenticator.userIsUser(session)){
+        if(!userAuthenticator.userIsUser(session)){
             return REDIRECT;
         }
         User user = (User)session.getAttribute("user");
@@ -162,7 +164,7 @@ public class UserAccessController {
     //Asbjørn
     @PostMapping("subscribeNewsletter")
     public String subscribeNewsletter (@ModelAttribute User user, HttpSession session) {
-        if(!userAuthenticator.userIsAdmin(session) || !userAuthenticator.userIsUser(session)){
+        if(!userAuthenticator.userIsUser(session)){
             return REDIRECT;
         }
         taskResult = userService.subscribeNewsletter(user.getUserId());
@@ -177,7 +179,7 @@ public class UserAccessController {
     //Asbjørn
     @PostMapping("unsubscribeNewsletter")
     public String unsubscribeNewsletter (@ModelAttribute User user, HttpSession session) {
-        if(!userAuthenticator.userIsAdmin(session) || !userAuthenticator.userIsUser(session)){
+        if(!userAuthenticator.userIsUser(session)){
             return REDIRECT;
         }
         taskResult = userService.unsubscribeNewsletter(user.getUserId());

@@ -127,9 +127,6 @@ public class ProductController {
     //Asbjørn
     @GetMapping ("/treatments")
     public String displayTreatments (Model model, HttpSession session) {
-        if(!userAuthenticator.userIsAdmin(session)){
-            return REDIRECT;
-        }
         if(session.getAttribute("user") != null) {
             User user = (User)session.getAttribute("user");
             model.addAttribute("user", user);
@@ -147,9 +144,6 @@ public class ProductController {
     //Asbjørn
     @GetMapping ("/products")
     public String displayProducts (Model model, HttpSession session) {
-        if(!userAuthenticator.userIsAdmin(session)){
-            return REDIRECT;
-        }
         if(session.getAttribute("user") != null) {
             User user = (User)session.getAttribute("user");
             model.addAttribute("user", user);

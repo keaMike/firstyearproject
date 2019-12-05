@@ -20,14 +20,16 @@ public class UserAuthenticator {
         return false;
     }
     //Jonathan
+    //As no users in the database has the role "Bruger" yet, this method simply checks if they are not null.
     public boolean userIsUser(HttpSession session) {
         User user = (User) session.getAttribute("user");
         if(user != null) {
-            for (String s : user.getUserRoles()) {
-                if (s.equals("Bruger")) {
-                    return true;
-                }
-            }
+            //for (String s : user.getUserRoles()) {
+            //    if (s.equals("Bruger")) {
+            //        return true;
+            //    }
+            //}
+            return true;
         }
         return false;
 
