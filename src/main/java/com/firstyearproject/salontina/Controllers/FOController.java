@@ -77,7 +77,8 @@ public class FOController {
     //Mike
     @GetMapping("/")
     public String index(Model model, HttpSession session) {
-        smsService.initiateAutoReminder();
+        smsService.initiateAutoReminder("Initiate"); //Might not be appropriate place for this method
+
         if(session.getAttribute("user") != null) {
             User user = (User)session.getAttribute("user");
             model.addAttribute("user", user);
