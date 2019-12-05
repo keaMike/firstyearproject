@@ -58,17 +58,23 @@ public class UserAccessController {
         showConfirmation = false;
     }
 
-    //Mike
-    @GetMapping("/")
-    public String index(Model model, HttpSession session) {
+    private Model userExcists(Model model, HttpSession session) {
         if(session.getAttribute("user") != null) {
             User user = (User)session.getAttribute("user");
             model.addAttribute("user", user);
-            log.info(user.toString());
+            return model;
         } else {
             model.addAttribute("user", new User());
             model.addAttribute("loginToken", new LoginToken());
+            return model;
         }
+    }
+
+    //Mike
+    @GetMapping("/")
+    public String index(Model model, HttpSession session) {
+
+        userExcists(model, session);
         return INDEX;
     }
 
