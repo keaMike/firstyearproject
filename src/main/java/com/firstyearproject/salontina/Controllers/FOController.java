@@ -1,6 +1,5 @@
 package com.firstyearproject.salontina.Controllers;
 
-import com.firstyearproject.salontina.Repositories.UserRepoImpl;
 import com.firstyearproject.salontina.Models.*;
 import com.firstyearproject.salontina.Services.*;
 import org.slf4j.Logger;
@@ -47,8 +46,6 @@ public class FOController {
     private ArrayList<Item> itemArrayList = new ArrayList<>();
     private ArrayList<Treatment> treatmentArrayList = new ArrayList<>();
 
-    private ArrayList<Item> itemArrayList = new ArrayList<>();
-    private ArrayList<Treatment> treatmentArrayList = new ArrayList<>();
 
     @Autowired
     UserServiceImpl userService;
@@ -59,6 +56,8 @@ public class FOController {
     @Autowired
     ProductServiceImpl productService;
 
+    @Autowired
+    SMSServiceImpl smsService;
 
     //Luca
     //Used in Java Methods/mappings
@@ -78,6 +77,7 @@ public class FOController {
     //Mike
     @GetMapping("/")
     public String index(Model model, HttpSession session) {
+        smsService.initiateAutoReminder();
         if(session.getAttribute("user") != null) {
             User user = (User)session.getAttribute("user");
             model.addAttribute("user", user);
@@ -254,10 +254,5 @@ public class FOController {
         }
         confirmation("Vi kunne IKKE afmelde dig nyhedsbrevet. Prøv igen senere");
         return "redigerbruger";
-    }
-
-    @GetMapping ("/kontakt")
-    public String kontakt () {
-        return "kontakt";
     }
 }
