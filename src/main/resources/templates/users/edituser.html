@@ -7,7 +7,7 @@
 </head>
 <div th:include = "fragments/header :: navbar"></div>
 <body>
-    <div class="container">
+    <div class="container edituser">
         <div class = "controlpaneltitle">
             <h1>Rediger dine oplysninger
                 <i class = "fas fa-user"></i>
@@ -54,7 +54,7 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h3>Er du sikker på du vil slette din bruger? <span th:text="${user.username}"></span></h3>
+                            <h3 style="color: black">Er du sikker på du vil slette din bruger? <span th:text="${user.username}"></span></h3>
                         </div>
                         <div class="modal-body">
                             <a th:href="@{'/deleteuser/' + ${user.userId}}" class="btn btn-dark">Ja</a>
@@ -64,7 +64,6 @@
                 </div>
             </div>
         </button>
-
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
@@ -73,5 +72,6 @@
             $('[data-toggle="tooltip"]').tooltip()
         })
     </script>
+    <div th:include="fragments/footer :: footer"></div>
 </body>
 </html>
