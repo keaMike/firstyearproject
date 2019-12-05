@@ -144,7 +144,7 @@
     margin-top: 0;
 }
 
-.input-div.two, .input-div.three, .input-div.four, .input-div.five {
+.input-div.two, .input-div.three, .input-div.four, .input-div.five, .input-div-six{
     margin-bottom: 4px;
 }
 
@@ -187,6 +187,13 @@
     font-size: 1.2rem;
     font-family: 'Poppins', sans-serif;
     color: #555;
+}
+
+.checkbox {
+    margin-left: 190px;
+    margin-top: 15px;
+    height: 20px;
+    width: 20px;
 }
 
 .edituser {

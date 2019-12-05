@@ -96,6 +96,15 @@
                                     <input type="password" class="input" id="confirmpassword" required>
                                 </div>
                             </div>
+                            <div class="input-div six">
+                                <div class="i">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div>
+                                    <h5>Tilmeld nyhedsbrev</h5>
+                                    <input type="checkbox" class="check-box checkbox" id="newsletter" th:field="${user.userNewsLetter}" required>
+                                </div>
+                            </div>
                             <input type="submit" class="btn btn-dark" value="Opret profil">
                         </form>
                     </div>
