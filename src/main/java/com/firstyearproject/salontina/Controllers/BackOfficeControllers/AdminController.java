@@ -21,6 +21,7 @@ public class AdminController {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     private String CONTROLPANEL = "controlpanel";
+    private String REDIRECT = "redirect:/";
 
     private boolean showConfirmation = false;
     private String confirmationText = "";
@@ -29,6 +30,8 @@ public class AdminController {
     BookingServiceImpl bookingService;
     @Autowired
     SMSServiceImpl smsService;
+    @Autowired
+    UserAuthenticator userAuthenticator;
 
     //Luca
     //Used in Java Methods/mappings
@@ -48,6 +51,9 @@ public class AdminController {
     //Mike
     @GetMapping("/controlpanel")
     public String controlpanel(Model model, HttpSession session) {
+        if(!userAuthenticator.userIsAdmin(session)){
+            return REDIRECT;
+        }
         smsService.initiateAutoReminder("Initate");
         User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);

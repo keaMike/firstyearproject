@@ -2,10 +2,7 @@ package com.firstyearproject.salontina.Controllers.BackOfficeControllers;
 
 import com.firstyearproject.salontina.Models.Newsletter;
 import com.firstyearproject.salontina.Models.User;
-import com.firstyearproject.salontina.Services.BookingServiceImpl;
-import com.firstyearproject.salontina.Services.ProductServiceImpl;
-import com.firstyearproject.salontina.Services.SMSServiceImpl;
-import com.firstyearproject.salontina.Services.UserServiceImpl;
+import com.firstyearproject.salontina.Services.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +31,9 @@ public class SMSController {
     @Autowired
     SMSServiceImpl sMSServiceImpl;
 
+    @Autowired
+    UserAuthenticator userAuthenticator;
+
     //Luca
     //Used in Java Methods/mappings
     public void confirmation(String text){
@@ -52,6 +52,9 @@ public class SMSController {
     //Luca
     @GetMapping("reminder")
     public String reminder(Model model, HttpSession session) {
+        if(!userAuthenticator.userIsAdmin(session)){
+            return REDIRECT;
+        }
         log.info("get reminder action started...");
         User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);
@@ -65,6 +68,9 @@ public class SMSController {
     //Luca
     @GetMapping("sendreminder")
     public String sendreminder(Model model, HttpSession session) {
+        if(!userAuthenticator.userIsAdmin(session)){
+            return REDIRECT;
+        }
         log.info("post sendreminder action started...");
         User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);
@@ -82,6 +88,9 @@ public class SMSController {
     //Luca
     @GetMapping("newsletter")
     public String newsletter(Model model, HttpSession session) {
+        if(!userAuthenticator.userIsAdmin(session)){
+            return REDIRECT;
+        }
         log.info("get newsletter action started...");
         User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);
@@ -96,6 +105,9 @@ public class SMSController {
     //Luca
     @PostMapping("sendnewsletter")
     public String sendNewsletter(Model model, HttpSession session, @ModelAttribute Newsletter newsletter) {
+        if(!userAuthenticator.userIsAdmin(session)){
+            return REDIRECT;
+        }
         log.info("post newsletter action started...");
 
         if(sMSServiceImpl.sendNewsletter(newsletter.getText())){
@@ -112,6 +124,9 @@ public class SMSController {
     //Luca
     @PostMapping("sendtestnewsletter")
     public String sendTestNewsletter(Model model, HttpSession session, @ModelAttribute Newsletter newsletter) {
+        if(!userAuthenticator.userIsAdmin(session)){
+            return REDIRECT;
+        }
         log.info("post newsletter action started...");
 
         if(sMSServiceImpl.sendNewsletterTest(newsletter.getTestNumber(), newsletter.getText())){
@@ -128,6 +143,9 @@ public class SMSController {
     //Mike
     @GetMapping("/sendbesked")
     public String sendMessage(Model model, HttpSession session) {
+        if(!userAuthenticator.userIsAdmin(session)){
+            return REDIRECT;
+        }
         User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);
         return NEWSLETTERORREMINDER;
@@ -135,7 +153,10 @@ public class SMSController {
 
     //Asbjørn
     @PostMapping ("/startAutoReminder")
-    public String startAutoReminder() { //Manually starts the autoReminder
+    public String startAutoReminder(HttpSession session) { //Manually starts the autoReminder
+        if(!userAuthenticator.userIsAdmin(session)){
+            return REDIRECT;
+        }
         sMSServiceImpl.initiateAutoReminder("Initiate");
         return REDIRECT + REMINDER;
     }
@@ -143,6 +164,9 @@ public class SMSController {
     //Asbjørn
     @PostMapping ("/stopAutoReminder")
     public String stopAutoReminde(Model model, HttpSession session){ //Manually stops the autoReminder
+        if(!userAuthenticator.userIsAdmin(session)){
+            return REDIRECT;
+        }
         sMSServiceImpl.initiateAutoReminder("cancel");
         return REDIRECT + REMINDER;
     }

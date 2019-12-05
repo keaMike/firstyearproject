@@ -4,10 +4,7 @@ import com.firstyearproject.salontina.Models.Item;
 import com.firstyearproject.salontina.Models.LoginToken;
 import com.firstyearproject.salontina.Models.Treatment;
 import com.firstyearproject.salontina.Models.User;
-import com.firstyearproject.salontina.Services.BookingServiceImpl;
-import com.firstyearproject.salontina.Services.ProductServiceImpl;
-import com.firstyearproject.salontina.Services.SMSServiceImpl;
-import com.firstyearproject.salontina.Services.UserServiceImpl;
+import com.firstyearproject.salontina.Services.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +38,9 @@ public class ProductController {
     @Autowired
     ProductServiceImpl productServiceImpl;
 
+    @Autowired
+    UserAuthenticator userAuthenticator;
+
     //Luca
     //Used in Java Methods/mappings
     public void confirmation(String text){
@@ -51,6 +51,7 @@ public class ProductController {
     //Luca
     //Used in HTML-Modals
     public void showConfirmation(Model model){
+
         model.addAttribute("showconfirmation", true);
         model.addAttribute("confirmationtext", confirmationText);
         showConfirmation = false;
@@ -59,6 +60,9 @@ public class ProductController {
     //Asbjørn
     @GetMapping("/createproduct")
     public String createProduct(Model model, HttpSession session) {
+        if(!userAuthenticator.userIsAdmin(session)){
+            return REDIRECT;
+        }
         User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);
         return CREATEPRODUCT;
@@ -67,6 +71,9 @@ public class ProductController {
     //Asbjørn
     @GetMapping("/createitem")
     public String createItem(Model model, HttpSession session) {
+        if(!userAuthenticator.userIsAdmin(session)){
+            return REDIRECT;
+        }
         User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);
         model.addAttribute("item", new Item());
@@ -75,7 +82,10 @@ public class ProductController {
 
     //Asbjørn
     @PostMapping("/createitem")
-    public String createItem(@ModelAttribute Item item, Model model, HttpSession session) {
+    public String createItem(@ModelAttribute Item item, HttpSession session) {
+        if(!userAuthenticator.userIsAdmin(session)){
+            return REDIRECT;
+        }
         taskResult = productServiceImpl.createItem(item);
         if (taskResult) {
             confirmation(item.getProductName() + " er blevet oprettet i systemet");
@@ -89,6 +99,9 @@ public class ProductController {
     //Asbjørn
     @GetMapping("/createtreatment")
     public String createTreatment(Model model, HttpSession session) {
+        if(!userAuthenticator.userIsAdmin(session)){
+            return REDIRECT;
+        }
         User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);
         model.addAttribute("treatment", new Treatment());
@@ -97,7 +110,10 @@ public class ProductController {
 
     //Asbjørn
     @PostMapping("/createtreatment")
-    public String createTreatment(@ModelAttribute Treatment treatment, Model model, HttpSession session) {
+    public String createTreatment(@ModelAttribute Treatment treatment, HttpSession session) {
+        if(!userAuthenticator.userIsAdmin(session)){
+            return REDIRECT;
+        }
         taskResult = productServiceImpl.createTreatment(treatment);
         if (taskResult) {
             confirmation(treatment.getProductName() + " er blevet oprettet som behandling i systemet");
@@ -111,6 +127,9 @@ public class ProductController {
     //Asbjørn
     @GetMapping ("/treatments")
     public String displayTreatments (Model model, HttpSession session) {
+        if(!userAuthenticator.userIsAdmin(session)){
+            return REDIRECT;
+        }
         if(session.getAttribute("user") != null) {
             User user = (User)session.getAttribute("user");
             model.addAttribute("user", user);
@@ -128,6 +147,9 @@ public class ProductController {
     //Asbjørn
     @GetMapping ("/products")
     public String displayProducts (Model model, HttpSession session) {
+        if(!userAuthenticator.userIsAdmin(session)){
+            return REDIRECT;
+        }
         if(session.getAttribute("user") != null) {
             User user = (User)session.getAttribute("user");
             model.addAttribute("user", user);
@@ -145,6 +167,9 @@ public class ProductController {
     //Mike
     @GetMapping("/editproduct")
     public String editProduct(Model model, HttpSession session) {
+        if(!userAuthenticator.userIsAdmin(session)){
+            return REDIRECT;
+        }
         User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);
         return EDITPRODUCT;
@@ -153,6 +178,9 @@ public class ProductController {
     //Asbjørn
     @GetMapping ("/edittreatment/{id}")
     public String editTreatment (@PathVariable("id") int id, Model model, HttpSession session) {
+        if(!userAuthenticator.userIsAdmin(session)){
+            return REDIRECT;
+        }
         User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);
         model.addAttribute("treatments", productServiceImpl.getTreatment(id));
@@ -161,7 +189,10 @@ public class ProductController {
 
     //Asbjørn
     @PostMapping ("/edittreatment")
-    public String editTreatment (@ModelAttribute Treatment treatment) {
+    public String editTreatment (@ModelAttribute Treatment treatment, HttpSession session) {
+        if(!userAuthenticator.userIsAdmin(session)){
+            return REDIRECT;
+        }
         taskResult = productServiceImpl.editTreatment(treatment);
         if (taskResult) {
             confirmation("Information på behandlingen: " + treatment.getProductName() + " er blevet ændret i systemet");
@@ -175,6 +206,9 @@ public class ProductController {
     //Asbjørn
     @GetMapping ("/edititem/{id}")
     public String editItem (@PathVariable ("id") int id, Model model, HttpSession session) {
+        if(!userAuthenticator.userIsAdmin(session)){
+            return REDIRECT;
+        }
         User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);
         model.addAttribute("items", productServiceImpl.getItem(id));
@@ -183,7 +217,10 @@ public class ProductController {
 
     //Asbjørn
     @PostMapping ("/edititem")
-    public String editItem (@ModelAttribute Item item) {
+    public String editItem (@ModelAttribute Item item, HttpSession session) {
+        if(!userAuthenticator.userIsAdmin(session)){
+            return REDIRECT;
+        }
         taskResult = productServiceImpl.editItem(item);
         if (taskResult) {
             confirmation("Information på " + item.getProductName() + " er blevet ændret i systemet");
