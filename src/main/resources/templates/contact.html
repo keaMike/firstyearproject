@@ -6,40 +6,35 @@
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
     <div th:include="fragments/header :: scripts"></div>
-    <style>
-        /* Always set the map height explicitly to define the size of the div
-         * element that contains the map. */
-        #map {
-            height: 100%;
-        }
-        /* Optional: Makes the sample page fill the window. */
-        html, body {
-            height: 50%;
-            width: 50%;
-            margin: 0;
-            padding: 0;
-        }
-    </style>
 
 </head>
     <div th:include = "fragments/header :: navbar"></div>
 <body>
+<div class="container">
+    <div class="contact-info">
+        <h1 class="controlpaneltitle">Kontakt</h1>
+        <p><b>Kontakt informationer:</b></p>
+        <p>Email:</p>
+        <p>Tlf:</p>
+>
 
-<div id="map"></div>
-<script>
-    function initMap() {
-        //Salon Tina location
-        //https://www.google.com/maps/place/Bavnevej+3,+2650+Hvidovre/@55.628387,12.4886444,17z/data=!4m5!3m4!1s0x4652543ed29b85e3:0x4d9513f240788352!8m2!3d55.628387!4d12.490833
-        var salonTina = {lat: 55.62837, lng: 12.4886444};
-        //Center map on Salon Tina
-        var map = new google.maps.Map(
-            document.getElementById('map'), {zoom: 15, center: salonTina});
-        //create a marker on salon Tina
-        var marker = new google.maps.Marker({position: salonTina, map: map});
-    }
-</script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAn_VS93zezqHNyiwRIKGRdOBahjZYw3io&callback=initMap"
-        async defer></script>
-
+    </div>
+    <div id="map"></div>
+    <script>
+        function initMap() {
+            //Salon Tina location
+            //https://www.google.com/maps/place/Bavnevej+3,+2650+Hvidovre/@55.628387,12.4886444,17z/data=!4m5!3m4!1s0x4652543ed29b85e3:0x4d9513f240788352!8m2!3d55.628387!4d12.490833
+            var salonTina = {lat: 55.62837, lng: 12.4886444};
+            //Center map on Salon Tina
+            var map = new google.maps.Map(
+                document.getElementById('map'), {zoom: 15, center: salonTina});
+            //create a marker on salon Tina
+            var marker = new google.maps.Marker({position: salonTina, map: map});
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAn_VS93zezqHNyiwRIKGRdOBahjZYw3io&callback=initMap"
+            async defer>
+    </script>
+</div>
 </body>
 </html>
