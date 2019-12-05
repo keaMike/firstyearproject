@@ -12,20 +12,20 @@
                     <a class="nav-link" href="#">Bestil tid <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item" th:if="${user.userId} != 0">
-                    <a class="nav-link" th:href="@{/minprofil}">Min Profil</a>
+                    <a class="nav-link" th:href="@{/userprofile}">Min Profil</a>
                 </li>
                 <li class="nav-item">
-                    <a class = "nav-link" th:href="@{/behandlinger}">Behandlinger</a>
+                    <a class = "nav-link" th:href="@{/treatments}">Behandlinger</a>
                 </li>
                 <li class="nav-item">
-                    <a class = "nav-link" th:href="@{/produkter}">Produkter</a>
+                    <a class = "nav-link" th:href="@{/products}">Produkter</a>
                 </li>
                 <li class="nav-item">
-                    <a class = "nav-link" th:href="@{/kontakt}" >Kontakt</a>
+                    <a class = "nav-link" th:href="@{/contact}" >Kontakt</a>
                 </li>
                 <div th:each="role : ${user.userRoles}">
                     <li class="nav-item" th:if="${role} == 'Admin'">
-                        <a class = "nav-link" th:href="@{/kontrolpanel}">Kontrol panel</a>
+                        <a class = "nav-link" th:href="@{/controlpanel}">Kontrol panel</a>
                     </li>
                 </div>
             </ul>

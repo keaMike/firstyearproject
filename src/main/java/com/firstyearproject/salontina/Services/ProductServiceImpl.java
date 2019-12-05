@@ -29,8 +29,9 @@ public class ProductServiceImpl implements ProductService{
         return pHandlerTaskResult;
     }
 
+    //Mike
     public boolean deleteTreatment(int treatmentId){
-        return false;
+        return productRepoImplManager.deleteTreatment(treatmentId);
     }
 
     //Asbjørn
@@ -50,8 +51,9 @@ public class ProductServiceImpl implements ProductService{
         return pHandlerTaskResult;
     }
 
+    //Mike
     public boolean deleteItem(int itemId){
-        return false;
+        return productRepoImplManager.deleteItem(itemId);
     }
 
     //Asbjørn

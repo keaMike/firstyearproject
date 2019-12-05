@@ -3,6 +3,7 @@ package com.firstyearproject.salontina.Repositories;
 import com.firstyearproject.salontina.Models.Item;
 import com.firstyearproject.salontina.Models.Treatment;
 import com.firstyearproject.salontina.Services.DatabaseLogger;
+import com.sun.corba.se.impl.orb.PrefixParserAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -328,5 +329,37 @@ public class ProductRepoImpl implements ProductRepo {
             e.printStackTrace();
         }
         return null;
+    }
+
+    //Mike
+    public boolean deleteTreatment(int treatmentId) {
+        log.info("deleteTreatment method started...");
+
+        String statement = "DELETE FROM treatments WHERE treatments_id = ?";
+
+        return deleteProduct(treatmentId, statement);
+    }
+
+    //Mike
+    public boolean deleteItem(int itemId) {
+        log.info("deleteItem method started...");
+
+        String statement = "DELETE FROM items WHERE items_id = ?";
+
+        return deleteProduct(itemId, statement);
+    }
+
+    //Mike
+    private boolean deleteProduct(int productId, String statement) {
+        try {
+            PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
+            pstmt.setInt(1, productId);
+            pstmt.executeUpdate();
+            pstmt.close();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
