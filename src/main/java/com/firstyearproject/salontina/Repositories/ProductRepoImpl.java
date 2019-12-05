@@ -319,14 +319,47 @@ public class ProductRepoImpl implements ProductRepo {
                 Item item = new Item();
                 item.setProductId(rs.getInt(1));
                 item.setProductName(rs.getString(2));
-                item.setProductDescription(rs.getString(3));
-                item.setProductActive(rs.getBoolean(4));
-                item.setItemQuantity(rs.getInt(5));
+                item.setProductPrice(rs.getDouble(3));
+                item.setProductDescription(rs.getString(4));
+                item.setProductActive(rs.getBoolean(5));
+                item.setItemQuantity(rs.getInt(6));
                 return item;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    //Mike
+    public boolean deleteTreatment(int treatmentId) {
+        log.info("deleteTreatment method started...");
+
+        String statement = "DELETE FROM treatments WHERE treatments_id = ?";
+
+        return deleteProduct(treatmentId, statement);
+    }
+
+    //Mike
+    public boolean deleteItem(int itemId) {
+        log.info("deleteItem method started...");
+
+        String statement = "DELETE FROM items WHERE items_id = ?";
+
+        return deleteProduct(itemId, statement);
+    }
+
+    //Mike
+    private boolean deleteProduct(int productId, String statement) {
+        try {
+            PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
+            pstmt.setInt(1, productId);
+            pstmt.executeUpdate();
+            pstmt.close();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

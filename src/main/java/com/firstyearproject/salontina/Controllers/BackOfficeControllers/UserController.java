@@ -68,7 +68,7 @@ public class UserController {
         User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);
         User editedUser = userServiceImpl.getUserById(userid);
-        user.setUserHistory(bookingServiceImpl.getBookingList(user.getUserId()));
+        user.setUserHistory(bookingServiceImpl.getBookingList(editedUser.getUserId()));
         model.addAttribute("editedUser", editedUser);
         return EDITUSERHISTORY;
     }

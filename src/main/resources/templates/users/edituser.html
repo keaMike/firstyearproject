@@ -24,13 +24,30 @@
             <label class="label">Email</label>
             <input class="form-control" type="text" th:field="${user.userEmail}">
             <br>
-            <label class="label">Kodeord</label>
+            <label class="label">Nye kodeord</label>
             <input class="form-control" type="password" th:field="${user.userPassword}">
             <br>
-            <input class="btn btn-dark" type="submit" value="Gem ændringer">
+            <input class="btn btn-dark option" type="submit" value="Gem ændringer">
         </form>
 
-        <a data-toggle="modal" data-target="#deletemodal">
+        <div class="option">
+            <form method="post" th:action="@{/subscribeNewsletter}" >
+                <input class="btn btn-dark" type="submit" value="Tilmeld nyhedsbrev">
+            </form>
+        </div>
+
+        <div class="option">
+            <form method="post" th:action="@{/unsubscribeNewsletter}" >
+                <input class="btn btn-dark" type="submit" value="Afmeld nyhedsbrev">
+            </form>
+        </div>
+
+        <div class="option" th:if="${showconfirmation}">
+            <div th:include="fragments/confirmation :: modal"></div>
+            <div th:include="fragments/confirmation :: script"></div>
+        </div>
+
+        <button class="btn btn-dark" data-toggle="modal" data-target="#deletemodal">
             <i class = "fas fa-trash-alt" data-toggle="tooltip" title = "Slet din profil" style="cursor: pointer;"></i>
             <!--Modal Content-->
             <div class="modal fade" id="deletemodal">
@@ -46,28 +63,9 @@
                     </div>
                 </div>
             </div>
-        </a>
-    </div>
+        </button>
 
-    <div>
-        <form method="post" th:action="@{/subscribeNewsletter}" >
-            <input type="hidden" th:field="${userToBeEdited.userId}"/>
-            <input class="btn btn-dark" type="submit" value="Tilmeld nyhedsbrev">
-        </form>
     </div>
-
-    <div>
-        <form method="post" th:action="@{/unsubscribeNewsletter}" >
-            <input type="hidden" th:field="${userToBeEdited.userId}"/>
-            <input class="btn btn-dark" type="submit" value="Afmeld nyhedsbrev">
-        </form>
-    </div>
-
-    <div th:if="${showconfirmation}">
-        <div th:include="fragments/confirmation :: modal"></div>
-        <div th:include="fragments/confirmation :: script"></div>
-    </div>
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script>

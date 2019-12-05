@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpSession;
+import javax.swing.text.html.HTML;
 
 @Controller
 public class SMSController {
@@ -132,4 +133,17 @@ public class SMSController {
         return NEWSLETTERORREMINDER;
     }
 
+    //Asbjørn
+    @PostMapping ("/startAutoReminder")
+    public String startAutoReminder() { //Manually starts the autoReminder
+        sMSServiceImpl.initiateAutoReminder("Initiate");
+        return REDIRECT + REMINDER;
+    }
+
+    //Asbjørn
+    @PostMapping ("/stopAutoReminder")
+    public String stopAutoReminde(Model model, HttpSession session){ //Manually stops the autoReminder
+        sMSServiceImpl.initiateAutoReminder("cancel");
+        return REDIRECT + REMINDER;
+    }
 }

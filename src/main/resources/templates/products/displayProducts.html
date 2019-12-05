@@ -38,7 +38,7 @@
                 <td th:text="${treatment.productId}"></td>
                 <td th:unless="${treatment.productActive}">Ikke aktiv</td>
                 <td>
-                    <a th:href="${'editTreatment/' + treatment.productId}"><i class="fas fa-edit" data-toggle="tooltip" title="Rediger behandling" ></i></a>
+                    <a th:href="${'edittreatment/' + treatment.productId}"><i class="fas fa-edit" data-toggle="tooltip" title="Rediger behandling" ></i></a>
                 </td>
             </div>
         </tr>
@@ -77,7 +77,7 @@
                 <td th:unless="${item.productActive}">Ikke på lager</td>
                 <td th:text="${item.productId}"></td>
                 <td>
-                    <a th:href="${'editItem/' + item.productId}"><i class="fas fa-edit" data-toggle="tooltip" title="Rediger produkt"></i></a>
+                    <a th:href="${'edititem/' + item.productId}"><i class="fas fa-edit" data-toggle="tooltip" title="Rediger produkt"></i></a>
                 </td>
             </div>
         </tr>

@@ -1,5 +1,6 @@
 package com.firstyearproject.salontina.Controllers.FrontOfficeControllers;
 
+import com.firstyearproject.salontina.Models.Booking;
 import com.firstyearproject.salontina.Models.LoginToken;
 import com.firstyearproject.salontina.Models.User;
 import com.firstyearproject.salontina.Services.BookingServiceImpl;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 public class UserAccessController {
@@ -38,6 +40,9 @@ public class UserAccessController {
     @Autowired
     UserServiceImpl userService;
 
+    @Autowired
+    BookingServiceImpl bookingService;
+
     //Luca
     //Used in Java Methods/mappings
     public void confirmation(String text){
@@ -53,16 +58,22 @@ public class UserAccessController {
         showConfirmation = false;
     }
 
-    //Mike
-    @GetMapping("/")
-    public String index(Model model, HttpSession session) {
+    private Model userExcists(Model model, HttpSession session) {
         if(session.getAttribute("user") != null) {
             User user = (User)session.getAttribute("user");
             model.addAttribute("user", user);
         } else {
             model.addAttribute("user", new User());
             model.addAttribute("loginToken", new LoginToken());
+            return model;
         }
+    }
+
+    //Mike
+    @GetMapping("/")
+    public String index(Model model, HttpSession session) {
+
+        userExcists(model, session);
         return INDEX;
     }
 
@@ -80,16 +91,10 @@ public class UserAccessController {
     }
 
     //Jonathan
-    @GetMapping("/register")
-    public String register(Model model) {
-        model.addAttribute("userToBeRegistered", new User());
-        return REGISTER;
-    }
-    //Jonathan
     @PostMapping("/register")
     public String register(@ModelAttribute User user) {
         userService.addUser(user);
-        return REDIRECT + LOGIN;
+        return REDIRECT;
     }
     //Jonathan
     @GetMapping("/editUser")

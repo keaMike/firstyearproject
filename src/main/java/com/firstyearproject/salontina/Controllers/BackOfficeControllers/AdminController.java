@@ -26,7 +26,9 @@ public class AdminController {
     private String confirmationText = "";
 
     @Autowired
-    BookingService bookingService;
+    BookingServiceImpl bookingService;
+    @Autowired
+    SMSServiceImpl smsService;
 
     //Luca
     //Used in Java Methods/mappings
@@ -46,6 +48,7 @@ public class AdminController {
     //Mike
     @GetMapping("/controlpanel")
     public String controlpanel(Model model, HttpSession session) {
+        smsService.initiateAutoReminder("Initate");
         User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);
         return CONTROLPANEL;

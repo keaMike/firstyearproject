@@ -143,7 +143,7 @@ public class ProductController {
     }
 
     //Mike
-    @GetMapping("/editProduct")
+    @GetMapping("/editproduct")
     public String editProduct(Model model, HttpSession session) {
         User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);
@@ -177,7 +177,7 @@ public class ProductController {
     public String editItem (@PathVariable ("id") int id, Model model, HttpSession session) {
         User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);
-        model.addAttribute("items", productServiceImpl.getTreatment(id));
+        model.addAttribute("items", productServiceImpl.getItem(id));
         return EDITITEM;
     }
 
