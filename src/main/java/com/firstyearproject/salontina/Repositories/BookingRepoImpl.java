@@ -46,7 +46,9 @@ public class BookingRepoImpl implements BookingRepo{
             pstmt.setString(4, booking.getBookingComment());
             pstmt.execute();
 
-            addTreatmentsToBooking(booking.getBookingTreatmentList(), booking);
+            if(booking.getBookingTreatmentList() != null && booking.getBookingTreatmentList().size() != 0){
+                addTreatmentsToBooking(booking.getBookingTreatmentList(), booking);
+            }
 
             return true;
         } catch (SQLException e) {

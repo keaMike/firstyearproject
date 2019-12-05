@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Tilføj ferie</title>
+
+    <div th:include="fragments/header :: navbar"></div>
+    <div th:include="fragments/header :: scripts"></div>
+</head>
+<body>
+    <div class="container">
+        <div class="controlpaneltitle">
+            <h1>Tilføj ferie
+                <i class = "fas fa-plane-departure"></i>
+            </h1>
+        </div>
+        <form th:method="Post" th:object="${vacationstring}" th:action="@{/addvacation}">
+            <div class="form-group">
+                <label for="vacationinput">Ferie dato</label>
+                <input id="vacationinput" type="text" class="form-control" aria-describedby="vacationinputHelp" th:field="${vacationstring.string}">
+                <small id="vacationinputHelp" class="text-muted">Skal skrives i formatet: 'ÅÅÅÅ-MM-DD'.</small>
+            </div>
+            <input class="btn btn-dark" type="submit" value="Indsæt ferie"/>
+        </form>
+
+        <br>
+        <br>
+        <br>
+    </div>
+</body>
+    <div th:include="fragments/footer :: footer"></div>
+</html>
