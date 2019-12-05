@@ -62,7 +62,6 @@ public class UserAccessController {
         if(session.getAttribute("user") != null) {
             User user = (User)session.getAttribute("user");
             model.addAttribute("user", user);
-            return model;
         } else {
             model.addAttribute("user", new User());
             model.addAttribute("loginToken", new LoginToken());

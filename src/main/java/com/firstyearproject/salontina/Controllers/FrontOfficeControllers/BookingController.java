@@ -79,9 +79,11 @@ public class BookingController {
 
     //Jonathan & Luca
     @GetMapping("choosetreatment")
-    public String chooseTreatment(Model model) {
-        model.addAttribute("booking", new Booking());
+    public String chooseTreatment(Model model, HttpSession session) {
+        User user = (User) session.getAttribute("user");
 
+        model.addAttribute("user", user);
+        model.addAttribute("booking", new Booking());
         model.addAttribute("treatmentList", productService.createTreatmentArrayList());
         return CHOOSEBOOKINGTREATMENT;
     }
@@ -89,18 +91,21 @@ public class BookingController {
     //Jonathan & Luca
     @GetMapping("choosetime/{treatmentId}")
     public String chooseTime(HttpSession session, Model model, @PathVariable int treatmentId) {
+        User user = (User) session.getAttribute("user");
+
         Date date = new Date(Calendar.getInstance().getTimeInMillis());
 
         Booking booking = new Booking();
         booking.setBookingTreatmentList(new ArrayList<>());
         booking.getBookingTreatmentList().add(productService.getTreatment(treatmentId));
         booking.setBookingDate(date);
-        //TODO set userId from httpsession user
+        booking.setBookingUserId(user.getUserId());
 
         session.setAttribute("booking", booking);
 
         List<Booking> bookingList = bookingService.getBookingList(date.toString());
 
+        model.addAttribute("user", user);
         model.addAttribute("bookingList", bookingList);
         return CHOOSEBOOKINGTIME;
     }
@@ -108,14 +113,15 @@ public class BookingController {
     //Jonathan & Luca
     @GetMapping("bookingconfirmation/{time}")
     public String bookingConfirmation(HttpSession session, Model model, @PathVariable String time) {
+        User user = (User) session.getAttribute("user");
+
         Booking booking = (Booking) session.getAttribute("booking");
 
         booking.setBookingTime(time);
 
-        System.out.println(booking);
-
         bookingService.addBooking(booking);
 
+        model.addAttribute("user", user);
         model.addAttribute("booking", booking);
         return BOOKINGCONFIRMATION;
 
