@@ -29,7 +29,7 @@
                     <tbody>
                         <tr th:each="booking: ${bookingList}">
                             <td th:if="${booking.bookingId == 0}">
-                                <a th:href="'/bookbehandling'">Book</a>
+                                <a th:href="'/booktreatment'">Book</a>
                             </td>
                             <td class="text-muted" th:unless="${booking.bookingId == 0}">Optaget</td>
                         </tr>

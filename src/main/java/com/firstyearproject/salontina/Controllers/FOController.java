@@ -29,26 +29,18 @@ public class FOController {
     private String REDIRECT = "redirect:/";
     private String LOGIN = "login";
     private String REGISTER = "register";
-    private String REDIGERBRUGER = "redigerbruger";
+    private String EDITUSER = "edituser";
     private String USERPROFILE = "userprofile";
     private String MYBOOKINGS = "mybookings";
-    private String MYPROFILE = "myprofile";
     private String CONTACT = "contact";
-    private String DISPLAYPRODUCTS = "displayProducts";
-    private String MINEBOOKINGS = "minebookings";
-    private String VÆLGTREATMENT = "vælgtreatment";
-    private String VÆLGTID = "vælgtid";
     private String BOOKINGCONFIRMATION = "bookingconfirmation";
+    private String CHOOSEBOOKINGTREATMENT = "choosebookingtreatment";
+    private String CHOOSEBOOKINGTIME = "choosebookingtime";
 
     private boolean taskResult = false;
     private boolean showConfirmation = false;
     private String confirmationText = "";
 
-    private ArrayList<Item> itemArrayList = new ArrayList<>();
-    private ArrayList<Treatment> treatmentArrayList = new ArrayList<>();
-
-    private ArrayList<Item> itemArrayList = new ArrayList<>();
-    private ArrayList<Treatment> treatmentArrayList = new ArrayList<>();
 
     @Autowired
     UserServiceImpl userService;
@@ -104,26 +96,26 @@ public class FOController {
 
     //Jonathan
     @GetMapping("/register")
-    public String createUser(Model model) {
+    public String register(Model model) {
         model.addAttribute("userToBeRegistered", new User());
         return REGISTER;
     }
     //Jonathan
     @PostMapping("/register")
-    public String createUser(@ModelAttribute User user) {
+    public String register(@ModelAttribute User user) {
         userService.addUser(user);
         return REDIRECT + LOGIN;
     }
     //Jonathan
-    @GetMapping("/redigerbruger")
-    public String redigerUser(HttpSession session, Model model) {
+    @GetMapping("/editUser")
+    public String editUser(HttpSession session, Model model) {
         User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);
-        return REDIGERBRUGER;
+        return EDITUSER;
     }
     //Jonathan
-    @PostMapping("/redigerbruger")
-    public String redigerUser(@ModelAttribute User user) {
+    @PostMapping("/editUser")
+    public String editUser(@ModelAttribute User user) {
         userService.editUser(user);
         return REDIRECT + USERPROFILE;
     }
@@ -136,15 +128,15 @@ public class FOController {
     }
 
     //Mike
-    @GetMapping("/sletbruger/{userid}")
+    @GetMapping("/deleteuser/{userid}")
     public String deleteUser(@PathVariable int userId) {
         userService.deleteUser(userId);
-        return REDIRECT + REDIGERBRUGER;
+        return REDIRECT + EDITUSER;
     }
 
     //Mike
-    @GetMapping("/minebookings")
-    public String userbookings(Model model, HttpSession session) {
+    @GetMapping("/mybookings")
+    public String userBookings(Model model, HttpSession session) {
         User user = (User)session.getAttribute("user");
         user.setUserHistory(bookingService.getBookingList(user.getUserId()));
         model.addAttribute("user", user);
@@ -152,12 +144,12 @@ public class FOController {
     }
 
     //Mike
-    @GetMapping("/sletbooking/{bookingid}")
-    public String deleteuserbooking(@PathVariable int bookingid) {
+    @GetMapping("/deletebooking/{bookingid}")
+    public String deleteUserBooking(@PathVariable int bookingid) {
         taskResult = bookingService.deleteBooking(bookingid);
         if (taskResult) {
             confirmation("Din booking er blevet slettet");
-            return REDIRECT + MINEBOOKINGS;
+            return REDIRECT + MYBOOKINGS;
         } else {
             confirmation("Din booking kunne ikke slettes. Prøv igen på et senere tidspunkt");
             return MYBOOKINGS;
@@ -165,7 +157,7 @@ public class FOController {
     }
 
     //Mike
-    @GetMapping("/minprofil")
+    @GetMapping("/myprofile")
     public String myprofil(Model model, HttpSession session) {
         User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);
@@ -173,7 +165,7 @@ public class FOController {
     }
 
     //Mike
-    @GetMapping("/kontakt")
+    @GetMapping("/contact")
     public String contact(Model model, HttpSession session) {
         if(session.getAttribute("user") != null) {
             User user = (User)session.getAttribute("user");
@@ -185,21 +177,18 @@ public class FOController {
         return CONTACT;
     }
 
-    //Jonathan
-
-    @GetMapping("vælgtreatment")
-    public String vælgBooking(Model model) {
+    //Jonathan & Luca
+    @GetMapping("choosetreatment")
+    public String chooseTreatment(Model model) {
         model.addAttribute("booking", new Booking());
 
-        productService.createProductArrayLists(itemArrayList, treatmentArrayList);
-
-        model.addAttribute("treatmentList", treatmentArrayList);
-        return "chooseBookingTreatment";
+        model.addAttribute("treatmentList", productService.createTreatmentArrayList());
+        return CHOOSEBOOKINGTREATMENT;
     }
 
     //Jonathan & Luca
-    @GetMapping("vælgtid/{treatmentId}")
-    public String vælgTid(HttpSession session, Model model, @PathVariable int treatmentId) {
+    @GetMapping("choosetime/{treatmentId}")
+    public String chooseTime(HttpSession session, Model model, @PathVariable int treatmentId) {
         Date date = new Date(Calendar.getInstance().getTimeInMillis());
 
         Booking booking = new Booking();
@@ -213,7 +202,7 @@ public class FOController {
         List<Booking> bookingList = bookingService.getBookingList(date.toString());
 
         model.addAttribute("bookingList", bookingList);
-        return "chooseBookingTime";
+        return CHOOSEBOOKINGTIME;
     }
 
     //Jonathan & Luca
@@ -238,10 +227,10 @@ public class FOController {
         taskResult = userService.subscribeNewsletter(user.getUserId());
         if (taskResult) {
             confirmation("Du er blevet tilmeldt nyhedsbrevet");
-            return "redigerbruger";
+            return EDITUSER;
         }
         confirmation("Vi kunne IKKE tilmelde dig nyhedsbrevet. Prøv igen senere");
-        return "redirect:/";
+        return REDIRECT;
     }
 
     //Asbjørn
@@ -250,14 +239,14 @@ public class FOController {
         taskResult = userService.unsubscribeNewsletter(user.getUserId());
         if (taskResult) {
             confirmation("Du er blevet afmeldt nyhedsbrevet");
-            return "redigerbruger";
+            return EDITUSER;
         }
         confirmation("Vi kunne IKKE afmelde dig nyhedsbrevet. Prøv igen senere");
-        return "redigerbruger";
+        return EDITUSER;
     }
 
-    @GetMapping ("/kontakt")
-    public String kontakt () {
-        return "kontakt";
+    @GetMapping ("/contact1")
+    public String contact () {
+        return CONTACT;
     }
 }

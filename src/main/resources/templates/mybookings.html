@@ -41,7 +41,7 @@
                                             <h3>Er du sikker på du vil slette din tid d. <span th:text="${booking.bookingDate}"></span></h3>
                                         </div>
                                         <div class="modal-body">
-                                            <a th:href="@{'/sletbooking/' + ${booking.bookingId}}" class="btn btn-dark">Ja</a>
+                                            <a th:href="@{'/deletebooking/' + ${booking.bookingId}}" class="btn btn-dark">Ja</a>
                                             <a class="btn btn-dark" data-dismiss="modal" style="color: white">Nej</a>
                                         </div>
                                     </div>

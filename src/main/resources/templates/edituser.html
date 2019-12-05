@@ -40,7 +40,7 @@
                             <h3>Er du sikker på du vil slette din bruger? <span th:text="${user.username}"></span></h3>
                         </div>
                         <div class="modal-body">
-                            <a th:href="@{'/sletbruger/' + ${user.userId}}" class="btn btn-dark">Ja</a>
+                            <a th:href="@{'/deleteuser/' + ${user.userId}}" class="btn btn-dark">Ja</a>
                             <a class="btn btn-dark" data-dismiss="modal" style="color: white">Nej</a>
                         </div>
                     </div>
