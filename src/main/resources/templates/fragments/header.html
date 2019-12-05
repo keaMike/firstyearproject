@@ -45,19 +45,39 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content" id="signupmodal-content">
                     <div class="modal-body">
-                        <form th:method="post" th:action="@{/opretprofil}" th:object="${user}">
+                        <form th:method="post" th:action="@{/register}" th:object="${user}">
 
                             <div class="input-div one">
                                 <div class="i">
                                     <i class="fas fa-user"></i>
                                 </div>
                                 <div>
-                                    <h5>Fulde navn</h5>
-                                    <input type="text" class="input" id="username" th:field="${user.userEmail}" required>
+                                    <h5>Fulde Navn</h5>
+                                    <input type="password" class="input" id="username" th:field="${user.username}" required>
+                                </div>
+                            </div>
+
+                            <div class="input-div two">
+                                <div class="i">
+                                    <i class="fas fa-at"></i>
+                                </div>
+                                <div>
+                                    <h5>E-Mail</h5>
+                                    <input type="text" class="input" id="email" th:field="${user.userEmail}" required>
                                 </div>
                             </div>
 
                             <div class="input-div three">
+                                <div class="i">
+                                    <i class="fas fa-phone"></i>
+                                </div>
+                                <div>
+                                    <h5>Telefon Nummer</h5>
+                                    <input type="password" class="input" id="phonenumber" th:field="${user.userPhonenumber}" required>
+                                </div>
+                            </div>
+
+                            <div class="input-div four">
                                 <div class="i">
                                     <i class="fas fa-lock"></i>
                                 </div>
@@ -67,7 +87,7 @@
                                 </div>
                             </div>
 
-                            <div class="input-div four">
+                            <div class="input-div five">
                                 <div class="i">
                                     <i class="fas fa-check"></i>
                                 </div>
@@ -116,4 +136,14 @@
             </div>
         </div>
     </div>
+</div>
+
+<div th:fragment="scripts"  xmlns:th="http://www.w3.org/1999/xhtml">
+    <script src= "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet" media="screen"/>
+    <script th:src="@{/webjars/jquery/3.1.1/jquery.min.js}"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <link rel = "stylesheet" type = "text/css" href = "/static/stylesheet.css" th:href = "@{/stylesheet.css}"/>
+    <script src="https://kit.fontawesome.com/af932a1361.js" crossorigin="anonymous"></script>
 </div>

@@ -153,11 +153,7 @@ body, html {
     margin-top: 0;
 }
 
-.input-div.two {
-    margin-bottom: 4px;
-}
-
-.input-div.three {
+.input-div.two, .input-div.three, .input-div.four, .input-div.five {
     margin-bottom: 4px;
 }
 
