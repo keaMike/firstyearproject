@@ -29,6 +29,30 @@ public class BookingRepoImpl implements BookingRepo{
     @Autowired
     DatabaseLogger databaseLogger;
 
+    //Luca
+    public boolean addBooking(Booking booking){
+        String statement =  "INSERT INTO bookings " +
+                            "(bookings_date, bookings_time, users_id) " +
+                            "VALUES " +
+                            "(?, ?, ?);";
+
+        try {
+            PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
+
+            pstmt.setString(1, booking.getBookingDate().toString());
+            pstmt.setString(2, booking.getBookingTime());
+            pstmt.setInt(3, booking.getBookingUserId());
+
+            pstmt.execute();
+
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
     //Mike
     public List<Booking> findBookingsByUserId(int userid) {
         try {
@@ -146,6 +170,28 @@ public class BookingRepoImpl implements BookingRepo{
         return null;
     }
 
+    //Luca
+    public boolean addVacationDate(Date date, int userId){
+        log.info("addVacation method started...");
+
+        for(int i = 0; i <= 7; i++){
+            String time = (i + 8) + ":00";
+            if(time.length() != 5){
+                time = "0" + time;
+            }
+            Booking booking = new Booking();
+
+            booking.setBookingDate(date);
+            booking.setBookingTime(time);
+            booking.setBookingUserId(userId);
+
+            if(!addBooking(booking)){
+                return false;
+            }
+        }
+        return true;
+    }
+  
     //Mike
     public boolean deleteBooking(int bookingId) {
         try {
