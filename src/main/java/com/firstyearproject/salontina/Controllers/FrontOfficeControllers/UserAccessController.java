@@ -1,5 +1,6 @@
 package com.firstyearproject.salontina.Controllers.FrontOfficeControllers;
 
+import com.firstyearproject.salontina.Models.Booking;
 import com.firstyearproject.salontina.Models.LoginToken;
 import com.firstyearproject.salontina.Models.User;
 import com.firstyearproject.salontina.Services.BookingServiceImpl;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 public class UserAccessController {
@@ -37,6 +39,9 @@ public class UserAccessController {
 
     @Autowired
     UserServiceImpl userService;
+
+    @Autowired
+    BookingServiceImpl bookingService;
 
     //Luca
     //Used in Java Methods/mappings

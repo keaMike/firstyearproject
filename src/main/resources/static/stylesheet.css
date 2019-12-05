@@ -207,6 +207,10 @@ body, html {
     cursor: pointer;
 }
 
+.option {
+    display: inline-block;
+    padding-right: 10px;
+}
 
 input[type='number'] {
     -moz-appearance:textfield;

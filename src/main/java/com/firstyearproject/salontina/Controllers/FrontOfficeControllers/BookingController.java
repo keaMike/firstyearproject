@@ -25,7 +25,7 @@ public class BookingController {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     private String REDIRECT = "redirect:/";
-    private String MYBOOKINGS = "users/mybookings";
+    private String MYBOOKINGS = "bookings/mybookings";
     private String BOOKINGCONFIRMATION = "bookings/bookingconfirmation";
     private String CHOOSEBOOKINGTREATMENT = "bookings/choosebookingtreatment";
     private String CHOOSEBOOKINGTIME = "bookings/choosebookingtime";

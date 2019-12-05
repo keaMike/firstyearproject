@@ -320,9 +320,10 @@ public class ProductRepoImpl implements ProductRepo {
                 Item item = new Item();
                 item.setProductId(rs.getInt(1));
                 item.setProductName(rs.getString(2));
-                item.setProductDescription(rs.getString(3));
-                item.setProductActive(rs.getBoolean(4));
-                item.setItemQuantity(rs.getInt(5));
+                item.setProductPrice(rs.getDouble(3));
+                item.setProductDescription(rs.getString(4));
+                item.setProductActive(rs.getBoolean(5));
+                item.setItemQuantity(rs.getInt(6));
                 return item;
             }
         } catch (SQLException e) {

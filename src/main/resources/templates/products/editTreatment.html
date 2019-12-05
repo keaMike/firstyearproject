@@ -10,24 +10,25 @@
 
 <div class="container">
     <h1>Details</h1>
-    <form th:method="post" th:action="@{/edittreatment}" th:object ="${treatments}">
-        <input type="number" th:field="${treatments.productId}" readonly/>
-        <br>
-        <div>Navn: </div>
-        <input type="text" th:field="${treatments.productName}"/>
-        <br>
-        <div>Pris:</div>
-        <input type="text" th:field="${treatments.productPrice}"/>
-        <br>
-        <div>Varighed:</div>
-        <input type="text" th:field="${treatments.treatmentDuration}"/>
-        <br>
-        <div>Beskrivelse</div>
-        <input type="text" th:field="${treatments.productDescription}"/>
-        <br>
-        <div>Aktiv:</div>
-        <input type="text" th:field="${treatments.productActive}"/>
-        <br>
+    <form class="form-group" th:method="post" th:action="@{/edittreatment}" th:object ="${treatments}">
+        <label for="id">ID</label>
+        <input class="form-control" id="id" type="number" th:field="${treatments.productId}" readonly/>
+
+        <label for="name">Navn</label>
+        <input class="form-control" id="name" type="text" th:field="${treatments.productName}"/>
+
+        <label for="price">Pris</label>
+        <input class="form-control" id="price" type="text" th:field="${treatments.productPrice}"/>
+
+        <label for="time">Varighed</label>
+        <input class="form-control" id="time" type="text" th:field="${treatments.treatmentDuration}"/>
+
+        <label for="desc">Beskrivelse</label>
+        <input class="form-control" id="desc" type="text" th:field="${treatments.productDescription}"/>
+
+        <label for="active">Aktiv</label>
+        <input class="form-check-input" id="active" type="checkbox" th:field="${treatments.productActive}"/>
+
         <input class="btn btn-primary btn-danger" type="submit" value="edit"/>
     </form>
 </div>
