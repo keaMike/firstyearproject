@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Kontakt</title>
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
     <div th:include="fragments/header :: scripts"></div>
@@ -12,11 +12,11 @@
 <body>
 <div class="container">
     <div class="contact-info">
-        <h1 class="controlpaneltitle">Kontakt</h1>
+        <h1 class="controlpaneltitle">Kontakt <i class="fas fa-phone"></i></h1>
         <p><b>Kontakt informationer:</b></p>
-        <p>Email:</p>
-        <p>Tlf:</p>
->
+        <p>E-Mail: salon-tina@oncable.dk</p>
+        <p>Telefon: 36 78 09 00</p>
+        <p>Adresse: Bavnvej 3, Hvidovre 2650</p>
 
     </div>
     <div id="map"></div>
@@ -24,7 +24,7 @@
         function initMap() {
             //Salon Tina location
             //https://www.google.com/maps/place/Bavnevej+3,+2650+Hvidovre/@55.628387,12.4886444,17z/data=!4m5!3m4!1s0x4652543ed29b85e3:0x4d9513f240788352!8m2!3d55.628387!4d12.490833
-            var salonTina = {lat: 55.62837, lng: 12.4886444};
+            var salonTina = {lat: 55.628375, lng: 12.490885};
             //Center map on Salon Tina
             var map = new google.maps.Map(
                 document.getElementById('map'), {zoom: 15, center: salonTina});
@@ -36,5 +36,6 @@
             async defer>
     </script>
 </div>
+<div th:include="fragments/footer :: footer"></div>
 </body>
 </html>

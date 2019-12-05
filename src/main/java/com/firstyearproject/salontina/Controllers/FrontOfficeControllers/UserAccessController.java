@@ -73,7 +73,6 @@ public class UserAccessController {
     //Mike
     @GetMapping("/")
     public String index(Model model, HttpSession session) {
-
         userExcists(model, session);
         return INDEX;
     }

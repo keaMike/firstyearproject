@@ -390,7 +390,7 @@ public class UserRepoImpl implements UserRepo{
         user.setUserId(rs.getInt(1));
         user.setUsername(rs.getString(2));
         user.setUserPassword(rs.getString(3));
-        user.setUserPassword(rs.getString(4));
+        user.setUserPhonenumber(rs.getInt(4));
         user.setUserEmail(rs.getString(5));
         user.setUserPreference(rs.getString(6));
         user.setUserRoles(getUserRoles(user.getUserId()));
