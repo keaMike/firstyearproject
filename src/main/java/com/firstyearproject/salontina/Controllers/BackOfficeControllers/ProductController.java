@@ -25,13 +25,13 @@ public class ProductController {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    private String CREATEPRODUCT = "createProduct";
-    private String CREATEITEM = "createItem";
-    private String CREATETREATMENT = "createTreatment";
-    private String DISPLAYPRODUCTS = "displayProducts";
-    private String EDITPRODUCT = "editproduct";
-    private String EDITTREATMENT = "editTreatment";
-    private String EDITITEM = "editItem";
+    private String CREATEPRODUCT = "products/createProduct";
+    private String CREATEITEM = "products/createItem";
+    private String CREATETREATMENT = "products/createTreatment";
+    private String DISPLAYPRODUCTS = "products/displayProducts";
+    private String EDITPRODUCT = "products/editproduct";
+    private String EDITTREATMENT = "products/editTreatment";
+    private String EDITITEM = "products/editItem";
     private String REDIRECT = "redirect:/";
 
     private boolean taskResult = false;

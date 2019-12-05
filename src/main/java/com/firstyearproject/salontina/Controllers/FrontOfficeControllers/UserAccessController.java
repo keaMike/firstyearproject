@@ -25,10 +25,10 @@ public class UserAccessController {
     private String INDEX = "index";
     private String REDIRECT = "redirect:/";
     private String LOGIN = "login";
-    private String REGISTER = "register";
-    private String EDITUSER = "edituser";
-    private String USERPROFILE = "userprofile";
-    private String MYPROFILE = "myprofile";
+    private String REGISTER = "users/register";
+    private String EDITUSER = "users/edituser";
+    private String USERPROFILE = "users/userprofile";
+    private String MYPROFILE = "users/myprofile";
     private String CONTACT = "contact";
 
     private boolean taskResult = false;
