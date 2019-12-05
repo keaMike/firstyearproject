@@ -9,7 +9,7 @@
 <body>
 
 <div class="container">
-    <h1>Details</h1>
+    <h1>Behandling detaljer<i class = "fas fa-cut"></i></h1>
     <form class="form-group" th:method="post" th:action="@{/edittreatment}" th:object ="${treatments}">
         <label for="id">ID</label>
         <input class="form-control" id="id" type="number" th:field="${treatments.productId}" readonly/>
@@ -26,10 +26,11 @@
         <label for="desc">Beskrivelse</label>
         <input class="form-control" id="desc" type="text" th:field="${treatments.productDescription}"/>
 
-        <label for="active">Aktiv</label>
-        <input class="form-check-input" id="active" type="checkbox" th:field="${treatments.productActive}"/>
-
-        <input class="btn btn-primary btn-danger" type="submit" value="edit"/>
+        <div class="form-check">
+            <input class="form-check-input" id="active" type="checkbox" th:field="${treatments.productActive}"/>
+            <label class="form-check-label" for="active">Aktiv</label>
+        </div>
+        <input class="btn btn-dark" type="submit" value="edit"/>
     </form>
 </div>
 

@@ -9,7 +9,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active" th:if="${user.userId} != 0">
-                    <a class="nav-link" href="#">Bestil tid <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="#">Bestil tid</span></a>
                 </li>
                 <li class="nav-item" th:if="${user.userId} != 0">
                     <a class="nav-link" th:href="@{/userprofile}">Min Profil</a>
@@ -53,7 +53,7 @@
                                 </div>
                                 <div>
                                     <h5>Fulde Navn</h5>
-                                    <input type="password" class="input" id="username" th:field="${user.username}" required>
+                                    <input type="text" class="input" id="username" th:field="${user.username}" required>
                                 </div>
                             </div>
 
@@ -73,7 +73,7 @@
                                 </div>
                                 <div>
                                     <h5>Telefon Nummer</h5>
-                                    <input type="password" class="input" id="phonenumber" th:field="${user.userPhonenumber}" required>
+                                    <input type="text" class="input" id="phonenumber" th:field="${user.userPhonenumber}" required>
                                 </div>
                             </div>
 
@@ -116,7 +116,7 @@
                                     <i class="fas fa-user"></i>
                                 </div>
                                 <div>
-                                    <h5>Brugernavn</h5>
+                                    <h5>E-Mail/Telefon Nr.</h5>
                                     <input type="text" class="input" name="username" th:field="${loginToken.loginTokenUsername}"  required>
                                 </div>
                             </div>

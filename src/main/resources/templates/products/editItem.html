@@ -9,7 +9,7 @@
 <body>
 
 <div class="container">
-    <h1>Produkt detaljer</h1>
+    <h1>Produkt detaljer<i class = "fas fa-flask"></i></h1>
     <form class="form-group" th:method="post" th:action="@{/edititem}" th:object ="${items}">
         <label for="id">ID</label>
         <input class="form-control" type="number" id="id" th:field="${items.productId}" readonly/>

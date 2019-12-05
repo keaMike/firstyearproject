@@ -86,16 +86,10 @@ public class UserAccessController {
     }
 
     //Jonathan
-    @GetMapping("/register")
-    public String register(Model model) {
-        model.addAttribute("userToBeRegistered", new User());
-        return REGISTER;
-    }
-    //Jonathan
     @PostMapping("/register")
     public String register(@ModelAttribute User user) {
         userService.addUser(user);
-        return REDIRECT + LOGIN;
+        return REDIRECT;
     }
     //Jonathan
     @GetMapping("/editUser")

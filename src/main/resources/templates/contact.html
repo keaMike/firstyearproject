@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
+    <div th:include="fragments/header :: scripts"></div>
     <style>
         /* Always set the map height explicitly to define the size of the div
          * element that contains the map. */
@@ -21,6 +22,7 @@
     </style>
 
 </head>
+    <div th:include = "fragments/header :: navbar"></div>
 <body>
 
 <div id="map"></div>
