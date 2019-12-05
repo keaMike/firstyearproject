@@ -95,6 +95,15 @@ public class UserAccessController {
         return INDEX;
     }
 
+    @GetMapping("/logout")
+    public String logout(HttpSession session){
+        if(!userAuthenticator.userIsUser(session)){
+            return REDIRECT;
+        }
+        session.removeAttribute("user");
+        return REDIRECT;
+    }
+
     //Jonathan
     @PostMapping("/register")
     public String register(@ModelAttribute User user) {
