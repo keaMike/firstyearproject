@@ -31,6 +31,7 @@ public class SMSServiceImpl implements SMSService{
     SMSConnector smsConnector;
 
     //Luca
+    @Override
     public boolean sendReminder(){
         try {
             List<Reminder> reminderList = userRepoImpl.getReminderList();
@@ -49,6 +50,7 @@ public class SMSServiceImpl implements SMSService{
 
     //Luca
     //Method gets a list of phonenumbers and sends text to them
+    @Override
     public boolean sendNewsletter(String text){
         try {
             List<String> phonenumbers = getTestNewsletterList(); //userRepo.getNewsletterList();
@@ -62,6 +64,7 @@ public class SMSServiceImpl implements SMSService{
     }
 
     //Luca
+    @Override
     public boolean sendNewsletterTest(String phonenumber, String text){
         try {
             sendSMS(verifyNumber(phonenumber), text);
@@ -73,6 +76,7 @@ public class SMSServiceImpl implements SMSService{
     }
 
     //Luca
+    @Override
     public void sendSMSToList(List<String> numberList, String text) throws ApiException{
         for(String s : numberList){
             sendSMS(verifyNumber(s), text);
@@ -99,6 +103,7 @@ public class SMSServiceImpl implements SMSService{
 
     //Asbjørn
     //This method creates a thread and schedules a
+    @Override
     public void initiateAutoReminder(String manualOverride) {
         log.info("AutoReminder initiated");
         final Runnable autoReminder = new Runnable() {
