@@ -17,8 +17,9 @@ public class BookingServiceImpl implements BookingService{
     @Autowired
     BookingRepoImpl BR;
 
+    //Luca
     public boolean addBooking(Booking booking){
-        return addBooking(booking);
+        return BR.addBooking(booking);
     }
 
     //Mike
