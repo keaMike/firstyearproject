@@ -11,6 +11,14 @@
     <button class="btn btn-primary" href="/sendreminder" >Send behandlingsreminder</button>
 </div>
 
+<div class="container">
+    <button class="btn btn-primary" href="/startAutoReminder" >Start Automatisk Reminder</button>
+</div>
+
+<div class="container">
+    <button class="btn btn-primary" href="/stopAutoReminder" >Stop Automatisk Reminder</button>
+</div>
+
 <div th:if="${showconfirmation}">
     <div th:include="fragments/confirmation :: modal"></div>
     <div th:include="fragments/confirmation :: script"></div>
