@@ -4,6 +4,7 @@ import com.firstyearproject.salontina.Models.Booking;
 import com.firstyearproject.salontina.Models.User;
 import com.firstyearproject.salontina.Services.BookingServiceImpl;
 import com.firstyearproject.salontina.Services.ProductServiceImpl;
+import com.firstyearproject.salontina.Services.UserAuthenticator;
 import com.firstyearproject.salontina.Services.UserServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +41,9 @@ public class BookingController {
     @Autowired
     ProductServiceImpl productService;
 
+    @Autowired
+    UserAuthenticator userAuthenticator;
+
     //Luca
     //Used in Java Methods/mappings
     public void confirmation(String text){
@@ -58,15 +62,25 @@ public class BookingController {
     //Mike
     @GetMapping("/mybookings")
     public String userBookings(Model model, HttpSession session) {
+        if(!userAuthenticator.userIsUser(session)){
+            return REDIRECT;
+        }
         User user = (User)session.getAttribute("user");
-        user.setUserHistory(bookingService.getBookingList(user.getUserId()));
+        if(userAuthenticator.userIsAdmin(session)){
+            model.addAttribute("bookings", bookingService.getFutureBookings());
+        } else {
+            model.addAttribute("bookings", bookingService.getBookingList(user.getUserId()));
+        }
         model.addAttribute("user", user);
         return MYBOOKINGS;
     }
 
     //Mike
     @GetMapping("/deletebooking/{bookingid}")
-    public String deleteUserBooking(@PathVariable int bookingid) {
+    public String deleteUserBooking(@PathVariable int bookingid, HttpSession session) {
+        if(!userAuthenticator.userIsUser(session)){
+            return REDIRECT;
+        }
         taskResult = bookingService.deleteBooking(bookingid);
         if (taskResult) {
             confirmation("Din booking er blevet slettet");
@@ -80,8 +94,10 @@ public class BookingController {
     //Jonathan & Luca
     @GetMapping("choosetreatment")
     public String chooseTreatment(Model model, HttpSession session) {
+        if(!userAuthenticator.userIsUser(session)){
+            return REDIRECT;
+        }
         User user = (User) session.getAttribute("user");
-
         model.addAttribute("user", user);
         model.addAttribute("booking", new Booking());
         model.addAttribute("treatmentList", productService.createTreatmentArrayList());
@@ -91,8 +107,11 @@ public class BookingController {
     //Jonathan & Luca
     @GetMapping("choosetime/{treatmentId}")
     public String chooseTime(HttpSession session, Model model, @PathVariable int treatmentId) {
-        User user = (User) session.getAttribute("user");
+        if(!userAuthenticator.userIsUser(session)){
+            return REDIRECT;
+        }
 
+        User user = (User) session.getAttribute("user");
         Date date = new Date(Calendar.getInstance().getTimeInMillis());
 
         Booking booking = new Booking();
@@ -113,6 +132,9 @@ public class BookingController {
     //Jonathan & Luca
     @GetMapping("bookingconfirmation/{time}")
     public String bookingConfirmation(HttpSession session, Model model, @PathVariable String time) {
+        if(!userAuthenticator.userIsUser(session)){
+            return REDIRECT;
+        }
         User user = (User) session.getAttribute("user");
 
         Booking booking = (Booking) session.getAttribute("booking");

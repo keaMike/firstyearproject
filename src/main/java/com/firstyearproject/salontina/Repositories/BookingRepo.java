@@ -12,6 +12,7 @@ public interface BookingRepo {
     List<Booking> findBookingsByUserId(int userid);
     List<Booking> getBookingList(Date startDate, Date endDate);
     List<Booking> getBookingList(Date date);
+    List<Booking> getFutureBookings();
     boolean addVacationDate(Date date, int userId);
     boolean deleteBooking(int bookingId);
     boolean deleteTreatmentByBookingId(int bookingId);
