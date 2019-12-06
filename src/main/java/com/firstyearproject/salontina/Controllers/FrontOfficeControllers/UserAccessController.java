@@ -107,7 +107,12 @@ public class UserAccessController {
     //Jonathan
     @PostMapping("/register")
     public String register(@ModelAttribute User user) {
-        userService.addUser(user);
+        taskResult = userService.addUser(user);
+        if (taskResult) {
+            confirmation("Du er blevet oprettet som bruger");
+            return REDIRECT;
+        }
+        confirmation("Vi kunne IKKE oprette dig som bruger. Prøv igen");
         return REDIRECT;
     }
     //Jonathan
@@ -126,7 +131,12 @@ public class UserAccessController {
         if(!userAuthenticator.userIsUser(session)){
             return REDIRECT;
         }
-        userService.editUser(user);
+        taskResult = userService.editUser(user);
+        if (taskResult) {
+            confirmation("Ændringerne er blevet gemt");
+            return REDIRECT + USERPROFILE;
+        }
+        confirmation("Vi kunne IKKE gemme dine ændringer. Prøv igen");
         return REDIRECT + USERPROFILE;
     }
 
@@ -143,7 +153,8 @@ public class UserAccessController {
     }
 
     //Mike
-    @GetMapping("/deleteuser/{userid}")
+    //MAKE POST
+    @GetMapping("/deleteuser/{userId}")
     public String deleteUser(@PathVariable int userId, HttpSession session) {
         if(!userAuthenticator.userIsUser(session)){
             return REDIRECT;

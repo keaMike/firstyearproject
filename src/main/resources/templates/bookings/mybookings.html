@@ -31,17 +31,20 @@
                         <span th:text="${treatment.productName}"></span>
                     </td>
                     <td>
-                        <a data-toggle="modal" data-target="#deletemodal" th:attrappend="data-target=${booking.bookingId}">
+                        <a data-toggle="modal" data-target="#deletemodal">
                             <i class = "fas fa-trash-alt" data-toggle="tooltip" title = "Slet booking" style="cursor: pointer;"></i>
                             <!--Modal Content-->
-                            <div class="modal fade" id="deletemodal" th:attrappend="id=${booking.bookingId}">
+                            <div class="modal fade" id="deletemodal">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h3>Er du sikker på du vil slette din tid d. <span th:text="${booking.bookingDate}"></span></h3>
                                         </div>
                                         <div class="modal-body">
-                                            <a th:href="@{'/deletebooking/' + ${booking.bookingId}}" class="btn btn-dark">Ja</a>
+                                            <form th:method="post" th:action="@{/deletebooking}">
+                                                <input type="hidden" th:field="${booking.bookingId}">
+                                                <input type="submit" class="btn btn-dark" value="Ja">
+                                            </form>
                                             <a class="btn btn-dark" data-dismiss="modal" style="color: white">Nej</a>
                                         </div>
                                     </div>

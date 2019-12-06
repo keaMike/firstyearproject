@@ -116,7 +116,11 @@ public class UserRepoImpl implements UserRepo{
             }
 
             userCreated = true;
-        } catch (Exception E) {
+        } catch (SQLIntegrityConstraintViolationException e) {
+            e.printStackTrace();
+
+        }
+        catch (SQLException E) {
             E.printStackTrace();
         }
         return userCreated;
