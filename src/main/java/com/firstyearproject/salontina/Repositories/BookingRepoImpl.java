@@ -179,7 +179,7 @@ public class BookingRepoImpl implements BookingRepo{
                 bookingList.add(booking);
             }
 
-            //TODO tilføj databaseLogger
+            databaseLogger.writeToLogFile(statement);
 
             return bookingList;
         } catch (SQLException e) {
@@ -307,6 +307,31 @@ public class BookingRepoImpl implements BookingRepo{
             databaseLogger.writeToLogFile(statement);
 
             return pstmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    //Asbjørn
+    @Override
+    public ResultSet checkSMSReminder(Date date) {
+        String statement = "SELECT * FROM smsreminder " +
+                "JOIN bookings ON smsreminder.bookings_id = bookings.bookings_id " +
+                "WHERE bookings_date = ?";
+        try {
+            PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
+
+            pstmt.setDate(1, date);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            if (date == rs.getDate(2)) {
+                return true;
+            }
+
+            mySQLConnector.closeConnection();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

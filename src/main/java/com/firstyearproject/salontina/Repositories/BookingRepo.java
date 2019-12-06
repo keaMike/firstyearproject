@@ -16,5 +16,5 @@ public interface BookingRepo {
     boolean addVacationDate(Date date, int userId);
     boolean deleteBooking(int bookingId);
     boolean deleteTreatmentByBookingId(int bookingId);
-
+    boolean checkSMSReminder(Date date);
 }

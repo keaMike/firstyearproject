@@ -19,6 +19,7 @@ public class UserAuthenticator {
         }
         return false;
     }
+
     //Jonathan
     //As no users in the database has the role "Bruger" yet, this method simply checks if they are not null.
     public boolean userIsUser(HttpSession session) {

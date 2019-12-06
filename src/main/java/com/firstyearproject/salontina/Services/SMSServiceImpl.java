@@ -10,19 +10,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 
 //Luca
 @Service
 public class SMSServiceImpl implements SMSService{
-
-    //Asbjørn
-    //Used in method for scheduling smsReminders. Creates a thread
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     UserRepoImpl userRepoImpl;
@@ -99,43 +90,6 @@ public class SMSServiceImpl implements SMSService{
             return null;
         }
         return number;
-    }
-
-    //Asbjørn
-    //This method creates a thread and schedules a
-    @Override
-    public void initiateAutoReminder(String manualOverride) {
-        log.info("AutoReminder initiated");
-        final Runnable autoReminder = new Runnable() {
-            @Override
-            public void run() {
-                sendNewsletter("Autotest - daily"); //This method is for testing/demonstration
-                //sendReminder(); //This method is the actual purpose of autoReminder
-            }
-        };
-
-        //The first int is the first delay after initialization. The second int is the delay between each method.
-        //TimeUnit can be configured to the desired unit of measure
-        final ScheduledFuture<?> autoReminderHandler = scheduler.scheduleAtFixedRate(autoReminder, 6, 24, TimeUnit.HOURS);
-
-
-        //This method is used to limit how long the autoReminder runs
-        //AutoReminder can be reinitialized be opening the FrontOffice page
-        scheduler.schedule(new Runnable() {
-            @Override
-            public void run() {autoReminderHandler.cancel(true); }
-        }, 14, TimeUnit.DAYS);
-
-
-        //I was not able to seperate this condition from the method because the variable autoReminderHandler
-        //is needed, and not easily transfered. The manual stop calls this method with the string "cancel"
-        if(manualOverride.equalsIgnoreCase("cancel")) {
-            scheduler.schedule(new Runnable() {
-                @Override
-                public void run() {autoReminderHandler.cancel(true); }
-            }, 1, TimeUnit.SECONDS);
-            log.info("AutoReminder stopped");
-        }
     }
 
     //Luca

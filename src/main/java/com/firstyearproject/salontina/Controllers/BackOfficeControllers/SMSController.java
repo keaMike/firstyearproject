@@ -32,6 +32,9 @@ public class SMSController {
     SMSServiceImpl sMSServiceImpl;
 
     @Autowired
+    AutoReminderServiceImpl autoReminderService;
+
+    @Autowired
     UserAuthenticator userAuthenticator;
 
     //Luca
@@ -152,22 +155,24 @@ public class SMSController {
     }
 
     //Asbjørn
+    //Manually starts the autoReminder
     @PostMapping ("/startAutoReminder")
-    public String startAutoReminder(HttpSession session) { //Manually starts the autoReminder
+    public String startAutoReminder(HttpSession session) {
         if(!userAuthenticator.userIsAdmin(session)){
             return REDIRECT;
         }
-        sMSServiceImpl.initiateAutoReminder("Initiate");
+        autoReminderService.initiateAutoReminder();
         return REDIRECT + REMINDER;
     }
 
     //Asbjørn
+    //Manually stops the autoReminder
     @PostMapping ("/stopAutoReminder")
-    public String stopAutoReminde(Model model, HttpSession session){ //Manually stops the autoReminder
+    public String stopAutoReminde(HttpSession session){
         if(!userAuthenticator.userIsAdmin(session)){
             return REDIRECT;
         }
-        sMSServiceImpl.initiateAutoReminder("cancel");
+        autoReminderService.cancelAutoReminder();
         return REDIRECT + REMINDER;
     }
 }
