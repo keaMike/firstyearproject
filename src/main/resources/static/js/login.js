@@ -1,13 +1,15 @@
-//Selects all html lines with 'input' as class
-const inputs = document.querySelectorAll('.input');
+//JAVASCRIPT USED IN BOTH LOGIN AND CREATE PROFILE
 
-function focusFunc() {
-    let parent = this.parentNode.parentNode;
+//Selects all html lines with 'input' as class
+var inputs = document.querySelectorAll('.input');
+
+function focusFunction() {
+    var parent = this.parentNode.parentNode;
     parent.classList.add('focus');
 }
 
-function blurFunc() {
-    let parent = this.parentNode.parentNode;
+function blurFunction() {
+    var parent = this.parentNode.parentNode;
     if(this.value == "") {
         parent.classList.remove('focus');
     }
@@ -16,8 +18,8 @@ function blurFunc() {
 //For each 'input' add event listener, if clicked add 'focus' to class, which triggers CSS, that performs the animation.
 //if clicked outside input, add 'blur', which removes 'focus' from class and relation to CSS.
 inputs.forEach(input => {
-    input.addEventListener('focus', focusFunc);
-    input.addEventListener('blur', blurFunc);
+    input.addEventListener('focus', focusFunction);
+    input.addEventListener('blur', blurFunction);
 });
 
 //CONFIRM PASSWORD
