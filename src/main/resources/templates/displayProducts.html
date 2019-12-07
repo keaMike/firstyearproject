@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Produkter</title>
+    <div th:include="fragments/header :: scripts"></div>
+</head>
+<div th:include = "fragments/header :: navbar"></div>
+<body>
+<div class="container" th:if="${showTreatments}">
+    <div class = "controlpaneltitle">
+        <h1>Behandlinger
+            <i class = "fas fa-cut"></i>
+        </h1>
+    </div>
+    <table class="table table-bordered table-striped table-hover">
+        <thead class="thead-dark">
+        <tr>
+            <th>Navn</th>
+            <th>Pris</th>
+            <th>Varighed</th>
+            <th>Beskrivelse</th>
+            <div th:each="role : ${user.userRoles}" th:if="${role} == 'Admin'">
+                <th>Aktiv</th>
+                <th>ID</th>
+                <th>Rediger</th>
+            </div>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="treatment: ${treatments}">
+            <td th:text="${treatment.productName}"></td>
+            <td th:text="${treatment.productPrice} + DK"></td>
+            <td th:text="${treatment.treatmentDuration} +  min"></td>
+            <td th:text="${treatment.productDescription}"></td>
+            <div th:each="role : ${user.userRoles}" th:if="${role} == 'Admin'">
+                <td th:if="${treatment.productActive}">Aktiv</td>
+                <td th:text="${treatment.productId}"></td>
+                <td th:unless="${treatment.productActive}">Ikke aktiv</td>
+                <td>
+                    <a th:href="${'editTreatment/' + treatment.productId}"><i class="fas fa-edit" data-toggle="tooltip" title="Rediger behandling" ></i></a>
+                </td>
+            </div>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="container" th:if="${showProducts}">
+    <div class = "controlpaneltitle">
+        <h1>Produker
+            <i class = "fas fa-flask"></i>
+        </h1>
+    </div>
+    <table class="table table-bordered table-striped table-hover">
+        <thead class="thead-dark">
+        <tr>
+            <th>Navn</th>
+            <th>Pris</th>
+            <th>Beskrivelse</th>
+            <div th:each="role : ${user.userRoles}" th:if="${role} == 'Admin'">
+                <th>Antal på lager</th>
+                <th>Aktiv</th>
+                <th>ID</th>
+                <th>Rediger</th>
+            </div>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item: ${items}">
+            <td th:text="${item.productName}"></td>
+            <td th:text="${item.productPrice} + DK"></td>
+            <td th:text="${item.productDescription}"></td>
+            <div th:each="role : ${user.userRoles}" th:if="${role} == 'Admin'">
+                <td th:text="${item.itemQuantity}"></td>
+                <td th:if="${item.productActive}">På lager</td>
+                <td th:unless="${item.productActive}">Ikke på lager</td>
+                <td th:text="${item.productId}"></td>
+                <td>
+                    <a th:href="${'editItem/' + item.productId}"><i class="fas fa-edit" data-toggle="tooltip" title="Rediger produkt"></i></a>
+                </td>
+            </div>
+        </tr>
+        </tbody>
+    </table>
+</div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+</body>
+</html>

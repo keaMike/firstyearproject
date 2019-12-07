@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet" media="screen"/>
+    <script src="https://kit.fontawesome.com/af932a1361.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-1">
+                <table class="table" style="display: inline-block;">
+                    <thead>
+                        <th>Tidsrum</th>
+                    </thead>
+                    <tbody>
+                        <tr th:each="i : ${#numbers.sequence(8, 15)}">
+                            <td th:text="${i} + ':00'"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-1">
+                <table class="table" style="display: inline-block;">
+                    <thead>
+                        <th>Booket</th>
+                    </thead>
+                    <tbody>
+                        <tr th:each="booking: ${bookingList}">
+                            <td th:if="${booking.bookingId == 0}">
+                                <a th:href="'/booktreatment'">Book</a>
+                            </td>
+                            <td class="text-muted" th:unless="${booking.bookingId == 0}">Optaget</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
