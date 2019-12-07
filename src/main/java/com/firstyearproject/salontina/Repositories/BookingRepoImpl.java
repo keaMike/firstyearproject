@@ -315,23 +315,26 @@ public class BookingRepoImpl implements BookingRepo{
 
     //Asbjørn
     @Override
-    public ResultSet checkSMSReminder(Date date) {
-        String statement = "SELECT * FROM smsreminder " +
-                "JOIN bookings ON smsreminder.bookings_id = bookings.bookings_id " +
+    public boolean checkSMSReminder(Date date) {
+        String statement = "SELECT * FROM smsreminders " +
+                "JOIN bookings ON smsreminders.bookings_id = bookings.bookings_id " +
                 "WHERE bookings_date = ?";
         try {
             PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
 
-            pstmt.setDate(1, date);
+            pstmt.setDate(1, Date.valueOf("2020-12-05"));
 
             ResultSet rs = pstmt.executeQuery();
 
-            if (date == rs.getDate(2)) {
+
+            //Method cannot read the resultset properly: even if the resultset contains values it still doesn't enter the
+            //if statement
+            if (rs.next()) {
+                log.info(String.valueOf(date));
+                log.info(String.valueOf(rs));
                 return true;
             }
-
             mySQLConnector.closeConnection();
-
         } catch (SQLException e) {
             e.printStackTrace();
         }

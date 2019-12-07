@@ -39,12 +39,15 @@ public class AutoReminderServiceImpl implements AutoReminderService {
             @Override
             public void run() {
 
-                //Should probably be rewritten but the repo functions needs the current date
+                //Needs to be rewritten so it gets tomorrows date
                 Date date = new Date(Calendar.getInstance().getTimeInMillis());
-                LocalDateTime.from(date.toInstant().atZone(ZoneId.of("Europe/Copenhagen"))).plusDays(1);
+
+                //LocalDateTime.from(date.toInstant().atZone(ZoneId.of("Europe/Copenhagen"))).plusDays(1);
+                log.info(String.valueOf(date));
                 boolean taskResult = bookingRepo.checkSMSReminder(date);
 
-                if (taskResult){
+                log.info(taskResult + " test");
+                if (taskResult == false){
                     log.info("thread task reached");
                     smsService.sendNewsletter("autotest - daily"); //This Method is for testing/demonstration
                     smsService.sendReminder(); //This method is the actual purpose of the autoReminder
@@ -54,14 +57,14 @@ public class AutoReminderServiceImpl implements AutoReminderService {
 
         //The first long is the first delay after initialization. The second long is the delay between each execution
         //TimeUnit can be configured to the desired unit of measure. <?> is an unbounded wildcard meaning it can be any type of object
-        final ScheduledFuture<?> autoReminderTask = scheduler.scheduleAtFixedRate(autoReminder, 6, 24, TimeUnit.HOURS);
+        final ScheduledFuture<?> autoReminderTask = scheduler.scheduleAtFixedRate(autoReminder, 0, 20, TimeUnit.SECONDS);
 
         //The following method is used to limit how long the autoReminder runs but can be manually started from Back-Office
         Runnable autoStop = new Runnable() {
             @Override
             public void run() {autoReminderTask.cancel(true); }
         };
-        scheduler.schedule(autoStop, 14, TimeUnit.DAYS);
+        scheduler.schedule(autoStop, 30, TimeUnit.DAYS);
         return autoReminderTask;
     }
 

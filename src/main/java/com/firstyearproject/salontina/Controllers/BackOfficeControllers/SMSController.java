@@ -162,6 +162,13 @@ public class SMSController {
             return REDIRECT;
         }
         autoReminderService.initiateAutoReminder();
+        if (true) {
+            log.info("AutoReminder succesfully started");
+            confirmation("SMS påmindelse er i gangsat");
+        } else {
+            log.info("AutoReminder could not be started");
+            confirmation("SMS påmindelse kunne ikke startes");
+        }
         return REDIRECT + REMINDER;
     }
 
@@ -172,7 +179,13 @@ public class SMSController {
         if(!userAuthenticator.userIsAdmin(session)){
             return REDIRECT;
         }
-        autoReminderService.cancelAutoReminder();
+        if(autoReminderService.cancelAutoReminder()) {
+            log.info("Autoreminder succesfully stopped");
+            confirmation("SMS påmindelse er blevet stoppet");
+        } else{
+            log.info("AutoReminder failed to stop...");
+            confirmation("SMS påmindelse kunne ikke stoppes");
+        }
         return REDIRECT + REMINDER;
     }
 }
