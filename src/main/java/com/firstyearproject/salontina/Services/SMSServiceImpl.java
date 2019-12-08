@@ -103,10 +103,10 @@ public class SMSServiceImpl implements SMSService{
     private List<String> getTestNewsletterList(){
         List<String> testList = new ArrayList<>();
 
-        //testList.add("22210051");
-        //testList.add("42241480");
+        testList.add("22210051");
+        testList.add("42241480");
         testList.add("22323386");
-        //testList.add("40266249");
+        testList.add("40266249");
 
         return testList;
     }
