@@ -38,9 +38,7 @@ public class ProductServiceImpl implements ProductService{
     //Asbjørn
     @Override
     public boolean editTreatment(Treatment treatment){
-
         pHandlerTaskResult = productRepoImplManager.editTreatment(treatment);
-
         return pHandlerTaskResult;
     }
 
@@ -61,9 +59,7 @@ public class ProductServiceImpl implements ProductService{
     //Asbjørn
     @Override
     public boolean editItem(Item item){
-
         pHandlerTaskResult = productRepoImplManager.editItem(item);
-
         return pHandlerTaskResult;
     }
 

@@ -21,8 +21,6 @@ import java.util.List;
 public class BookingRepoImpl implements BookingRepo{
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
-    private PreparedStatement pstm;
-    private Connection con;
 
     @Autowired
     MySQLConnector mySQLConnector;
@@ -33,10 +31,11 @@ public class BookingRepoImpl implements BookingRepo{
     //Luca
     @Override
     public boolean addBooking(Booking booking){
-        String statement =  "INSERT INTO bookings " +
-                            "(bookings_date, bookings_time, users_id, bookings_comment) " +
-                            "VALUES " +
-                            "(?, ?, ?, ?);";
+        String statement =
+                "INSERT INTO bookings " +
+                "(bookings_date, bookings_time, users_id, bookings_comment) " +
+                "VALUES " +
+                "(?, ?, ?, ?);";
 
         try {
             PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
@@ -66,10 +65,11 @@ public class BookingRepoImpl implements BookingRepo{
     //Luca
     @Override
     public boolean addTreatmentsToBooking(List<Treatment> treatmentList, Booking booking){
-        String statement =  "INSERT INTO bookings_treatment " +
-                            "(bookings_id, treatments_id) " +
-                            "VALUES " +
-                            "(?, ?)";
+        String statement =
+                "INSERT INTO bookings_treatment " +
+                "(bookings_id, treatments_id) " +
+                "VALUES " +
+                "(?, ?)";
 
         for(Treatment t : treatmentList){
             try {
@@ -94,7 +94,11 @@ public class BookingRepoImpl implements BookingRepo{
 
     //Luca
     private int getBookingId(Booking booking){
-        String statement = "SELECT bookings_id FROM bookings WHERE bookings_date = ? AND bookings_time = ?";
+        String statement =
+                "SELECT bookings_id " +
+                "FROM bookings " +
+                "WHERE bookings_date = ? " +
+                "AND bookings_time = ?";
 
         try {
             PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
@@ -121,39 +125,42 @@ public class BookingRepoImpl implements BookingRepo{
     //Mike
     @Override
     public List<Booking> findBookingsByUserId(int userid) {
+        String statement =
+                "SELECT * " +
+                "FROM bookings " +
+                "JOIN bookings_treatment " +
+                "ON bookings.bookings_id = bookings_treatment.bookings_id " +
+                "JOIN treatments " +
+                "ON bookings_treatment.treatments_id = treatments.treatments_id " +
+                "WHERE users_id = ?";
         try {
-            String statement =  "SELECT * FROM bookings JOIN bookings_treatment ON " +
-                                "bookings.bookings_id = bookings_treatment.bookings_id JOIN treatments ON " +
-                                "bookings_treatment.treatments_id = treatments.treatments_id WHERE users_id = ?";
-
-            con = mySQLConnector.openConnection();
-            pstm = con.prepareStatement(statement);
-            pstm.setInt(1, userid);
-            ResultSet rs = pstm.executeQuery();
+            PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
+            pstmt.setInt(1, userid);
+            ResultSet rs = pstmt.executeQuery();
             List<Booking> bookings = new ArrayList<>();
             while(rs.next()) {
-                Booking b = new Booking();
-                b.setBookingId(rs.getInt("bookings_id"));
-                b.setBookingUserId(rs.getInt("users_id"));
+                Booking booking = new Booking();
+                booking.setBookingId(rs.getInt("bookings_id"));
+                booking.setBookingUserId(rs.getInt("users_id"));
                 //TODO setTime?
-                b.setBookingDate(rs.getDate("bookings_date"));
-                b.setBookingComment(rs.getString("bookings_comment"));
+                booking.setBookingDate(rs.getDate("bookings_date"));
+                booking.setBookingComment(rs.getString("bookings_comment"));
 
-                Treatment t = new Treatment();
-                t.setProductId(rs.getInt("treatments_id"));
-                t.setProductName(rs.getString("treatments_name"));
-                t.setProductPrice(rs.getInt("treatments_price"));
-                t.setProductDescription(rs.getString("treatments_description"));
-                t.setTreatmentDuration(rs.getInt("treatments_duration"));
-                t.setProductActive(rs.getBoolean("treatments_active"));
+                Treatment treatment = new Treatment();
+                treatment.setProductId(rs.getInt("treatments_id"));
+                treatment.setProductName(rs.getString("treatments_name"));
+                treatment.setProductPrice(rs.getInt("treatments_price"));
+                treatment.setProductDescription(rs.getString("treatments_description"));
+                treatment.setTreatmentDuration(rs.getInt("treatments_duration"));
+                treatment.setProductActive(rs.getBoolean("treatments_active"));
 
                 //Initializing list
                 List<Treatment> treatments = new ArrayList<>();
-                b.setBookingTreatmentList(treatments);
+                booking.setBookingTreatmentList(treatments);
                 //Add treatments to a bookings treatment list
-                b.getBookingTreatmentList().add(t);
+                booking.getBookingTreatmentList().add(treatment);
                 //Add bookings to ArrayList
-                bookings.add(b);
+                bookings.add(booking);
             }
 
             databaseLogger.writeToLogFile(statement);
@@ -170,9 +177,10 @@ public class BookingRepoImpl implements BookingRepo{
     //Luca
     @Override
     public List<Booking> getBookingList(Date startDate, Date endDate){
-        String statement =  "SELECT * FROM bookings " +
-                            "WHERE bookings_date BETWEEN DATE(?) AND DATE(?) " +
-                            "ORDER BY bookings_date, bookings_time;";
+        String statement =
+                "SELECT * FROM bookings " +
+                "WHERE bookings_date BETWEEN DATE(?) AND DATE(?) " +
+                "ORDER BY bookings_date, bookings_time;";
 
         List<Booking> bookingList = new ArrayList<>();
 
@@ -208,9 +216,10 @@ public class BookingRepoImpl implements BookingRepo{
     //Luca
     @Override
     public List<Booking> getBookingList(Date date){
-        String statement =  "SELECT * FROM bookings " +
-                            "WHERE bookings_date = ? " +
-                            "ORDER BY bookings_time;";
+        String statement =
+                "SELECT * FROM bookings " +
+                "WHERE bookings_date = ? " +
+                "ORDER BY bookings_time;";
 
         List<Booking> bookingList = new ArrayList<>();
 
@@ -239,9 +248,10 @@ public class BookingRepoImpl implements BookingRepo{
     //Luca
     @Override
     public List<Booking> getFutureBookings(){
-        String statement = "SELECT * FROM bookings " +
-                            "WHERE bookings_date BETWEEN DATE_ADD(CURDATE(), INTERVAL 1 day) AND DATE_ADD(CURDATE(), INTERVAL 30 day) " +
-                            "ORDER BY bookings_date;";
+        String statement =
+                "SELECT * FROM bookings " +
+                "WHERE bookings_date BETWEEN DATE_ADD(CURDATE(), INTERVAL 1 day) AND DATE_ADD(CURDATE(), INTERVAL 30 day) " +
+                "ORDER BY bookings_date;";
 
         List<Booking> bookingList = new ArrayList<>();
         try{
@@ -303,13 +313,12 @@ public class BookingRepoImpl implements BookingRepo{
     //Mike
     @Override
     public boolean deleteBooking(int bookingId) {
-        try {
-            String statement = "DELETE FROM bookings WHERE bookings_id = ?";
+        String statement = "DELETE FROM bookings WHERE bookings_id = ?";
 
-            con = mySQLConnector.openConnection();
-            pstm = con.prepareStatement(statement);
-            pstm.setInt(1, bookingId);
-            pstm.executeUpdate();
+        try {
+            PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
+            pstmt.setInt(1, bookingId);
+            pstmt.executeUpdate();
 
             databaseLogger.writeToLogFile(statement);
 
@@ -345,7 +354,8 @@ public class BookingRepoImpl implements BookingRepo{
     //Asbjørn
     @Override
     public boolean checkSMSReminder() {
-        String statement = "SELECT * FROM smsreminders " +
+        String statement =
+                "SELECT * FROM smsreminders " +
                 "JOIN bookings " +
                 "ON smsreminders.bookings_id = bookings.bookings_id " +
                 "WHERE bookings_date " +
@@ -374,7 +384,8 @@ public class BookingRepoImpl implements BookingRepo{
     @Override
     public boolean saveReminder() {
         log.info("save reached");
-        String statement = "INSERT INTO smsreminders " +
+        String statement =
+                "INSERT INTO smsreminders " +
                 "SELECT bookings_id " +
                 "FROM bookings " +
                 "WHERE bookings_date " +
