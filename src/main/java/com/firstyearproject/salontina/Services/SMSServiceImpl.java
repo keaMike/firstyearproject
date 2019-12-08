@@ -34,8 +34,9 @@ public class SMSServiceImpl implements SMSService{
             for(Reminder r : reminderList){
                 String reminderText = "Hej " + r.getReminderUsername() + " du har en tid d. " + r.getReminderDate() + " kl. " + r.getReminderTime() + " hos Salon Tina.";
                 sendSMS(verifyNumber(r.getReminderPhonenumber()), reminderText);
-                bookingRepo.saveReminder();
             }
+
+            bookingRepo.saveReminder();
 
             return true;
         } catch (com.twilio.exception.ApiException e) {
