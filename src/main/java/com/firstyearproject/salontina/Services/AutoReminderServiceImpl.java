@@ -38,16 +38,10 @@ public class AutoReminderServiceImpl implements AutoReminderService {
         final Runnable autoReminder = new Runnable() {
             @Override
             public void run() {
+                boolean taskResult = bookingRepo.checkSMSReminder();
 
-                //Needs to be rewritten so it gets tomorrows date
-                Date date = new Date(Calendar.getInstance().getTimeInMillis());
-
-                //LocalDateTime.from(date.toInstant().atZone(ZoneId.of("Europe/Copenhagen"))).plusDays(1);
-                log.info(String.valueOf(date));
-                boolean taskResult = bookingRepo.checkSMSReminder(date);
-
-                log.info(taskResult + " test");
-                if (taskResult == false){
+                log.info("Reminder for tomorrow has been sent? " + taskResult);
+                if (!taskResult){
                     log.info("thread task reached");
                     smsService.sendNewsletter("autotest - daily"); //This Method is for testing/demonstration
                     smsService.sendReminder(); //This method is the actual purpose of the autoReminder

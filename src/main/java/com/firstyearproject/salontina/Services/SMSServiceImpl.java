@@ -1,6 +1,7 @@
 package com.firstyearproject.salontina.Services;
 
 import com.firstyearproject.salontina.Models.Reminder;
+import com.firstyearproject.salontina.Repositories.BookingRepoImpl;
 import com.firstyearproject.salontina.Repositories.UserRepoImpl;
 import com.twilio.exception.ApiException;
 import org.slf4j.Logger;
@@ -21,6 +22,9 @@ public class SMSServiceImpl implements SMSService{
     @Autowired
     SMSConnector smsConnector;
 
+    @Autowired
+    BookingRepoImpl bookingRepo;
+
     //Luca
     @Override
     public boolean sendReminder(){
@@ -30,6 +34,7 @@ public class SMSServiceImpl implements SMSService{
             for(Reminder r : reminderList){
                 String reminderText = "Hej " + r.getReminderUsername() + " du har en tid d. " + r.getReminderDate() + " kl. " + r.getReminderTime() + " hos Salon Tina.";
                 sendSMS(verifyNumber(r.getReminderPhonenumber()), reminderText);
+                bookingRepo.saveReminder();
             }
 
             return true;

@@ -1,6 +1,7 @@
 package com.firstyearproject.salontina.Repositories;
 
 import com.firstyearproject.salontina.Models.Booking;
+import com.firstyearproject.salontina.Models.Reminder;
 import com.firstyearproject.salontina.Models.Treatment;
 
 import java.sql.Date;
@@ -16,5 +17,6 @@ public interface BookingRepo {
     boolean addVacationDate(Date date, int userId);
     boolean deleteBooking(int bookingId);
     boolean deleteTreatmentByBookingId(int bookingId);
-    boolean checkSMSReminder(Date date);
+    boolean checkSMSReminder();
+    boolean saveReminder();
 }
