@@ -110,6 +110,7 @@ public class UserAccessController {
         userService.addUser(user);
         return REDIRECT;
     }
+
     //Jonathan
     @GetMapping("/editUser")
     public String editUser(HttpSession session, Model model) {
@@ -120,6 +121,7 @@ public class UserAccessController {
         model.addAttribute("user", user);
         return EDITUSER;
     }
+
     //Jonathan
     @PostMapping("/editUser")
     public String editUser(@ModelAttribute User user, HttpSession session) {

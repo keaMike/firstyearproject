@@ -287,7 +287,6 @@ public class BookingRepoImpl implements BookingRepo{
     }
 
     //Luca
-    //Burde denne metode ikke være i servicelaget hvis den ikke kalder databasen? - Asbjørn
     @Override
     public boolean addVacationDate(Date date, int userId){
         log.info("addVacation method started...");
@@ -381,6 +380,7 @@ public class BookingRepoImpl implements BookingRepo{
         return false;
     }
 
+    //Asbjørn
     @Override
     public boolean saveReminder() {
         log.info("save reached");
