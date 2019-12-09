@@ -27,6 +27,9 @@ public class UserController {
     private boolean taskResult = false;
     private boolean showConfirmation = false;
     private String confirmationText = "";
+    private String alert = "";
+    private String danger = "alert alert-danger";
+    private String success = "alert alert-success";
 
 
     @Autowired
@@ -40,16 +43,18 @@ public class UserController {
 
     //Luca
     //Used in Java Methods/mappings
-    public void confirmation(String text){
+    public void confirmation(String text, String alert){
         showConfirmation = true;
         confirmationText = text;
+        this.alert = alert;
     }
 
     //Luca
     //Used in HTML-Modals
     public void showConfirmation(Model model){
-        model.addAttribute("showconfirmation", true);
+        model.addAttribute("showconfirmation", showConfirmation);
         model.addAttribute("confirmationtext", confirmationText);
+        model.addAttribute("alert", alert);
         showConfirmation = false;
     }
 
@@ -63,6 +68,7 @@ public class UserController {
         List<User> users = userServiceImpl.getAllUsers();
         model.addAttribute("user", user);
         model.addAttribute("users", users);
+        showConfirmation(model);
         return ALLUSERS;
     }
 
@@ -73,10 +79,12 @@ public class UserController {
             return REDIRECT;
         }
         User user = (User)session.getAttribute("user");
-        model.addAttribute("user", user);
         User editedUser = userServiceImpl.getUserById(userid);
         user.setUserHistory(bookingServiceImpl.getBookingList(editedUser.getUserId()));
+
+        model.addAttribute("user", user);
         model.addAttribute("editedUser", editedUser);
+        showConfirmation(model);
         return EDITUSERHISTORY;
     }
 
@@ -88,9 +96,11 @@ public class UserController {
         }
         taskResult = userServiceImpl.editUserHistory(user);
         if (taskResult) {
-            return EDITUSERHISTORY;
+            confirmation("Bruger præferencerne blev gemt", success);
+            return REDIRECT + "userlist";
         } else {
-            return EDITUSERHISTORY + user.getUserId();
+            confirmation("Bruger præferencerne blev ikke gemt", danger);
+            return EDITUSERHISTORY + "/" + user.getUserId();
         }
     }
 

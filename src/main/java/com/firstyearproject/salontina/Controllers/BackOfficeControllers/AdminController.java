@@ -29,6 +29,9 @@ public class AdminController {
 
     private boolean showConfirmation = false;
     private String confirmationText = "";
+    private String alert = "";
+    private String danger = "alert alert-danger";
+    private String success = "alert alert-success";
 
     @Autowired
     BookingServiceImpl bookingService;

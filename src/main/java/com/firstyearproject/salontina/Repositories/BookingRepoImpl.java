@@ -117,28 +117,7 @@ public class BookingRepoImpl implements BookingRepo{
             ResultSet rs = pstm.executeQuery();
             List<Booking> bookings = new ArrayList<>();
             while(rs.next()) {
-                Booking b = new Booking();
-                b.setBookingId(rs.getInt("bookings_id"));
-                b.setBookingUserId(rs.getInt("users_id"));
-                //TODO setTime?
-                b.setBookingDate(rs.getDate("bookings_date"));
-                b.setBookingComment(rs.getString("bookings_comment"));
-
-                Treatment t = new Treatment();
-                t.setProductId(rs.getInt("treatments_id"));
-                t.setProductName(rs.getString("treatments_name"));
-                t.setProductPrice(rs.getInt("treatments_price"));
-                t.setProductDescription(rs.getString("treatments_description"));
-                t.setTreatmentDuration(rs.getInt("treatments_duration"));
-                t.setProductActive(rs.getBoolean("treatments_active"));
-
-                //Initializing list
-                List<Treatment> treatments = new ArrayList<>();
-                b.setBookingTreatmentList(treatments);
-                //Add treatments to a bookings treatment list
-                b.getBookingTreatmentList().add(t);
-                //Add bookings to ArrayList
-                bookings.add(b);
+                bookings.add(generateBookingFromResultSet(rs));
             }
 
             databaseLogger.writeToLogFile(statement);
@@ -220,6 +199,8 @@ public class BookingRepoImpl implements BookingRepo{
     //Luca
     public List<Booking> getFutureBookings(){
         String statement = "SELECT * FROM bookings " +
+                            "JOIN bookings_treatment on bookings.bookings_id = bookings_treatment.bookings_id " +
+                            "JOIN treatments on bookings_treatment.treatments_id = treatments.treatments_id " +
                             "WHERE bookings_date BETWEEN DATE_ADD(CURDATE(), INTERVAL 1 day) AND DATE_ADD(CURDATE(), INTERVAL 30 day) " +
                             "ORDER BY bookings_date;";
 
@@ -249,6 +230,21 @@ public class BookingRepoImpl implements BookingRepo{
         booking.setBookingTime(rs.getString(3));
         booking.setBookingDate(rs.getDate(4));
         booking.setBookingComment(rs.getString(5));
+
+        Treatment t = new Treatment();
+        t.setProductId(rs.getInt("treatments_id"));
+        t.setProductName(rs.getString("treatments_name"));
+        t.setProductPrice(rs.getInt("treatments_price"));
+        t.setProductDescription(rs.getString("treatments_description"));
+        t.setTreatmentDuration(rs.getInt("treatments_duration"));
+        t.setProductActive(rs.getBoolean("treatments_active"));
+
+        //Initializing list
+        List<Treatment> treatments = new ArrayList<>();
+        booking.setBookingTreatmentList(treatments);
+        //Add treatments to a bookings treatment list
+        booking.getBookingTreatmentList().add(t);
+
         return booking;
     }
 

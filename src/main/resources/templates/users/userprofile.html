@@ -7,25 +7,28 @@
 </head>
 <div th:include = "fragments/header :: navbar"></div>
 <body>
-<div class = "controlpaneltitle">
-    <h1>Min profil
-        <i class = "fas fa-user"></i>
-    </h1>
-</div>
-<div class = "container boxcontainer">
-    <a th:href="@{/mybookings}" class = "box">
-        <div class = "boxicon"><i class = "fas fa-book"></i></div>
-        <div class = "boxcontent">
-            <h3>Mine bookings</h3>
-        </div>
-    </a>
-    <a th:href="@{/editUser}" class = "box">
-        <div class = "boxicon"><i class = "fas fa-user-edit"></i></div>
-        <div class = "boxcontent">
-            <h3>Rediger oplysninger</h3>
-        </div>
-    </a>
-</div>
-<div th:include="fragments/footer :: footer"></div>
+    <div th:if="${showconfirmation}" th:class="${alert}" role="alert">
+        <span th:text="${confirmationtext}"></span>
+    </div>
+    <div class = "controlpaneltitle">
+        <h1>Min profil
+            <i class = "fas fa-user"></i>
+        </h1>
+    </div>
+    <div class = "container boxcontainer">
+        <a th:href="@{/mybookings}" class = "box">
+            <div class = "boxicon"><i class = "fas fa-book"></i></div>
+            <div class = "boxcontent">
+                <h3>Mine bookings</h3>
+            </div>
+        </a>
+        <a th:href="@{/editUser}" class = "box">
+            <div class = "boxicon"><i class = "fas fa-user-edit"></i></div>
+            <div class = "boxcontent">
+                <h3>Rediger oplysninger</h3>
+            </div>
+        </a>
+    </div>
+    <div th:include="fragments/footer :: footer"></div>
 </body>
 </html>

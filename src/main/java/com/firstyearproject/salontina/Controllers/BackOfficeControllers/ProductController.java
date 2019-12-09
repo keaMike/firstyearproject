@@ -34,6 +34,9 @@ public class ProductController {
     private boolean taskResult = false;
     private boolean showConfirmation = false;
     private String confirmationText = "";
+    private String alert = "";
+    private String danger = "alert alert-danger";
+    private String success = "alert alert-success";
 
     @Autowired
     ProductServiceImpl productServiceImpl;
@@ -43,16 +46,17 @@ public class ProductController {
 
     //Luca
     //Used in Java Methods/mappings
-    public void confirmation(String text){
+    public void confirmation(String text, String alert){
         showConfirmation = true;
         confirmationText = text;
+        this.alert = alert;
     }
 
     //Luca
     //Used in HTML-Modals
     public void showConfirmation(Model model){
 
-        model.addAttribute("showconfirmation", true);
+        model.addAttribute("showconfirmation", showConfirmation);
         model.addAttribute("confirmationtext", confirmationText);
         showConfirmation = false;
     }
@@ -88,11 +92,11 @@ public class ProductController {
         }
         taskResult = productServiceImpl.createItem(item);
         if (taskResult) {
-            confirmation(item.getProductName() + " er blevet oprettet i systemet");
-            return REDIRECT;
+            confirmation(item.getProductName() + " er blevet oprettet i systemet", success);
+            return REDIRECT + "products";
         } else {
-            confirmation("Produktet kunne ikke oprettes i systemet");
-            return CREATEITEM;
+            confirmation("Produktet kunne ikke oprettes i systemet", danger);
+            return REDIRECT + "products";
         }
     }
 
@@ -116,11 +120,11 @@ public class ProductController {
         }
         taskResult = productServiceImpl.createTreatment(treatment);
         if (taskResult) {
-            confirmation(treatment.getProductName() + " er blevet oprettet som behandling i systemet");
-            return REDIRECT;
+            confirmation(treatment.getProductName() + " er blevet oprettet som behandling i systemet", success);
+            return REDIRECT + "treatments";
         } else {
-            confirmation("Behandlingen kunne ikke oprettes i systemet");
-            return CREATETREATMENT;
+            confirmation("Behandlingen kunne ikke oprettes i systemet", danger);
+            return REDIRECT + "treatments";
         }
     }
 
@@ -138,6 +142,7 @@ public class ProductController {
         model.addAttribute("items", productServiceImpl.createItemArrayList());
         model.addAttribute("showTreatments", true);
         model.addAttribute("showProducts", false);
+        showConfirmation(model);
         return DISPLAYPRODUCTS;
     }
 
@@ -155,6 +160,7 @@ public class ProductController {
         model.addAttribute("items", productServiceImpl.createItemArrayList());
         model.addAttribute("showProducts", true);
         model.addAttribute("showTreatments", false);
+        showConfirmation(model);
         return DISPLAYPRODUCTS;
     }
 
@@ -189,11 +195,11 @@ public class ProductController {
         }
         taskResult = productServiceImpl.editTreatment(treatment);
         if (taskResult) {
-            confirmation("Information på behandlingen: " + treatment.getProductName() + " er blevet ændret i systemet");
-            return REDIRECT;
+            confirmation("Information på behandlingen: " + treatment.getProductName() + " er blevet ændret i systemet", success);
+            return REDIRECT + "treatments";
         } else {
-            confirmation("Behandlingens information kunne IKKE ændres i systemet");
-            return DISPLAYPRODUCTS;
+            confirmation("Behandlingens information kunne IKKE ændres i systemet", danger);
+            return REDIRECT + "treatments";
         }
     }
 
@@ -217,11 +223,11 @@ public class ProductController {
         }
         taskResult = productServiceImpl.editItem(item);
         if (taskResult) {
-            confirmation("Information på " + item.getProductName() + " er blevet ændret i systemet");
-            return REDIRECT;
+            confirmation("Information på " + item.getProductName() + " er blevet ændret i systemet", success);
+            return REDIRECT + "products";
         } else {
-            confirmation("Produktets information kunne IKKE ændres i systemet");
-            return DISPLAYPRODUCTS;
+            confirmation("Produktets information kunne IKKE ændres i systemet", danger);
+            return REDIRECT + "products";
         }
     }
 

@@ -66,7 +66,7 @@
                                 </div>
                                 <div>
                                     <h5>E-Mail</h5>
-                                    <input class="input" type="email" id="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                                    <input class="input" type="email" id="email" pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-z]{2,4}$"
                                            oninvalid="setCustomValidity('Indtast en gyldig e-mail adresse')"
                                            oninput="setCustomValidity('')"
                                            th:field="${user.userEmail}" required>

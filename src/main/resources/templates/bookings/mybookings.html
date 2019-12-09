@@ -8,16 +8,22 @@
 <div th:include = "fragments/header :: navbar"></div>
 <body>
     <div class="container">
-        <h1>Her vises dine bookings <span th:text="${user.username}"></span></h1>
+        <div th:if="${showconfirmation}" th:class="${alert}" role="alert">
+            <span th:text="${confirmationtext}"></span>
+        </div>
+        <h1 class="controlpaneltitle">Her vises dine bookings <span th:text="${user.username}"></span>
+            <i class="fas fa-book"></i>
+        </h1>
         <br>
-        <div class="controlpaneltitle">
-            <h3 th:if="${#lists.isEmpty(bookings)}">Du har ingen bookings</h3>
+        <div th:if="${#lists.isEmpty(bookings)}" class="controlpaneltitle">
+            <h3>Du har ingen bookings</h3>
         </div>
         <div th:unless="${#lists.isEmpty(bookings)}">
             <table class="table table-striped">
                 <thead class="thead-dark">
                 <tr>
                     <th>Dato</th>
+                    <th>Tid</th>
                     <th>Kommentar</th>
                     <th>Behandlinger</th>
                     <th>Slet booking</th>
@@ -25,26 +31,26 @@
                 </thead>
                 <tbody>
                 <tr th:each="booking : ${bookings}">
-                    <td th:text="${booking.bookingDate}"></td>
+                    <td th:text="${#dates.format(booking.bookingDate, 'dd MMM yyyy')}"></td>
+                    <td th:text="${booking.bookingTime}"></td>
                     <td th:text="${booking.bookingComment}"></td>
                     <td th:each="treatment : ${booking.bookingTreatmentList}">
                         <span th:text="${treatment.productName}"></span>
                     </td>
                     <td>
-                        <a data-toggle="modal" data-target="#deletemodal">
+                        <a data-toggle="modal" data-target="#deletemodal" th:attrappend="data-target=${booking.bookingDate}">
                             <i class = "fas fa-trash-alt" data-toggle="tooltip" title = "Slet booking" style="cursor: pointer;"></i>
                             <!--Modal Content-->
-                            <div class="modal fade" id="deletemodal">
+                            <div class="modal fade" id="deletemodal" th:attrappend="id=${booking.bookingDate}">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h3>Er du sikker på du vil slette din tid d. <span th:text="${booking.bookingDate}"></span></h3>
+                                            <h3>Er du sikker på du vil slette din tid d.
+                                                <span th:text="$${#dates.format(booking.bookingDate, 'dd MMM yyyy')}"></span>
+                                            </h3>
                                         </div>
                                         <div class="modal-body">
-                                            <form th:method="post" th:action="@{/deletebooking}">
-                                                <input type="hidden" th:field="${booking.bookingId}">
-                                                <input type="submit" class="btn btn-dark" value="Ja">
-                                            </form>
+                                            <a class="btn btn-dark" th:href="@{'/deletebooking/' + ${booking.bookingId}}">Ja</a>
                                             <a class="btn btn-dark" data-dismiss="modal" style="color: white">Nej</a>
                                         </div>
                                     </div>

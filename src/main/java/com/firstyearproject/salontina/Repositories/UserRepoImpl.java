@@ -94,11 +94,13 @@ public class UserRepoImpl implements UserRepo{
     @Override
     public boolean addUser(User user){
         Boolean userCreated = false;
+
+        String statement =  "INSERT INTO users " +
+                "(users_fullName, users_phonenumber, users_email, users_preferences, users_password) " +
+                "VALUES " +
+                "(?, ?, ?, ?, ?)";
+
         try{
-            String statement =  "INSERT INTO users " +
-                                "(users_fullName, users_phonenumber, users_email, users_preferences, users_password) " +
-                                "VALUES " +
-                                "(?, ?, ?, ?, ?)";
 
             Connection connection = mySQLConnector.openConnection();
             PreparedStatement pstms = connection.prepareStatement(statement);
@@ -136,7 +138,7 @@ public class UserRepoImpl implements UserRepo{
     //Asbjørn
     @Override
     public boolean subscribeNewsletter(int userId) {
-        String statement = "INSERT INTO salon_tina_database.newsletter (users_id) VALUES (?)";
+        String statement = "INSERT INTO newsletter (users_id) VALUES (?)";
         userRepoTaskResult = newsletterQueries(userId, statement);
         return userRepoTaskResult;
     }
@@ -144,7 +146,7 @@ public class UserRepoImpl implements UserRepo{
     //Asbjørn
     @Override
     public boolean unsubscribeNewsletter(int userId) {
-        String statement = "DELETE FROM salon_tina_database.newsletter WHERE users_id = ?";
+        String statement = "DELETE FROM newsletter WHERE users_id = ?";
         userRepoTaskResult = newsletterQueries(userId, statement);
         return userRepoTaskResult;
     }
@@ -241,30 +243,59 @@ public class UserRepoImpl implements UserRepo{
     public boolean editUser(User user) {
         Boolean userEdited = false;
         log.info(user.toString());
-        try{
-            String statement =  "UPDATE users " +
-                                "SET users_fullName = ?, " +
-                                "users_phonenumber = ?, " +
-                                "users_email = ?, " +
-                                "users_preferences = ?, " +
-                                "users_password = ? " +
-                                "WHERE users_id = ?;";
 
-            Connection connection = mySQLConnector.openConnection();
-            PreparedStatement pstms = connection.prepareStatement(statement);
-            pstms.setString(1, user.getUsername());
-            pstms.setInt(2,user.getUserPhonenumber());
-            pstms.setString(3,user.getUserEmail());
-            pstms.setString(4,user.getUserPreference());
-            pstms.setString(5, user.getUserPassword());
-            pstms.setInt(6,user.getUserId());
-            pstms.executeUpdate();
-            userEdited = true;
+        String statement;
 
-            databaseLogger.writeToLogFile(statement);
-        } catch (Exception E){
-            E.printStackTrace();
+        if(!user.getUserPassword().equals("")) {
+            statement =  "UPDATE users " +
+                    "SET users_fullName = ?, " +
+                    "users_phonenumber = ?, " +
+                    "users_email = ?, " +
+                    "users_preferences = ?, " +
+                    "users_password = ? " +
+                    "WHERE users_id = ?;";
+            try{
+
+                Connection connection = mySQLConnector.openConnection();
+                PreparedStatement pstms = connection.prepareStatement(statement);
+                pstms.setString(1, user.getUsername());
+                pstms.setInt(2,user.getUserPhonenumber());
+                pstms.setString(3,user.getUserEmail());
+                pstms.setString(4,user.getUserPreference());
+                pstms.setString(5, user.getUserPassword());
+                pstms.setInt(6,user.getUserId());
+                pstms.executeUpdate();
+                userEdited = true;
+
+                databaseLogger.writeToLogFile(statement);
+            } catch (Exception E){
+                E.printStackTrace();
+            }
+        } else {
+            statement =  "UPDATE users " +
+                    "SET users_fullName = ?, " +
+                    "users_phonenumber = ?, " +
+                    "users_email = ?, " +
+                    "users_preferences = ? " +
+                    "WHERE users_id = ?;";
+            try{
+
+                Connection connection = mySQLConnector.openConnection();
+                PreparedStatement pstms = connection.prepareStatement(statement);
+                pstms.setString(1, user.getUsername());
+                pstms.setInt(2,user.getUserPhonenumber());
+                pstms.setString(3,user.getUserEmail());
+                pstms.setString(4,user.getUserPreference());
+                pstms.setInt(5,user.getUserId());
+                pstms.executeUpdate();
+                userEdited = true;
+
+                databaseLogger.writeToLogFile(statement);
+            } catch (Exception E){
+                E.printStackTrace();
+            }
         }
+
         return userEdited;
     }
 

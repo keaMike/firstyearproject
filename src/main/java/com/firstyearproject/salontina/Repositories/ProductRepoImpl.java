@@ -248,7 +248,7 @@ public class ProductRepoImpl implements ProductRepo {
     @Override
     public boolean editTreatment(Treatment treatment) {
         try {
-            String statement =  "UPDATE salon_tina_database.treatments " +
+            String statement =  "UPDATE treatments " +
                                 "SET treatments_name = ?, treatments_price = ?, treatments_duration, treatments_description = ?, " +
                                 "treatments_active = ?, treatments_id = ? " +
                                 "WHERE treatments_id = ?";

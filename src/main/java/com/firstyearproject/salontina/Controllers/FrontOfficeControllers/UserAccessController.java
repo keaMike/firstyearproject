@@ -37,6 +37,9 @@ public class UserAccessController {
     private boolean taskResult = false;
     private boolean showConfirmation = false;
     private String confirmationText = "";
+    private String alert = "";
+    private String danger = "alert alert-danger";
+    private String success = "alert alert-success";
 
     @Autowired
     UserServiceImpl userService;
@@ -49,16 +52,18 @@ public class UserAccessController {
 
     //Luca
     //Used in Java Methods/mappings
-    public void confirmation(String text){
+    public void confirmation(String text, String alert){
         showConfirmation = true;
         confirmationText = text;
+        this.alert = alert;
     }
 
     //Luca
     //Used in HTML-Modals
     public void showConfirmation(Model model){
-        model.addAttribute("showconfirmation", true);
+        model.addAttribute("showconfirmation", showConfirmation);
         model.addAttribute("confirmationtext", confirmationText);
+        model.addAttribute("alert", alert);
         showConfirmation = false;
     }
 
@@ -79,6 +84,7 @@ public class UserAccessController {
     @GetMapping("/")
     public String index(Model model, HttpSession session) {
         userExcists(model, session);
+        showConfirmation(model);
         return INDEX;
     }
 
@@ -89,10 +95,11 @@ public class UserAccessController {
 
         if(user != null){
             session.setAttribute("user", user);
-
+            confirmation("Velkommen " + user.getUsername() + ", du er blevet logget ind", success);
             return REDIRECT;
         }
-        return INDEX;
+        confirmation("Fejl ved login, enten din email/tlf. eller kodeord er forkert", danger);
+        return REDIRECT;
     }
 
     @GetMapping("/logout")
@@ -109,12 +116,13 @@ public class UserAccessController {
     public String register(@ModelAttribute User user) {
         taskResult = userService.addUser(user);
         if (taskResult) {
-            confirmation("Du er blevet oprettet som bruger");
+            confirmation("Du er blevet oprettet som bruger", success);
             return REDIRECT;
         }
-        confirmation("Vi kunne IKKE oprette dig som bruger. Prøv igen");
+        confirmation("Vi kunne ikke oprette dig som bruger. Prøv igen", danger);
         return REDIRECT;
     }
+
     //Jonathan
     @GetMapping("/editUser")
     public String editUser(HttpSession session, Model model) {
@@ -125,6 +133,7 @@ public class UserAccessController {
         model.addAttribute("user", user);
         return EDITUSER;
     }
+
     //Jonathan
     @PostMapping("/editUser")
     public String editUser(@ModelAttribute User user, HttpSession session) {
@@ -132,12 +141,14 @@ public class UserAccessController {
             return REDIRECT;
         }
         taskResult = userService.editUser(user);
+        User editedUser = userService.getUserById(user.getUserId());
+        session.setAttribute("user", editedUser);
         if (taskResult) {
-            confirmation("Ændringerne er blevet gemt");
-            return REDIRECT + USERPROFILE;
+            confirmation("Ændringerne er blevet gemt", success);
+            return REDIRECT + "userprofile";
         }
-        confirmation("Vi kunne IKKE gemme dine ændringer. Prøv igen");
-        return REDIRECT + USERPROFILE;
+        confirmation("Vi kunne ikke gemme dine ændringer. Prøv igen", danger);
+        return REDIRECT + "userprofile";
     }
 
     @GetMapping("userprofile")
@@ -149,18 +160,20 @@ public class UserAccessController {
         log.info("user is admin or user...");
         User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);
+        showConfirmation(model);
         return USERPROFILE;
     }
 
     //Mike
-    //MAKE POST
-    @GetMapping("/deleteuser/{userId}")
-    public String deleteUser(@PathVariable int userId, HttpSession session) {
+    @PostMapping("/deleteuser")
+    public String deleteUser(@ModelAttribute User user, HttpSession session) {
         if(!userAuthenticator.userIsUser(session)){
             return REDIRECT;
         }
-        userService.deleteUser(userId);
-        return REDIRECT + EDITUSER;
+        confirmation("Din profil blev successfuldt slettet", success);
+        session.removeAttribute("user");
+        userService.deleteUser(user.getUserId());
+        return REDIRECT;
     }
 
     //Mike
@@ -189,11 +202,11 @@ public class UserAccessController {
         }
         taskResult = userService.subscribeNewsletter(user.getUserId());
         if (taskResult) {
-            confirmation("Du er blevet tilmeldt nyhedsbrevet");
-            return EDITUSER;
+            confirmation("Du er blevet tilmeldt nyhedsbrevet", success);
+            return REDIRECT + "userprofile";
         }
-        confirmation("Vi kunne IKKE tilmelde dig nyhedsbrevet. Prøv igen senere");
-        return REDIRECT;
+        confirmation("Vi kunne ikke tilmelde dig nyhedsbrevet. Prøv igen senere", danger);
+        return REDIRECT + "userprofile";
     }
 
     //Asbjørn
@@ -204,11 +217,11 @@ public class UserAccessController {
         }
         taskResult = userService.unsubscribeNewsletter(user.getUserId());
         if (taskResult) {
-            confirmation("Du er blevet afmeldt nyhedsbrevet");
-            return EDITUSER;
+            confirmation("Du er blevet afmeldt nyhedsbrevet", success);
+            return REDIRECT + "userprofile";
         }
-        confirmation("Vi kunne IKKE afmelde dig nyhedsbrevet. Prøv igen senere");
-        return EDITUSER;
+        confirmation("Vi kunne ikke afmelde dig nyhedsbrevet. Prøv igen senere", danger);
+        return REDIRECT + "userprofile";
     }
 
 }

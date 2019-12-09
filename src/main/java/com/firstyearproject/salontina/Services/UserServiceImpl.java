@@ -37,7 +37,9 @@ public class UserServiceImpl implements UserService {
     //Jonathan
     @Override
     public boolean editUser(User user){
-        user.setUserPassword(hashPassword(user.getUserPassword()));
+        if(user.getUserPassword() != "") {
+            user.setUserPassword(hashPassword(user.getUserPassword()));
+        }
         return UR.editUser(user);
     }
 

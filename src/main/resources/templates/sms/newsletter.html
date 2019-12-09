@@ -2,22 +2,33 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Newsletter</title>
+    <title>Nyhedsbrev</title>
     <div th:include="fragments/header :: scripts"></div>
 </head>
 <div th:include = "fragments/header :: navbar"></div>
 <body>
     <div class="container">
-        <form th:method="Post" th:action="@{/sendnewsletter}" th:object="${newsletter}">
-            <textarea class="form-control" th:field="${newsletter.text}" required></textarea>
+        <h1 class="controlpaneltitle">Send nyhedsbrev
+            <i class="fas fa-envelope"></i>
+        </h1>
+        <form class="form-group" th:method="Post" th:action="@{/sendnewsletter}" th:object="${newsletter}">
+            <h4>Send nyhedsbrev</h4>
+            <label for="msgOne">Besked</label>
+            <textarea class="form-control" id="msgOne" th:field="${newsletter.text}" required></textarea>
             <input th:field="${newsletter.testNumber}" hidden>
-            <input class="btn btn-primary" type="submit" value="Send newsletter"/>
+            <br>
+            <input class="btn btn-dark" type="submit" value="Send"/>
         </form>
 
-        <form th:method="Post" th:action="@{/sendtestnewsletter}" th:object="${newsletter}">
-            <textarea class="form-control" th:field="${newsletter.text}" required></textarea>
-            <input type="text" class="form-control" th:field="${newsletter.testNumber}">
-            <input class="btn btn-primary" type="submit" value="Send test newsletter"/>
+        <form class="form-group" th:method="Post" th:action="@{/sendtestnewsletter}" th:object="${newsletter}">
+            <h4>Send test nyhedsbrev</h4>
+            <label for="msgTwo">Test besked</label>
+            <textarea class="form-control" id="msgTwo" th:field="${newsletter.text}" required></textarea>
+
+            <label for="phonenumberTwo">Test telefon nummer</label>
+            <input class="form-control" type="text" id="phonenumberTwo" th:field="${newsletter.testNumber}">
+            <br>
+            <input class="btn btn-dark" type="submit" value="Send test"/>
         </form>
     </div>
 
