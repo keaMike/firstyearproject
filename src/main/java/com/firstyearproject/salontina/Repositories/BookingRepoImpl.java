@@ -9,11 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
-import java.sql.Date;
 import java.util.List;
 
 @Repository
@@ -56,6 +53,8 @@ public class BookingRepoImpl implements BookingRepo{
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            mySQLConnector.closeConnection();
         }
 
         return false;
@@ -64,34 +63,24 @@ public class BookingRepoImpl implements BookingRepo{
     //Luca
     @Override
     public boolean addTreatmentsToBooking(List<Treatment> treatmentList, Booking booking){
-        //TODO 'No operations allowed after statement closed.' when adding booking
-
         log.info("addTreatmentsToBooking method started...");
         String statement =
                 "INSERT INTO bookings_treatment " +
                 "(bookings_id, treatments_id) " +
-                "VALUES " +
-                "(?, ?)";
+                "VALUES (" + getBookingId(booking) + ", " + treatmentList.get(0).getProductId() + ");";
 
-        for(Treatment t : treatmentList){
-            try {
-                PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
+        try {
+            Statement stmt = mySQLConnector.openConnection().createStatement();
 
-                pstmt.setInt(1, getBookingId(booking));
-                pstmt.setInt(2, t.getProductId());
+            stmt.execute(statement);
 
-                pstmt.execute();
-
-                databaseLogger.writeToLogFile(statement);
-
-            } catch (SQLException e) {
-                e.printStackTrace();
-            } finally {
-                mySQLConnector.closeConnection();
-            }
-            return true;
+            databaseLogger.writeToLogFile(statement);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            mySQLConnector.closeConnection();
         }
-        return false;
+        return true;
     }
 
     //Luca
@@ -238,7 +227,7 @@ public class BookingRepoImpl implements BookingRepo{
         String statement = "SELECT * FROM bookings " +
                             "JOIN bookings_treatment on bookings.bookings_id = bookings_treatment.bookings_id " +
                             "JOIN treatments on bookings_treatment.treatments_id = treatments.treatments_id " +
-                            "WHERE bookings_date BETWEEN DATE_ADD(CURDATE(), INTERVAL 1 day) AND DATE_ADD(CURDATE(), INTERVAL 30 day) " +
+                            "WHERE bookings_date BETWEEN DATE_ADD(CURDATE(), INTERVAL 0 DAY) AND DATE_ADD(CURDATE(), INTERVAL 365 DAY) " +
                             "ORDER BY bookings_date;";
 
         List<Booking> bookingList = new ArrayList<>();
@@ -412,5 +401,36 @@ public class BookingRepoImpl implements BookingRepo{
             mySQLConnector.closeConnection();
         }
         return true;
+    }
+
+    @Override
+    public boolean bookingExists(Booking booking) {
+        log.info("bookingExists method started...");
+        String statement =  "SELECT * FROM bookings " +
+                            "WHERE bookings_date = ? AND bookings_time = ?";
+
+        try{
+            PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
+
+            pstmt.setDate(1, booking.getBookingDate());
+            pstmt.setString(2, booking.getBookingTime());
+
+            ResultSet rs = pstmt.executeQuery();
+
+            if(rs.next()){
+                int bookingInt = rs.getInt(1);
+
+                if(bookingInt != 0){
+                    return true;
+                }
+            }
+
+            databaseLogger.writeToLogFile(statement);
+        } catch (SQLException e){
+            e.printStackTrace();
+        } finally {
+            mySQLConnector.closeConnection();
+        }
+        return false;
     }
 }

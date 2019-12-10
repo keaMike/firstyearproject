@@ -19,4 +19,5 @@ public interface BookingRepo {
     boolean deleteTreatmentByBookingId(int bookingId);
     boolean checkSMSReminder();
     boolean saveReminder();
+    boolean bookingExists(Booking booking);
 }

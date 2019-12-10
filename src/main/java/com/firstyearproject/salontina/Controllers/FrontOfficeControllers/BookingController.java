@@ -83,7 +83,7 @@ public class BookingController {
         }
 
         User user = (User) session.getAttribute("user");
-        if(bookingService.deleteBooking(bookingService.getBookingList(user.getUserId()), bookingId)){
+        if(bookingService.deleteBooking(bookingService.getBookingList(user.getUserId()), bookingId, userAuthenticator.userIsAdmin(session))){
             log.info("deleted booking: " + bookingId + "..." + SessionLog.sessionId(session));
 
             confirmationTool.confirmation("Din booking er blevet slettet", ConfirmationTool.success);
@@ -159,8 +159,19 @@ public class BookingController {
 
         booking.setBookingTime(time);
 
+        if(bookingService.bookingExists(booking)){
+            log.info("booking already exists... can not add new booking..." + SessionLog.sessionId(session));
+
+            session.removeAttribute("booking");
+
+            confirmationTool.confirmation("Den valgte tid og dato er allerede booket. Prøv igen.", ConfirmationTool.danger);
+            return REDIRECT;
+        }
+
         if(bookingService.addBooking(booking)){
             log.info("added booking: " + booking.getBookingId() + "..." + SessionLog.sessionId(session));
+
+            session.removeAttribute("booking");
 
             model.addAttribute("user", user);
             model.addAttribute("booking", booking);

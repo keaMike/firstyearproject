@@ -29,12 +29,18 @@ public class BookingServiceImpl implements BookingService{
     }
 
     //Mike
-    public boolean deleteBooking(List<Booking> bookingList, int bookingId){
+    public boolean deleteBooking(List<Booking> bookingList, int bookingId, boolean admin){
         log.info("deleteBooking method started...");
+
+        if(admin){
+            bookingRepo.deleteBooking(bookingId);
+            return true;
+        }
 
         for(Booking booking : bookingList) {
             if(booking.getBookingId() == bookingId) {
-                return bookingRepo.deleteBooking(bookingId);
+                bookingRepo.deleteBooking(bookingId);
+                return true;
             }
         }
         return false;
@@ -130,6 +136,11 @@ public class BookingServiceImpl implements BookingService{
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    public boolean bookingExists(Booking booking) {
+        return bookingRepo.bookingExists(booking);
     }
 
     //Mike
