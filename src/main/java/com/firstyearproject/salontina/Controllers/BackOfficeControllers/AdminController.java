@@ -1,6 +1,6 @@
 package com.firstyearproject.salontina.Controllers.BackOfficeControllers;
 
-import com.firstyearproject.salontina.Models.AddVacation;
+import com.firstyearproject.salontina.Models.ChooseDate;
 import com.firstyearproject.salontina.Models.User;
 import com.firstyearproject.salontina.Services.*;
 import com.firstyearproject.salontina.Tools.ConfirmationTool;
@@ -68,12 +68,12 @@ public class AdminController {
         }
         User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);
-        model.addAttribute("vacationstring", new AddVacation());
+        model.addAttribute("choosedate", new ChooseDate());
         return ADDVACATION;
     }
 
     @PostMapping("/addvacation")
-    public String addVacation(HttpSession session, @ModelAttribute AddVacation vacationString){
+    public String addVacation(HttpSession session, @ModelAttribute ChooseDate chooseDate){
         log.info("post addvacation action started..." + SessionLog.sessionId(session));
 
         if(!userAuthenticator.userIsAdmin(session)){
@@ -82,15 +82,15 @@ public class AdminController {
             return REDIRECT;
         }
         User user = (User)session.getAttribute("user");
-        if(bookingService.addVacationDate(vacationString.getString(), user.getUserId())){
-            log.info("added vacation on date: " + vacationString + "..." + SessionLog.sessionId(session));
+        if(bookingService.addVacationDate(chooseDate.getString(), user.getUserId())){
+            log.info("added vacation on date: " + chooseDate + "..." + SessionLog.sessionId(session));
 
-            confirmationTool.confirmation("Ferie er blevet tilføjet d. " + vacationString + ".", ConfirmationTool.success);
+            confirmationTool.confirmation("Ferie er blevet tilføjet d. " + chooseDate + ".", ConfirmationTool.success);
             return REDIRECT + ADDVACATION;
         }
-        log.info("could not add vacation on date: " + vacationString + "..." + SessionLog.sessionId(session));
+        log.info("could not add vacation on date: " + chooseDate + "..." + SessionLog.sessionId(session));
 
-        confirmationTool.confirmation("Ferie kunne ikke tilføjes d. " + vacationString + ".", ConfirmationTool.danger);
+        confirmationTool.confirmation("Ferie kunne ikke tilføjes d. " + chooseDate + ".", ConfirmationTool.danger);
         return REDIRECT + ADDVACATION;
     }
 

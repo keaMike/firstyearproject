@@ -73,32 +73,38 @@ public class BookingServiceImpl implements BookingService{
     @Override
     public List<Booking> getBookingList(String dateString){
         log.info("getBookingList(String) method started...");
-        try {
+
+        List<Booking> bookingList = bookingRepo.getBookingList(parseDateString(dateString));
+
+        if(bookingList == null){
+            bookingList = new ArrayList<>();
+        }
+
+        for(int i = 0; i <= 7; i++){
+            String time = (i + 8) + ":00";
+            if(time.length() != 5){
+                time = "0" + time;
+            }
+            if(!timeIsBooked(bookingList, time)){
+                bookingList.add(i, new Booking());
+                bookingList.get(i).setBookingId(0);
+                bookingList.get(i).setBookingTime(time);
+                bookingList.get(i).setBookingDate(parseDateString(dateString));
+            }
+        }
+
+        return bookingList;
+    }
+
+    //Luca
+    public Date parseDateString(String dateString){
+        try{
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
             java.util.Date date = sdf.parse(dateString);
 
-            List<Booking> bookingList = bookingRepo.getBookingList(new Date(date.getTime()));
-
-            if(bookingList == null){
-                bookingList = new ArrayList<>();
-            }
-
-            for(int i = 0; i <= 7; i++){
-                String time = (i + 8) + ":00";
-                if(time.length() != 5){
-                    time = "0" + time;
-                }
-                if(!timeIsBooked(bookingList, time)){
-                    bookingList.add(i, new Booking());
-                    bookingList.get(i).setBookingId(0);
-                    bookingList.get(i).setBookingTime(time);
-                    bookingList.get(i).setBookingDate(new Date(date.getTime()));
-                }
-            }
-
-            return bookingList;
-        } catch (ParseException e) {
+            return new Date(date.getTime());
+        } catch (ParseException e){
             e.printStackTrace();
         }
         return null;

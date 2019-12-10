@@ -1,13 +1,13 @@
 package com.firstyearproject.salontina.Models;
 
-public class AddVacation {
+public class ChooseDate {
 
     private String string;
 
-    public AddVacation() {
+    public ChooseDate() {
     }
 
-    public AddVacation(String string) {
+    public ChooseDate(String string) {
         this.string = string;
     }
 

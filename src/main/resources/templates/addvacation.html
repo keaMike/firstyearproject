@@ -14,10 +14,10 @@
                 <i class = "fas fa-plane-departure"></i>
             </h1>
         </div>
-        <form th:method="Post" th:object="${vacationstring}" th:action="@{/addvacation}">
+        <form th:method="Post" th:object="${choosedate}" th:action="@{/addvacation}">
             <div class="form-group">
                 <label for="vacationinput">Ferie dato</label>
-                <input id="vacationinput" type="text" class="form-control" aria-describedby="vacationinputHelp" th:field="${vacationstring.string}">
+                <input id="vacationinput" type="text" class="form-control" aria-describedby="vacationinputHelp" th:field="${choosedate.string}">
                 <small id="vacationinputHelp" class="text-muted">Skal skrives i formatet: 'ÅÅÅÅ-MM-DD'.</small>
             </div>
             <input class="btn btn-dark" type="submit" value="Indsæt ferie"/>

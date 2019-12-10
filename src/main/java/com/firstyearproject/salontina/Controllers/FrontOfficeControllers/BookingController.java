@@ -1,6 +1,7 @@
 package com.firstyearproject.salontina.Controllers.FrontOfficeControllers;
 
 import com.firstyearproject.salontina.Models.Booking;
+import com.firstyearproject.salontina.Models.ChooseDate;
 import com.firstyearproject.salontina.Models.User;
 import com.firstyearproject.salontina.Services.BookingServiceImpl;
 import com.firstyearproject.salontina.Services.ProductServiceImpl;
@@ -13,10 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpSession;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -126,21 +130,44 @@ public class BookingController {
 
         User user = (User) session.getAttribute("user");
 
-        Date date = new Date(Calendar.getInstance().getTimeInMillis());
-
         Booking booking = new Booking();
         booking.setBookingTreatmentList(new ArrayList<>());
-        booking.getBookingTreatmentList().add(productService.getTreatment(treatmentId));
-        booking.setBookingDate(date);
+        if(treatmentId != 0){
+            booking.getBookingTreatmentList().add(productService.getTreatment(treatmentId));
+        }
         booking.setBookingUserId(user.getUserId());
 
-        session.setAttribute("booking", booking);
+        ChooseDate chooseDate = (ChooseDate) session.getAttribute("choosedate");
 
-        List<Booking> bookingList = bookingService.getBookingList(date.toString());
+        List<Booking> bookingList;
+
+        if(chooseDate == null){
+            Date date = new Date(Calendar.getInstance().getTimeInMillis());
+            booking.setBookingDate(date);
+            bookingList = bookingService.getBookingList(date.toString());
+            model.addAttribute("choosedate", new ChooseDate(date.toString()));
+        } else {
+            booking.setBookingDate(bookingService.parseDateString(chooseDate.getString()));
+            bookingList = bookingService.getBookingList(chooseDate.getString());
+            model.addAttribute("choosedate", chooseDate);
+        }
+
+        session.setAttribute("booking", booking);
 
         model.addAttribute("user", user);
         model.addAttribute("bookingList", bookingList);
         return CHOOSEBOOKINGTIME;
+    }
+
+    @PostMapping("choosetime/changebookingdate")
+    public String changebookingdate(Model model, HttpSession session, @ModelAttribute ChooseDate chooseDate){
+        log.info("post changebookingtime action started..." + SessionLog.sessionId(session));
+
+        if(chooseDate.getString() != null){
+            session.setAttribute("choosedate", chooseDate);
+        }
+
+        return REDIRECT + "choosetime/0";
     }
 
     //Jonathan & Luca
