@@ -31,20 +31,30 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="treatment: ${treatments}">
-            <td th:text="${treatment.productName}"></td>
-            <td th:text="${treatment.productPrice} + ' DKK'"></td>
-            <td th:text="${treatment.treatmentDuration} +  ' min'"></td>
-            <td th:text="${treatment.productDescription}"></td>
-            <div th:each="role : ${user.userRoles}" th:if="${role} == 'Admin'">
-                <td th:if="${treatment.productActive}">Aktiv</td>
-                <td th:text="${treatment.productId}"></td>
-                <td th:unless="${treatment.productActive}">Ikke aktiv</td>
-                <td>
-                    <a th:href="${'edittreatment/' + treatment.productId}"><i class="fas fa-edit" data-toggle="tooltip" title="Rediger behandling" ></i></a>
-                </td>
-            </div>
-        </tr>
+        <div th:each="role : ${user.userRoles}" th:if="${role} == 'Admin'">
+            <tr th:each="treatment: ${treatments}">
+                <td th:text="${treatment.productName}"></td>
+                <td th:text="${treatment.productPrice} + ' DKK'"></td>
+                <td th:text="${treatment.treatmentDuration} +  ' min'"></td>
+                <td th:text="${treatment.productDescription}"></td>
+                <div th:each="role : ${user.userRoles}" th:if="${role} == 'Admin'">
+                    <td th:if="${treatment.productActive}">Aktiv</td>
+                    <td th:text="${treatment.productId}"></td>
+                    <td th:unless="${treatment.productActive}">Ikke aktiv</td>
+                    <td>
+                        <a th:href="${'edittreatment/' + treatment.productId}"><i class="fas fa-edit" data-toggle="tooltip" title="Rediger behandling" ></i></a>
+                    </td>
+                </div>
+            </tr>
+        </div>
+        <div th:if="${user.username != '' AND user.userId != 1}">
+            <tr th:each="treatment: ${treatments}" th:if="${treatment.productActive}">
+                <td th:text="${treatment.productName}"></td>
+                <td th:text="${treatment.productPrice} + ' DKK'"></td>
+                <td th:text="${treatment.treatmentDuration} +  ' min'"></td>
+                <td th:text="${treatment.productDescription}"></td>
+            </tr>
+        </div>
         </tbody>
     </table>
 </div>

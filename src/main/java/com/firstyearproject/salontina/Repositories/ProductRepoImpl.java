@@ -241,8 +241,8 @@ public class ProductRepoImpl implements ProductRepo {
         log.info("editTreatment method started...");
         String statement =
                 "UPDATE salon_tina_database.treatments " +
-                "SET treatments_name = ?, treatments_price = ?, treatments_duration, treatments_description = ?, " +
-                "treatments_active = ?, treatments_id = ? " +
+                "SET treatments_name = ?, treatments_price = ?, treatments_duration = ?, treatments_description = ?, " +
+                "treatments_active = ? " +
                 "WHERE treatments_id = ?";
         try {
             PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
