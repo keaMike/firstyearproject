@@ -7,9 +7,37 @@
     <div th:include = "fragments/header :: navbar"></div>
 </head>
 <body>
-<div class="container">
-    <h3 th:text="'Tillykke, ' + ${user.username} + ', du har booket en behandling d.' + ${booking.bookingDate} + ' kl. ' + ${booking.bookingTime}"></h3>
-</div>
+    <div class="container">
+        <h1 class="controlpaneltitle">
+            Bekræft din booking
+        </h1>
+
+        <form th:method="Post" th:action="@{savebooking}" th:object="${booking}">
+            <input type="hidden" th:field="${booking.bookingId}">
+            <input type="hidden" th:field="${booking.bookingUserId}">
+            <div class="form-group">
+                <label for="time"></label>
+                <input class="form-control" type="text" placeholder="Tidspunkt" id="time" th:field="${booking.bookingTime}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="date"></label>
+                <input class="form-control" type="date" placeholder="Dato" id="date" th:field="${booking.bookingDate}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="comment"></label>
+                <textarea class="form-control" type="text" placeholder="Kommentar" id="comment" aria-describedby="commentHelp" th:field="${booking.bookingComment}"></textarea>
+                <small id="commentHelp" class="text-muted">Hvis du har en kommentar til din booking, skriv den her.</small>
+            </div>
+            <div class="form-group">
+                <span th:each="treatment : ${booking.bookingTreatmentList}" th:text="${treatment.productName}"></span>
+            </div>
+            <input class="btn btn-dark" type="submit" value="Bekræft booking"/>
+            <a class="btn btn-light btn-outline-secondary" href="/">Annulér booking</a>
+        </form>
+        <br>
+        <br>
+        <br>
+    </div>
 <div th:include="fragments/footer :: footer"></div>
 </body>
 </html>

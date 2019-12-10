@@ -163,6 +163,12 @@ public class BookingController {
     public String changebookingdate(Model model, HttpSession session, @ModelAttribute ChooseDate chooseDate){
         log.info("post changebookingtime action started..." + SessionLog.sessionId(session));
 
+        if(!userAuthenticator.userIsUser(session)){
+            log.info(SessionLog.NOTLOGGEDIN + SessionLog.sessionId(session));
+
+            return REDIRECT;
+        }
+
         if(chooseDate.getString() != null){
             session.setAttribute("choosedate", chooseDate);
         }
@@ -195,18 +201,35 @@ public class BookingController {
             return REDIRECT;
         }
 
+        log.info("added booking: " + booking.getBookingId() + "..." + SessionLog.sessionId(session));
+
+        session.removeAttribute("booking");
+
+        model.addAttribute("user", user);
+        model.addAttribute("booking", booking);
+        return BOOKINGCONFIRMATION;
+    }
+
+    @PostMapping("bookingconfirmation/savebooking")
+    public String bookingConfirmation(HttpSession session, Model model, @ModelAttribute Booking booking){
+        log.info("post bookingconfirmation action started..." + SessionLog.sessionId(session));
+
+        if(!userAuthenticator.userIsUser(session)){
+            log.info(SessionLog.NOTLOGGEDIN + SessionLog.sessionId(session));
+
+            return REDIRECT;
+        }
+
         if(bookingService.addBooking(booking)){
             log.info("added booking: " + booking.getBookingId() + "..." + SessionLog.sessionId(session));
 
             session.removeAttribute("booking");
 
-            model.addAttribute("user", user);
-            model.addAttribute("booking", booking);
-            return BOOKINGCONFIRMATION;
+            confirmationTool.confirmation("Din booking er tilføjet.", ConfirmationTool.success);
+            return REDIRECT;
         }
-        log.info("could not add booking..." + SessionLog.sessionId(session));
 
-        confirmationTool.confirmation("Kunne ikke tilføje din booking. Hvis problemet sker igen, ring til salonen.", ConfirmationTool.danger);
+        confirmationTool.confirmation("Din booking kunne ikke tilføjes.", ConfirmationTool.danger);
         return REDIRECT;
     }
 
