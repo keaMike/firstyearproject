@@ -39,6 +39,8 @@ public class AdminController {
     SMSServiceImpl smsService;
     @Autowired
     UserAuthenticator userAuthenticator;
+    @Autowired
+    AutoReminderServiceImpl autoReminderService;
 
     //Luca
     //Used in Java Methods/mappings
@@ -61,7 +63,7 @@ public class AdminController {
         if(!userAuthenticator.userIsAdmin(session)){
             return REDIRECT;
         }
-        smsService.initiateAutoReminder("Initate");
+        autoReminderService.initiateAutoReminder();
         User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);
         return CONTROLPANEL;

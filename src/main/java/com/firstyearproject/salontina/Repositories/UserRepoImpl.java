@@ -15,9 +15,7 @@ import java.util.List;
 @Repository
 public class UserRepoImpl implements UserRepo{
 
-
     private final Logger log = LoggerFactory.getLogger(this.getClass());
-    private PreparedStatement pstm;
     private boolean userRepoTaskResult;
 
     @Autowired
@@ -33,7 +31,12 @@ public class UserRepoImpl implements UserRepo{
 
         List<String> phonenumbers = new ArrayList<>();
 
-        String statement = "SELECT (SELECT users_phonenumber FROM users WHERE users_id = newsletter.users_id) AS phonenumber FROM newsletter;";
+        String statement =
+                "SELECT " +
+                "(SELECT users_phonenumber " +
+                "FROM users " +
+                "WHERE users_id = newsletter.users_id) " +
+                "AS phonenumber FROM newsletter;";
 
         try {
             PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
@@ -49,6 +52,8 @@ public class UserRepoImpl implements UserRepo{
             return phonenumbers;
         } catch (SQLException e) {
             e.printStackTrace();
+        }  finally {
+            mySQLConnector.closeConnection();
         }
         return null;
     }
@@ -60,12 +65,12 @@ public class UserRepoImpl implements UserRepo{
 
         List<Reminder> reminderList = new ArrayList<>();
 
-        String statement =  "SELECT (SELECT users.users_phonenumber FROM users WHERE users.users_id = bookings.users_id) " +
-                            "AS booking_phonenumber, (SELECT users.users_fullName FROM users WHERE users.users_id = bookings.users_id) " +
-                            "AS booking_name, " +
-                            "bookings_date, " +
-                            "bookings_time " +
-                            "FROM bookings WHERE bookings_date BETWEEN DATE_ADD(CURDATE(), INTERVAL 1 day) AND DATE_ADD(CURDATE(), INTERVAL 1 day);";
+        String statement =
+                "SELECT (SELECT users.users_phonenumber FROM users WHERE users.users_id = bookings.users_id) " +
+                "AS booking_phonenumber, (SELECT users.users_fullName FROM users WHERE users.users_id = bookings.users_id) " +
+                "AS booking_name, bookings_date, bookings_time " +
+                "FROM bookings " +
+                "WHERE bookings_date BETWEEN DATE_ADD(CURDATE(), INTERVAL 1 day) AND DATE_ADD(CURDATE(), INTERVAL 1 day);";
 
         try {
             PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
@@ -86,6 +91,8 @@ public class UserRepoImpl implements UserRepo{
             return reminderList;
         } catch (SQLException e) {
             e.printStackTrace();
+        }  finally {
+            mySQLConnector.closeConnection();
         }
         return null;
     }
@@ -93,17 +100,13 @@ public class UserRepoImpl implements UserRepo{
     //Jonathan
     @Override
     public boolean addUser(User user){
-        Boolean userCreated = false;
-
-        String statement =  "INSERT INTO users " +
+        boolean userCreated = false;
+        String statement =
+                "INSERT INTO users " +
                 "(users_fullName, users_phonenumber, users_email, users_preferences, users_password) " +
-                "VALUES " +
-                "(?, ?, ?, ?, ?)";
-
+                "VALUES (?, ?, ?, ?, ?)";
         try{
-
-            Connection connection = mySQLConnector.openConnection();
-            PreparedStatement pstms = connection.prepareStatement(statement);
+            PreparedStatement pstms = mySQLConnector.openConnection().prepareStatement(statement);
             pstms.setString(1, user.getUsername());
             pstms.setInt(2, user.getUserPhonenumber());
             pstms.setString(3, user.getUserEmail());
@@ -124,14 +127,15 @@ public class UserRepoImpl implements UserRepo{
         }
         catch (SQLException E) {
             E.printStackTrace();
+        } finally {
+            mySQLConnector.closeConnection();
         }
         return userCreated;
     }
 
     //Luca
-    public void addToNewsletter(User user){
+    private void addToNewsletter(User user){
         User foundUser = authenticateUser(new LoginToken(user.getUserEmail(), user.getUserPassword()));
-
         subscribeNewsletter(foundUser.getUserId());
     }
 
@@ -155,19 +159,19 @@ public class UserRepoImpl implements UserRepo{
     //Both subscribe and unsubscribe use the same execute code
     private boolean newsletterQueries(int userId, String statement) {
         try{
-            pstm = null;
-            Connection connection = mySQLConnector.openConnection();
-            pstm = connection.prepareStatement(statement);
-            pstm.setInt(1, userId);
+            PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
+            pstmt.setInt(1, userId);
 
-            pstm.executeUpdate();
-            mySQLConnector.closeConnection();
+            pstmt.executeUpdate();
+
             userRepoTaskResult = true;
             databaseLogger.writeToLogFile(statement);
 
         } catch (SQLException e) {
             e.printStackTrace();
             userRepoTaskResult = false;
+        }  finally {
+            mySQLConnector.closeConnection();
         }
         return userRepoTaskResult;
     }
@@ -176,12 +180,12 @@ public class UserRepoImpl implements UserRepo{
     @Override
     public List<User> findAllUsers() {
         List<User> users = new ArrayList();
+        String statement =
+                "SELECT * " +
+                "FROM users";
         try {
-            String statement = "SELECT * FROM users";
-
-            Connection connection = mySQLConnector.openConnection();
-            PreparedStatement pstm = connection.prepareStatement(statement);
-            ResultSet rs = pstm.executeQuery();
+            PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
+            ResultSet rs = pstmt.executeQuery();
             while(rs.next()) {
                 User u = new User();
                 u.setUserId(rs.getInt("users_id"));
@@ -198,6 +202,8 @@ public class UserRepoImpl implements UserRepo{
             return users;
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            mySQLConnector.closeConnection();
         }
         return null;
     }
@@ -205,45 +211,45 @@ public class UserRepoImpl implements UserRepo{
     //Mike
     @Override
     public User findUserById(int userid) {
-        User u = new User();
+        User user = new User();
+        String statement =
+                "SELECT * " +
+                "FROM users " +
+                "WHERE users_id = ?";
         try {
-            String statement = "SELECT * FROM users WHERE users_id = ?";
-
-            Connection con = mySQLConnector.openConnection();
-            pstm = null;
-            pstm = con.prepareStatement(statement);
-            pstm.setInt(1, userid);
-            ResultSet rs = pstm.executeQuery();
+            PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
+            pstmt.setInt(1, userid);
+            ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
-                generateUserFromResultSet(u, rs);
+                generateUserFromResultSet(user, rs);
             }
-            pstm.close();
 
             databaseLogger.writeToLogFile(statement);
 
-            return u;
+            return user;
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            mySQLConnector.closeConnection();
         }
         return null;
     }
 
     //Luca
-    private void generateUserFromResultSet(User u, ResultSet rs) throws SQLException {
-        u.setUserId(rs.getInt(1));
-        u.setUsername(rs.getString(2));
-        u.setUserPassword(rs.getString(3));
-        u.setUserPhonenumber(rs.getInt(4));
-        u.setUserEmail(rs.getString(5));
-        u.setUserPreference(rs.getString(6));
+    private void generateUserFromResultSet(User user, ResultSet rs) throws SQLException {
+        user.setUserId(rs.getInt(1));
+        user.setUsername(rs.getString(2));
+        user.setUserPassword(rs.getString(3));
+        user.setUserPhonenumber(rs.getInt(4));
+        user.setUserEmail(rs.getString(5));
+        user.setUserPreference(rs.getString(6));
     }
 
     //Jonathan
     @Override
     public boolean editUser(User user) {
-        Boolean userEdited = false;
-        log.info(user.toString());
-
+        boolean userEdited = false;
+        log.info(user.toString()):
         String statement;
 
         if(!user.getUserPassword().equals("")) {
@@ -302,20 +308,23 @@ public class UserRepoImpl implements UserRepo{
     //Mike
     @Override
     public boolean editUserHistory(User user) {
+        String statement =
+                "UPDATE users " +
+                "SET users_preferences = ? " +
+                "WHERE users_id = ?";
         try{
-            String statement = "UPDATE users SET users_preferences = ? WHERE users_id = ?";
-
-            Connection connection = mySQLConnector.openConnection();
-            PreparedStatement pstm = connection.prepareStatement(statement);
-            pstm.setString(1,user.getUserPreference());
-            pstm.setInt(2,user.getUserId());
-            pstm.executeUpdate();
+            PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
+            pstmt.setString(1,user.getUserPreference());
+            pstmt.setInt(2,user.getUserId());
+            pstmt.executeUpdate();
 
             databaseLogger.writeToLogFile(statement);
 
             return true;
-        } catch (Exception E){
-            E.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            mySQLConnector.closeConnection();
         }
         return false;
     }
@@ -325,7 +334,12 @@ public class UserRepoImpl implements UserRepo{
     public User authenticateUser(LoginToken loginToken){
         log.info("authenticateUser method started...");
 
-        String statement = "SELECT * FROM users WHERE users_phonenumber = ? OR users_email = ? AND users_password = ?;";
+        String statement =
+                "SELECT * " +
+                "FROM users " +
+                "WHERE users_phonenumber = ? " +
+                "OR users_email = ? " +
+                "AND users_password = ?;";
 
         try {
             PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
@@ -341,6 +355,8 @@ public class UserRepoImpl implements UserRepo{
             return generateUserFromResultSet(rs);
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            mySQLConnector.closeConnection();
         }
         return null;
     }
@@ -351,7 +367,10 @@ public class UserRepoImpl implements UserRepo{
 
         List<String> userRoles = new ArrayList<>();
 
-        String statement = "SELECT * FROM users_roles WHERE users_id = ?;";
+        String statement =
+                "SELECT * " +
+                "FROM users_roles " +
+                "WHERE users_id = ?;";
 
         try {
             PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
@@ -379,7 +398,10 @@ public class UserRepoImpl implements UserRepo{
 
         List<Booking> userHistory = new ArrayList<>();
 
-        String statement = "SELECT * FROM bookings WHERE users_id = ?;";
+        String statement =
+                "SELECT * " +
+                "FROM bookings " +
+                "WHERE users_id = ?;";
 
         try {
             PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
@@ -413,7 +435,13 @@ public class UserRepoImpl implements UserRepo{
 
         List<Treatment> treatmentList = new ArrayList<>();
 
-        String statement = "SELECT (SELECT treatments.treatments_name FROM treatments WHERE treatments_id = bookings_treatment.treatments_id) AS treatment_name FROM bookings_treatment WHERE bookings_id = ?;";
+        String statement =
+                "SELECT " +
+                "(SELECT treatments.treatments_name " +
+                "FROM treatments WHERE treatments_id = bookings_treatment.treatments_id) " +
+                "AS treatment_name " +
+                "FROM bookings_treatment " +
+                "WHERE bookings_id = ?;";
 
         try {
             PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
@@ -456,11 +484,12 @@ public class UserRepoImpl implements UserRepo{
     //Mike & Asbjørn
     @Override
     public boolean deleteUser(int userId) {
+        String statement =
+                "INSERT INTO users_archive " +
+                "SELECT users_id, users_fullName, users_phonenumber, users_email, users_preferences " +
+                "FROM users " +
+                "WHERE users_id = ?";
         try {
-            String statement =  "INSERT INTO users_archive SELECT users_id, users_fullName, " +
-                                "users_phonenumber, users_email, users_preferences " +
-                                "FROM users WHERE users_id = ?";
-
             Connection connection = mySQLConnector.openConnection();
             PreparedStatement pstm = connection.prepareStatement(statement);
             pstm.setInt(1, userId);
@@ -476,6 +505,8 @@ public class UserRepoImpl implements UserRepo{
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            mySQLConnector.closeConnection();
         }
         return false;
     }

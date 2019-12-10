@@ -112,6 +112,4 @@ public class BookingServiceImpl implements BookingService{
     public List<Booking> getBookingList(int userId){
         return BR.findBookingsByUserId(userId);
     }
-
-
 }

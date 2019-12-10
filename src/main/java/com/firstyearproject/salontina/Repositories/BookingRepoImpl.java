@@ -1,6 +1,7 @@
 package com.firstyearproject.salontina.Repositories;
 
 import com.firstyearproject.salontina.Models.Booking;
+import com.firstyearproject.salontina.Models.Reminder;
 import com.firstyearproject.salontina.Models.Treatment;
 import com.firstyearproject.salontina.Services.DatabaseLogger;
 import org.slf4j.Logger;
@@ -20,8 +21,6 @@ import java.util.List;
 public class BookingRepoImpl implements BookingRepo{
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
-    private PreparedStatement pstm;
-    private Connection con;
 
     @Autowired
     MySQLConnector mySQLConnector;
@@ -32,10 +31,11 @@ public class BookingRepoImpl implements BookingRepo{
     //Luca
     @Override
     public boolean addBooking(Booking booking){
-        String statement =  "INSERT INTO bookings " +
-                            "(bookings_date, bookings_time, users_id, bookings_comment) " +
-                            "VALUES " +
-                            "(?, ?, ?, ?);";
+        String statement =
+                "INSERT INTO bookings " +
+                "(bookings_date, bookings_time, users_id, bookings_comment) " +
+                "VALUES " +
+                "(?, ?, ?, ?);";
 
         try {
             PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
@@ -50,9 +50,13 @@ public class BookingRepoImpl implements BookingRepo{
                 addTreatmentsToBooking(booking.getBookingTreatmentList(), booking);
             }
 
+            databaseLogger.writeToLogFile(statement);
+
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            mySQLConnector.closeConnection();
         }
 
         return false;
@@ -61,10 +65,11 @@ public class BookingRepoImpl implements BookingRepo{
     //Luca
     @Override
     public boolean addTreatmentsToBooking(List<Treatment> treatmentList, Booking booking){
-        String statement =  "INSERT INTO bookings_treatment " +
-                            "(bookings_id, treatments_id) " +
-                            "VALUES " +
-                            "(?, ?)";
+        String statement =
+                "INSERT INTO bookings_treatment " +
+                "(bookings_id, treatments_id) " +
+                "VALUES " +
+                "(?, ?)";
 
         for(Treatment t : treatmentList){
             try {
@@ -74,8 +79,13 @@ public class BookingRepoImpl implements BookingRepo{
                 pstmt.setInt(2, t.getProductId());
 
                 pstmt.execute();
+
+                databaseLogger.writeToLogFile(statement);
+
             } catch (SQLException e) {
                 e.printStackTrace();
+            } finally {
+                mySQLConnector.closeConnection();
             }
             return true;
         }
@@ -84,7 +94,11 @@ public class BookingRepoImpl implements BookingRepo{
 
     //Luca
     private int getBookingId(Booking booking){
-        String statement = "SELECT bookings_id FROM bookings WHERE bookings_date = ? AND bookings_time = ?";
+        String statement =
+                "SELECT bookings_id " +
+                "FROM bookings " +
+                "WHERE bookings_date = ? " +
+                "AND bookings_time = ?";
 
         try {
             PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
@@ -97,8 +111,13 @@ public class BookingRepoImpl implements BookingRepo{
             if(rs.next()){
                 return rs.getInt(1);
             }
+
+            databaseLogger.writeToLogFile(statement);
+
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            mySQLConnector.closeConnection();
         }
         return 0;
     }
@@ -106,15 +125,18 @@ public class BookingRepoImpl implements BookingRepo{
     //Mike
     @Override
     public List<Booking> findBookingsByUserId(int userid) {
+        String statement =
+                "SELECT * " +
+                "FROM bookings " +
+                "JOIN bookings_treatment " +
+                "ON bookings.bookings_id = bookings_treatment.bookings_id " +
+                "JOIN treatments " +
+                "ON bookings_treatment.treatments_id = treatments.treatments_id " +
+                "WHERE users_id = ?";
         try {
-            String statement =  "SELECT * FROM bookings JOIN bookings_treatment ON " +
-                                "bookings.bookings_id = bookings_treatment.bookings_id JOIN treatments ON " +
-                                "bookings_treatment.treatments_id = treatments.treatments_id WHERE users_id = ?";
-
-            con = mySQLConnector.openConnection();
-            pstm = con.prepareStatement(statement);
-            pstm.setInt(1, userid);
-            ResultSet rs = pstm.executeQuery();
+            PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
+            pstmt.setInt(1, userid);
+            ResultSet rs = pstmt.executeQuery();
             List<Booking> bookings = new ArrayList<>();
             while(rs.next()) {
                 bookings.add(generateBookingFromResultSet(rs));
@@ -134,9 +156,10 @@ public class BookingRepoImpl implements BookingRepo{
     //Luca
     @Override
     public List<Booking> getBookingList(Date startDate, Date endDate){
-        String statement =  "SELECT * FROM bookings " +
-                            "WHERE bookings_date BETWEEN DATE(?) AND DATE(?) " +
-                            "ORDER BY bookings_date, bookings_time;";
+        String statement =
+                "SELECT * FROM bookings " +
+                "WHERE bookings_date BETWEEN DATE(?) AND DATE(?) " +
+                "ORDER BY bookings_date, bookings_time;";
 
         List<Booking> bookingList = new ArrayList<>();
 
@@ -158,11 +181,13 @@ public class BookingRepoImpl implements BookingRepo{
                 bookingList.add(booking);
             }
 
-            //TODO tilføj databaseLogger
+            databaseLogger.writeToLogFile(statement);
 
             return bookingList;
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            mySQLConnector.closeConnection();
         }
         return null;
     }
@@ -170,9 +195,10 @@ public class BookingRepoImpl implements BookingRepo{
     //Luca
     @Override
     public List<Booking> getBookingList(Date date){
-        String statement =  "SELECT * FROM bookings " +
-                            "WHERE bookings_date = ? " +
-                            "ORDER BY bookings_time;";
+        String statement =
+                "SELECT * FROM bookings " +
+                "WHERE bookings_date = ? " +
+                "ORDER BY bookings_time;";
 
         List<Booking> bookingList = new ArrayList<>();
 
@@ -192,11 +218,14 @@ public class BookingRepoImpl implements BookingRepo{
             return bookingList;
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            mySQLConnector.closeConnection();
         }
         return null;
     }
 
     //Luca
+    @Override
     public List<Booking> getFutureBookings(){
         String statement = "SELECT * FROM bookings " +
                             "JOIN bookings_treatment on bookings.bookings_id = bookings_treatment.bookings_id " +
@@ -214,16 +243,20 @@ public class BookingRepoImpl implements BookingRepo{
                 bookingList.add(generateBookingFromResultSet(rs));
             }
 
+            databaseLogger.writeToLogFile(statement);
+
             return bookingList;
         } catch (SQLException e){
             e.printStackTrace();
+        } finally {
+            mySQLConnector.closeConnection();
         }
 
         return null;
     }
 
     //Luca
-    public Booking generateBookingFromResultSet(ResultSet rs) throws SQLException{
+    private Booking generateBookingFromResultSet(ResultSet rs) throws SQLException{
         Booking booking = new Booking();
         booking.setBookingId(rs.getInt(1));
         booking.setBookingUserId(rs.getInt(2));
@@ -274,19 +307,20 @@ public class BookingRepoImpl implements BookingRepo{
     //Mike
     @Override
     public boolean deleteBooking(int bookingId) {
-        try {
-            String statement = "DELETE FROM bookings WHERE bookings_id = ?";
+        String statement = "DELETE FROM bookings WHERE bookings_id = ?";
 
-            con = mySQLConnector.openConnection();
-            pstm = con.prepareStatement(statement);
-            pstm.setInt(1, bookingId);
-            pstm.executeUpdate();
+        try {
+            PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
+            pstmt.setInt(1, bookingId);
+            pstmt.executeUpdate();
 
             databaseLogger.writeToLogFile(statement);
 
             return deleteTreatmentByBookingId(bookingId);
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            mySQLConnector.closeConnection();
         }
         return false;
     }
@@ -305,7 +339,66 @@ public class BookingRepoImpl implements BookingRepo{
             return pstmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            mySQLConnector.closeConnection();
         }
         return false;
+    }
+
+    //Asbjørn
+    @Override
+    public boolean checkSMSReminder() {
+        String statement =
+                "SELECT * FROM smsreminders " +
+                "JOIN bookings " +
+                "ON smsreminders.bookings_id = bookings.bookings_id " +
+                "WHERE bookings_date " +
+                "BETWEEN DATE_ADD(CURDATE(), INTERVAL 1 day) AND DATE_ADD(CURDATE(), INTERVAL 1 day)";
+        try {
+            PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            //If the resultset comes back with something in it, then the reminder have already been sent out
+            if (rs.next()) {
+                return true;
+            }
+
+            databaseLogger.writeToLogFile(statement);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return true; //Incase of SQLException the thread should NOT proceed with the method
+        } finally {
+            mySQLConnector.closeConnection();
+        }
+        return false;
+    }
+
+    //Asbjørn
+    @Override
+    public boolean saveReminder() {
+        log.info("save reached");
+        String statement =
+                "INSERT INTO smsreminders " +
+                "SELECT bookings_id " +
+                "FROM bookings " +
+                "WHERE bookings_date " +
+                "BETWEEN DATE_ADD(CURDATE(), INTERVAL 1 day) AND DATE_ADD(CURDATE(), INTERVAL 1 day)";
+
+        try{
+            PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
+
+            pstmt.executeUpdate();
+
+            databaseLogger.writeToLogFile(statement);
+
+        } catch(SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            mySQLConnector.closeConnection();
+        }
+        return true;
     }
 }

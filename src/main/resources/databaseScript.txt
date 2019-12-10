@@ -51,7 +51,6 @@ CREATE TABLE IF NOT EXISTS users_roles(
 
 INSERT INTO users_roles (users_id, role) VALUES
 (1, 'Admin'),
-(1, 'Frisør'),
 (2, 'Frisør');
 
 CREATE TABLE IF NOT EXISTS newsletter (
@@ -124,6 +123,12 @@ INSERT INTO items (items_name, items_price, items_description, items_active, ite
 ('Super 88 Hårkur 150 ml', 126.75, 'Super 88 Hårkur er en professionel hårkur til farvet, permanentet, tørt og porøst hår. Tilfører håret fugtighed, elasticitet, glans og forbedrer hårstrukturen mærkbart.', 1, 10),
 ('Clearspring Organic Coconut Oil 550 ml', 74.25, 'Clearspring Organic Coconut Oil er et helt fantastisk produkt.', 1, 20);
 
+CREATE TABLE IF NOT EXISTS smsreminders (
+    booking_id INT UNIQUE NOT NULL,
+    CONSTRAINT smsreminder_fk_bookings FOREIGN KEY (booking_id) REFERENCES bookings (bookings_id)
+);
+
+
 SELECT * FROM newsletter;
 SELECT * FROM bookings;
 SELECT * FROM users;
@@ -132,3 +137,4 @@ SELECT * FROM bookings_treatment;
 SELECT * FROM treatments;
 SELECT * FROM items;
 SELECT * FROM users_archive;
+SELECT * FROM smsreminders;

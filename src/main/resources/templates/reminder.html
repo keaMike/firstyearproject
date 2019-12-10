@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Reminder</title>
+    <div th:include="fragments/header :: scripts"></div>
+</head>
+<div th:include = "fragments/header :: navbar"></div>
+<body>
+<div class="container">
+    <button class="btn btn-primary" href="/sendreminder" >Send behandlingsreminder</button>
+</div>
+
+<div th:if="${showconfirmation}">
+    <div th:include="fragments/confirmation :: modal"></div>
+    <div th:include="fragments/confirmation :: script"></div>
+</div>
+
+</body>
+</html>

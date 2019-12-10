@@ -35,6 +35,9 @@ public class SMSController {
     SMSServiceImpl sMSServiceImpl;
 
     @Autowired
+    AutoReminderServiceImpl autoReminderService;
+
+    @Autowired
     UserAuthenticator userAuthenticator;
 
     //Luca
@@ -152,22 +155,37 @@ public class SMSController {
     }
 
     //Asbjørn
+    //Manually starts the autoReminder
     @PostMapping ("/startAutoReminder")
-    public String startAutoReminder(HttpSession session) { //Manually starts the autoReminder
+    public String startAutoReminder(HttpSession session) {
         if(!userAuthenticator.userIsAdmin(session)){
             return REDIRECT;
         }
-        sMSServiceImpl.initiateAutoReminder("Initiate");
-        return REDIRECT + "reminder";
+        autoReminderService.initiateAutoReminder();
+        if (true) {
+            log.info("AutoReminder succesfully started");
+            confirmation("SMS påmindelse er i gangsat");
+        } else {
+            log.info("AutoReminder could not be started");
+            confirmation("SMS påmindelse kunne ikke startes");
+        }
+        return REDIRECT + REMINDER;
     }
 
     //Asbjørn
+    //Manually stops the autoReminder
     @PostMapping ("/stopAutoReminder")
-    public String stopAutoReminde(Model model, HttpSession session){ //Manually stops the autoReminder
+    public String stopAutoReminde(HttpSession session){
         if(!userAuthenticator.userIsAdmin(session)){
             return REDIRECT;
         }
-        sMSServiceImpl.initiateAutoReminder("cancel");
-        return REDIRECT + "reminder";
+        if(autoReminderService.cancelAutoReminder()) {
+            log.info("Autoreminder succesfully stopped");
+            confirmation("SMS påmindelse er blevet stoppet");
+        } else{
+            log.info("AutoReminder failed to stop...");
+            confirmation("SMS påmindelse kunne ikke stoppes");
+        }
+        return REDIRECT + REMINDER;
     }
 }

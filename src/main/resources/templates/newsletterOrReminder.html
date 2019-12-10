@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Rotten Potatoes - Control Panel</title>
+    <div th:include="fragments/header :: scripts"></div>
+</head>
+    <div th:include = "fragments/header :: navbar"></div>
+<body>
+<div class = "controlpaneltitle">
+    <h1>Vælg hvad du vil sende
+        <i class = "fas fa-question"></i>
+    </h1>
+</div>
+<div class = "container boxcontainer">
+    <a th:href="@{/newsletter}" class = "box">
+        <div class = "boxicon"><i class = "fas fa-envelope"></i></div>
+        <div class = "boxcontent">
+            <h3>Send nyhedsbrev</h3>
+        </div>
+    </a>
+    <a th:href="@{/reminder}" class = "box">
+        <div class = "boxicon"><i class = "fas fa-bell"></i></div>
+        <div class = "boxcontent">
+            <h3>Send reminder</h3>
+        </div>
+    </a>
+</div>
+</body>
+</html></title>
+</head>
+<body>
+
+</body>
+</html>
