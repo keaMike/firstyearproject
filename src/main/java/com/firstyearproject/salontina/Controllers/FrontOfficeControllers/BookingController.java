@@ -203,15 +203,13 @@ public class BookingController {
 
         log.info("added booking: " + booking.getBookingId() + "..." + SessionLog.sessionId(session));
 
-        session.removeAttribute("booking");
-
         model.addAttribute("user", user);
         model.addAttribute("booking", booking);
         return BOOKINGCONFIRMATION;
     }
 
     @PostMapping("bookingconfirmation/savebooking")
-    public String bookingConfirmation(HttpSession session, Model model, @ModelAttribute Booking booking){
+    public String bookingConfirmation(HttpSession session, Model model, @ModelAttribute Booking foundBooking){
         log.info("post bookingconfirmation action started..." + SessionLog.sessionId(session));
 
         if(!userAuthenticator.userIsUser(session)){
@@ -219,6 +217,10 @@ public class BookingController {
 
             return REDIRECT;
         }
+
+        Booking booking = (Booking) session.getAttribute("booking");
+
+        booking.setBookingComment(foundBooking.getBookingComment());
 
         if(bookingService.addBooking(booking)){
             log.info("added booking: " + booking.getBookingId() + "..." + SessionLog.sessionId(session));
