@@ -3,9 +3,8 @@ package com.firstyearproject.salontina.Services;
 import com.firstyearproject.salontina.Models.Reminder;
 import com.firstyearproject.salontina.Repositories.BookingRepoImpl;
 import com.firstyearproject.salontina.Repositories.UserRepoImpl;
+import com.firstyearproject.salontina.Tools.SMSConnector;
 import com.twilio.exception.ApiException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

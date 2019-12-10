@@ -5,6 +5,8 @@ import com.firstyearproject.salontina.Models.LoginToken;
 import com.firstyearproject.salontina.Models.Treatment;
 import com.firstyearproject.salontina.Models.User;
 import com.firstyearproject.salontina.Services.*;
+import com.firstyearproject.salontina.Tools.ConfirmationTool;
+import com.firstyearproject.salontina.Tools.UserAuthenticator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +34,6 @@ public class ProductController {
     private String REDIRECT = "redirect:/";
 
     private boolean taskResult = false;
-    private boolean showConfirmation = false;
-    private String confirmationText = "";
-    private String alert = "";
-    private String danger = "alert alert-danger";
-    private String success = "alert alert-success";
 
     @Autowired
     ProductServiceImpl productServiceImpl;
@@ -44,22 +41,8 @@ public class ProductController {
     @Autowired
     UserAuthenticator userAuthenticator;
 
-    //Luca
-    //Used in Java Methods/mappings
-    public void confirmation(String text, String alert){
-        showConfirmation = true;
-        confirmationText = text;
-        this.alert = alert;
-    }
-
-    //Luca
-    //Used in HTML-Modals
-    public void showConfirmation(Model model){
-
-        model.addAttribute("showconfirmation", showConfirmation);
-        model.addAttribute("confirmationtext", confirmationText);
-        showConfirmation = false;
-    }
+    @Autowired
+    ConfirmationTool confirmationTool;
 
     //Asbjørn
     @GetMapping("/createproduct")
@@ -92,10 +75,10 @@ public class ProductController {
         }
         taskResult = productServiceImpl.createItem(item);
         if (taskResult) {
-            confirmation(item.getProductName() + " er blevet oprettet i systemet", success);
+            confirmationTool.confirmation(item.getProductName() + " er blevet oprettet i systemet", ConfirmationTool.success);
             return REDIRECT + "products";
         } else {
-            confirmation("Produktet kunne ikke oprettes i systemet", danger);
+            confirmationTool.confirmation("Produktet kunne ikke oprettes i systemet", ConfirmationTool.danger);
             return REDIRECT + "products";
         }
     }
@@ -120,10 +103,10 @@ public class ProductController {
         }
         taskResult = productServiceImpl.createTreatment(treatment);
         if (taskResult) {
-            confirmation(treatment.getProductName() + " er blevet oprettet som behandling i systemet", success);
+            confirmationTool.confirmation(treatment.getProductName() + " er blevet oprettet som behandling i systemet", ConfirmationTool.success);
             return REDIRECT + "treatments";
         } else {
-            confirmation("Behandlingen kunne ikke oprettes i systemet", danger);
+            confirmationTool.confirmation("Behandlingen kunne ikke oprettes i systemet", ConfirmationTool.danger);
             return REDIRECT + "treatments";
         }
     }
@@ -142,7 +125,7 @@ public class ProductController {
         model.addAttribute("items", productServiceImpl.createItemArrayList());
         model.addAttribute("showTreatments", true);
         model.addAttribute("showProducts", false);
-        showConfirmation(model);
+        confirmationTool.showConfirmation(model);
         return DISPLAYPRODUCTS;
     }
 
@@ -160,7 +143,7 @@ public class ProductController {
         model.addAttribute("items", productServiceImpl.createItemArrayList());
         model.addAttribute("showProducts", true);
         model.addAttribute("showTreatments", false);
-        showConfirmation(model);
+        confirmationTool.showConfirmation(model);
         return DISPLAYPRODUCTS;
     }
 
@@ -195,10 +178,10 @@ public class ProductController {
         }
         taskResult = productServiceImpl.editTreatment(treatment);
         if (taskResult) {
-            confirmation("Information på behandlingen: " + treatment.getProductName() + " er blevet ændret i systemet", success);
+            confirmationTool.confirmation("Information på behandlingen: " + treatment.getProductName() + " er blevet ændret i systemet", ConfirmationTool.success);
             return REDIRECT + "treatments";
         } else {
-            confirmation("Behandlingens information kunne IKKE ændres i systemet", danger);
+            confirmationTool.confirmation("Behandlingens information kunne IKKE ændres i systemet", ConfirmationTool.danger);
             return REDIRECT + "treatments";
         }
     }
@@ -223,10 +206,10 @@ public class ProductController {
         }
         taskResult = productServiceImpl.editItem(item);
         if (taskResult) {
-            confirmation("Information på " + item.getProductName() + " er blevet ændret i systemet", success);
+            confirmationTool.confirmation("Information på " + item.getProductName() + " er blevet ændret i systemet", ConfirmationTool.success);
             return REDIRECT + "products";
         } else {
-            confirmation("Produktets information kunne IKKE ændres i systemet", danger);
+            confirmationTool.confirmation("Produktets information kunne IKKE ændres i systemet", ConfirmationTool.danger);
             return REDIRECT + "products";
         }
     }

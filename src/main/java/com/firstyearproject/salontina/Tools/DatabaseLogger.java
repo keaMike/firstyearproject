@@ -1,4 +1,4 @@
-package com.firstyearproject.salontina.Services;
+package com.firstyearproject.salontina.Tools;
 
 import org.springframework.stereotype.Component;
 

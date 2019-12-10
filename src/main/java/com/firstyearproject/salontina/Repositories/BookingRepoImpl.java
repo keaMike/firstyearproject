@@ -1,15 +1,14 @@
 package com.firstyearproject.salontina.Repositories;
 
 import com.firstyearproject.salontina.Models.Booking;
-import com.firstyearproject.salontina.Models.Reminder;
 import com.firstyearproject.salontina.Models.Treatment;
-import com.firstyearproject.salontina.Services.DatabaseLogger;
+import com.firstyearproject.salontina.Tools.DatabaseLogger;
+import com.firstyearproject.salontina.Tools.MySQLConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -108,12 +107,11 @@ public class BookingRepoImpl implements BookingRepo{
 
             ResultSet rs = pstmt.executeQuery();
 
+            databaseLogger.writeToLogFile(statement);
+
             if(rs.next()){
                 return rs.getInt(1);
             }
-
-            databaseLogger.writeToLogFile(statement);
-
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

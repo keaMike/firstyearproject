@@ -4,17 +4,15 @@ import com.firstyearproject.salontina.Models.Booking;
 import com.firstyearproject.salontina.Models.User;
 import com.firstyearproject.salontina.Services.BookingServiceImpl;
 import com.firstyearproject.salontina.Services.ProductServiceImpl;
-import com.firstyearproject.salontina.Services.UserAuthenticator;
-import com.firstyearproject.salontina.Services.UserServiceImpl;
+import com.firstyearproject.salontina.Tools.ConfirmationTool;
+import com.firstyearproject.salontina.Tools.UserAuthenticator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpSession;
 import java.sql.Date;
@@ -35,11 +33,6 @@ public class BookingController {
     private String CHOOSEBOOKINGTIME = "bookings/choosebookingtime";
 
     private boolean taskResult = false;
-    private boolean showConfirmation = false;
-    private String confirmationText = "";
-    private String alert = "";
-    private String danger = "alert alert-danger";
-    private String success = "alert alert-success";
 
     @Autowired
     BookingServiceImpl bookingService;
@@ -50,21 +43,8 @@ public class BookingController {
     @Autowired
     UserAuthenticator userAuthenticator;
 
-    //Luca
-    //Used in Java Methods/mappings
-    public void confirmation(String text, String alert){
-        showConfirmation = true;
-        confirmationText = text;
-        this.alert = alert;
-    }
-
-    //Luca
-    //Used in HTML-Modals
-    public void showConfirmation(Model model){
-        model.addAttribute("showconfirmation", showConfirmation);
-        model.addAttribute("confirmationtext", confirmationText);
-        showConfirmation = false;
-    }
+    @Autowired
+    ConfirmationTool confirmationTool;
 
     //Mike
     @GetMapping("/mybookings")
@@ -79,7 +59,7 @@ public class BookingController {
             model.addAttribute("bookings", bookingService.getBookingList(user.getUserId()));
         }
         model.addAttribute("user", user);
-        showConfirmation(model);
+        confirmationTool.showConfirmation(model);
         return MYBOOKINGS;
     }
 
@@ -95,15 +75,15 @@ public class BookingController {
             if(booking.getBookingId() == bookingId) {
                 taskResult = bookingService.deleteBooking(bookingId);
                 if (taskResult) {
-                    confirmation("Din booking er blevet slettet", success);
+                    confirmationTool.confirmation("Din booking er blevet slettet", ConfirmationTool.success);
                     return REDIRECT + "mybookings";
                 } else {
-                    confirmation("Din booking kunne ikke slettes. Prøv igen på et senere tidspunkt", danger);
+                    confirmationTool.confirmation("Din booking kunne ikke slettes. Prøv igen på et senere tidspunkt", ConfirmationTool.danger);
                     return REDIRECT + "mybookings";
                 }
             }
         }
-        confirmation("Du kan ikke slette en booking som ikke er din egen", danger);
+        confirmationTool.confirmation("Du kan ikke slette en booking som ikke er din egen", ConfirmationTool.danger);
         return REDIRECT;
     }
 

@@ -1,4 +1,4 @@
-package com.firstyearproject.salontina.Repositories;
+package com.firstyearproject.salontina.Tools;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +37,7 @@ public class MySQLConnector {
         return singleInstance;
     }
 
-    Connection openConnection(){
+    public Connection openConnection(){
         //Enter URL, username and password for Database in the getConnection call below
 
         if(connectionOpened){
@@ -63,7 +63,7 @@ public class MySQLConnector {
         return null;
     }
 
-    void closeConnection(){
+    public void closeConnection(){
         if(connectionOpened){
             log.info("closing MySQL connection...");
 

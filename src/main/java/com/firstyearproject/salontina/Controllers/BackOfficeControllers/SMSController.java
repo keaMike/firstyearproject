@@ -3,6 +3,8 @@ package com.firstyearproject.salontina.Controllers.BackOfficeControllers;
 import com.firstyearproject.salontina.Models.Newsletter;
 import com.firstyearproject.salontina.Models.User;
 import com.firstyearproject.salontina.Services.*;
+import com.firstyearproject.salontina.Tools.ConfirmationTool;
+import com.firstyearproject.salontina.Tools.UserAuthenticator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +15,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpSession;
-import javax.swing.text.html.HTML;
 
 @Controller
 public class SMSController {
@@ -25,12 +26,6 @@ public class SMSController {
     private String NEWSLETTERORREMINDER = "sms/newsletterOrReminder";
     private String REDIRECT = "redirect:/";
 
-    private boolean showConfirmation = false;
-    private String confirmationText = "";
-    private String alert = "";
-    private String danger = "alert alert-danger";
-    private String success = "alert alert-success";
-
     @Autowired
     SMSServiceImpl sMSServiceImpl;
 
@@ -40,21 +35,8 @@ public class SMSController {
     @Autowired
     UserAuthenticator userAuthenticator;
 
-    //Luca
-    //Used in Java Methods/mappings
-    public void confirmation(String text, String alert){
-        showConfirmation = true;
-        confirmationText = text;
-        this.alert = alert;
-    }
-
-    //Luca
-    //Used in HTML-Modals
-    public void showConfirmation(Model model){
-        model.addAttribute("showconfirmation", showConfirmation);
-        model.addAttribute("confirmationtext", confirmationText);
-        showConfirmation = false;
-    }
+    @Autowired
+    ConfirmationTool confirmationTool;
 
     //Luca
     @GetMapping("reminder")
@@ -65,7 +47,7 @@ public class SMSController {
         log.info("get reminder action started...");
         User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);
-        showConfirmation(model);
+        confirmationTool.showConfirmation(model);
 
         return REMINDER;
     }
@@ -81,10 +63,10 @@ public class SMSController {
         model.addAttribute("user", user);
         if(sMSServiceImpl.sendReminder()){
             log.info("sms reminder sent successfully...");
-            confirmation("SMS Reminder blev sendt.", success);
+            confirmationTool.confirmation("SMS Reminder blev sendt.", ConfirmationTool.success);
         } else{
             log.info("sms reminder failed to sent...");
-            confirmation("Der skete en fejl ved afsendelse af reminder.", danger);
+            confirmationTool.confirmation("Der skete en fejl ved afsendelse af reminder.", ConfirmationTool.danger);
         }
 
         return REDIRECT + "reminder";
@@ -100,7 +82,7 @@ public class SMSController {
         User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);
         model.addAttribute("newsletter", new Newsletter());
-        showConfirmation(model);
+        confirmationTool.showConfirmation(model);
 
         return NEWSLETTER;
     }
@@ -115,10 +97,10 @@ public class SMSController {
 
         if(sMSServiceImpl.sendNewsletter(newsletter.getText())){
             log.info("newsletter was successfully sent...");
-            confirmation("Nyhedsbrev blev sendt.", success);
+            confirmationTool.confirmation("Nyhedsbrev blev sendt.", ConfirmationTool.success);
         } else{
             log.info("sms newsletter failed to sent...");
-            confirmation("Der skete en fejl ved afsendelse af nyhedsbrev.", danger);
+            confirmationTool.confirmation("Der skete en fejl ved afsendelse af nyhedsbrev.", ConfirmationTool.danger);
         }
 
         return REDIRECT + "newsletter";
@@ -134,10 +116,10 @@ public class SMSController {
 
         if(sMSServiceImpl.sendNewsletterTest(newsletter.getTestNumber(), newsletter.getText())){
             log.info("newsletter was successfully sent...");
-            confirmation("Test nyhedsbrev blev sendt.", success);
+            confirmationTool.confirmation("Test nyhedsbrev blev sendt.", ConfirmationTool.success);
         } else{
             log.info("sms reminder failed to sent...");
-            confirmation("Der skete en fejl ved afsendelse af nyhedsbrev.", danger);
+            confirmationTool.confirmation("Der skete en fejl ved afsendelse af nyhedsbrev.", ConfirmationTool.danger);
         }
 
         return REDIRECT + "newsletter";
@@ -164,10 +146,10 @@ public class SMSController {
         autoReminderService.initiateAutoReminder();
         if (true) {
             log.info("AutoReminder succesfully started");
-            confirmation("SMS påmindelse er i gangsat", success);
+            confirmationTool.confirmation("SMS påmindelse er i gangsat", ConfirmationTool.success);
         } else {
             log.info("AutoReminder could not be started");
-            confirmation("SMS påmindelse kunne ikke startes", danger);
+            confirmationTool.confirmation("SMS påmindelse kunne ikke startes", ConfirmationTool.danger);
         }
         return REDIRECT + REMINDER;
     }
@@ -181,10 +163,10 @@ public class SMSController {
         }
         if(autoReminderService.cancelAutoReminder()) {
             log.info("Autoreminder succesfully stopped");
-            confirmation("SMS påmindelse er blevet stoppet", success);
+            confirmationTool.confirmation("SMS påmindelse er blevet stoppet", ConfirmationTool.success);
         } else{
             log.info("AutoReminder failed to stop...");
-            confirmation("SMS påmindelse kunne ikke stoppes", danger);
+            confirmationTool.confirmation("SMS påmindelse kunne ikke stoppes", ConfirmationTool.danger);
         }
         return REDIRECT + REMINDER;
     }

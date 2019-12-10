@@ -2,7 +2,8 @@ package com.firstyearproject.salontina.Repositories;
 
 import com.firstyearproject.salontina.Models.*;
 
-import com.firstyearproject.salontina.Services.DatabaseLogger;
+import com.firstyearproject.salontina.Tools.DatabaseLogger;
+import com.firstyearproject.salontina.Tools.MySQLConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

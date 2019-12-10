@@ -1,11 +1,10 @@
 package com.firstyearproject.salontina.Controllers.FrontOfficeControllers;
 
-import com.firstyearproject.salontina.Models.Booking;
 import com.firstyearproject.salontina.Models.LoginToken;
 import com.firstyearproject.salontina.Models.User;
 import com.firstyearproject.salontina.Services.BookingServiceImpl;
-import com.firstyearproject.salontina.Services.ProductServiceImpl;
-import com.firstyearproject.salontina.Services.UserAuthenticator;
+import com.firstyearproject.salontina.Tools.ConfirmationTool;
+import com.firstyearproject.salontina.Tools.UserAuthenticator;
 import com.firstyearproject.salontina.Services.UserServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,11 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
 @Controller
 public class UserAccessController {
@@ -35,11 +32,6 @@ public class UserAccessController {
     private String CONTACT = "contact";
 
     private boolean taskResult = false;
-    private boolean showConfirmation = false;
-    private String confirmationText = "";
-    private String alert = "";
-    private String danger = "alert alert-danger";
-    private String success = "alert alert-success";
 
     @Autowired
     UserServiceImpl userService;
@@ -50,22 +42,8 @@ public class UserAccessController {
     @Autowired
     UserAuthenticator userAuthenticator;
 
-    //Luca
-    //Used in Java Methods/mappings
-    public void confirmation(String text, String alert){
-        showConfirmation = true;
-        confirmationText = text;
-        this.alert = alert;
-    }
-
-    //Luca
-    //Used in HTML-Modals
-    public void showConfirmation(Model model){
-        model.addAttribute("showconfirmation", showConfirmation);
-        model.addAttribute("confirmationtext", confirmationText);
-        model.addAttribute("alert", alert);
-        showConfirmation = false;
-    }
+    @Autowired
+    ConfirmationTool confirmationTool;
 
     //Jonathan & Mike
     private Model userExcists(Model model, HttpSession session) {
@@ -84,7 +62,7 @@ public class UserAccessController {
     @GetMapping("/")
     public String index(Model model, HttpSession session) {
         userExcists(model, session);
-        showConfirmation(model);
+        confirmationTool.showConfirmation(model);
         return INDEX;
     }
 
@@ -95,10 +73,10 @@ public class UserAccessController {
 
         if(user != null){
             session.setAttribute("user", user);
-            confirmation("Velkommen " + user.getUsername() + ", du er blevet logget ind", success);
+            confirmationTool.confirmation("Velkommen " + user.getUsername() + ", du er blevet logget ind", ConfirmationTool.success);
             return REDIRECT;
         }
-        confirmation("Fejl ved login, enten din email/tlf. eller kodeord er forkert", danger);
+        confirmationTool.confirmation("Fejl ved login, enten din email/tlf. eller kodeord er forkert", ConfirmationTool.danger);
         return REDIRECT;
     }
 
@@ -116,10 +94,10 @@ public class UserAccessController {
     public String register(@ModelAttribute User user) {
         taskResult = userService.addUser(user);
         if (taskResult) {
-            confirmation("Du er blevet oprettet som bruger", success);
+            confirmationTool.confirmation("Du er blevet oprettet som bruger", ConfirmationTool.success);
             return REDIRECT;
         }
-        confirmation("Vi kunne ikke oprette dig som bruger. Prøv igen", danger);
+        confirmationTool.confirmation("Vi kunne ikke oprette dig som bruger. Prøv igen", ConfirmationTool.danger);
         return REDIRECT;
     }
 
@@ -144,10 +122,10 @@ public class UserAccessController {
         User editedUser = userService.getUserById(user.getUserId());
         session.setAttribute("user", editedUser);
         if (taskResult) {
-            confirmation("Ændringerne er blevet gemt", success);
+            confirmationTool.confirmation("Ændringerne er blevet gemt", ConfirmationTool.success);
             return REDIRECT + "userprofile";
         }
-        confirmation("Vi kunne ikke gemme dine ændringer. Prøv igen", danger);
+        confirmationTool.confirmation("Vi kunne ikke gemme dine ændringer. Prøv igen", ConfirmationTool.danger);
         return REDIRECT + "userprofile";
     }
 
@@ -160,7 +138,7 @@ public class UserAccessController {
         log.info("user is admin or user...");
         User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);
-        showConfirmation(model);
+        confirmationTool.showConfirmation(model);
         return USERPROFILE;
     }
 
@@ -170,7 +148,7 @@ public class UserAccessController {
         if(!userAuthenticator.userIsUser(session)){
             return REDIRECT;
         }
-        confirmation("Din profil blev successfuldt slettet", success);
+        confirmationTool.confirmation("Din profil blev successfuldt slettet", ConfirmationTool.success);
         session.removeAttribute("user");
         userService.deleteUser(user.getUserId());
         return REDIRECT;
@@ -202,10 +180,10 @@ public class UserAccessController {
         }
         taskResult = userService.subscribeNewsletter(user.getUserId());
         if (taskResult) {
-            confirmation("Du er blevet tilmeldt nyhedsbrevet", success);
+            confirmationTool.confirmation("Du er blevet tilmeldt nyhedsbrevet", ConfirmationTool.success);
             return REDIRECT + "userprofile";
         }
-        confirmation("Vi kunne ikke tilmelde dig nyhedsbrevet. Prøv igen senere", danger);
+        confirmationTool.confirmation("Vi kunne ikke tilmelde dig nyhedsbrevet. Prøv igen senere", ConfirmationTool.danger);
         return REDIRECT + "userprofile";
     }
 
@@ -217,10 +195,10 @@ public class UserAccessController {
         }
         taskResult = userService.unsubscribeNewsletter(user.getUserId());
         if (taskResult) {
-            confirmation("Du er blevet afmeldt nyhedsbrevet", success);
+            confirmationTool.confirmation("Du er blevet afmeldt nyhedsbrevet", ConfirmationTool.success);
             return REDIRECT + "userprofile";
         }
-        confirmation("Vi kunne ikke afmelde dig nyhedsbrevet. Prøv igen senere", danger);
+        confirmationTool.confirmation("Vi kunne ikke afmelde dig nyhedsbrevet. Prøv igen senere", ConfirmationTool.danger);
         return REDIRECT + "userprofile";
     }
 

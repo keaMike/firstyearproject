@@ -2,6 +2,8 @@ package com.firstyearproject.salontina.Controllers.BackOfficeControllers;
 
 import com.firstyearproject.salontina.Models.User;
 import com.firstyearproject.salontina.Services.*;
+import com.firstyearproject.salontina.Tools.ConfirmationTool;
+import com.firstyearproject.salontina.Tools.UserAuthenticator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +27,6 @@ public class UserController {
     private String REDIRECT = "redirect:/";
 
     private boolean taskResult = false;
-    private boolean showConfirmation = false;
-    private String confirmationText = "";
-    private String alert = "";
-    private String danger = "alert alert-danger";
-    private String success = "alert alert-success";
 
 
     @Autowired
@@ -41,22 +38,9 @@ public class UserController {
     @Autowired
     UserAuthenticator userAuthenticator;
 
-    //Luca
-    //Used in Java Methods/mappings
-    public void confirmation(String text, String alert){
-        showConfirmation = true;
-        confirmationText = text;
-        this.alert = alert;
-    }
+    @Autowired
+    ConfirmationTool confirmationTool;
 
-    //Luca
-    //Used in HTML-Modals
-    public void showConfirmation(Model model){
-        model.addAttribute("showconfirmation", showConfirmation);
-        model.addAttribute("confirmationtext", confirmationText);
-        model.addAttribute("alert", alert);
-        showConfirmation = false;
-    }
 
     //Mike
     @GetMapping("/userlist")
@@ -68,7 +52,7 @@ public class UserController {
         List<User> users = userServiceImpl.getAllUsers();
         model.addAttribute("user", user);
         model.addAttribute("users", users);
-        showConfirmation(model);
+        confirmationTool.showConfirmation(model);
         return ALLUSERS;
     }
 
@@ -84,7 +68,7 @@ public class UserController {
 
         model.addAttribute("user", user);
         model.addAttribute("editedUser", editedUser);
-        showConfirmation(model);
+        confirmationTool.showConfirmation(model);
         return EDITUSERHISTORY;
     }
 
@@ -96,10 +80,10 @@ public class UserController {
         }
         taskResult = userServiceImpl.editUserHistory(user);
         if (taskResult) {
-            confirmation("Bruger præferencerne blev gemt", success);
+            confirmationTool.confirmation("Bruger præferencerne blev gemt", ConfirmationTool.success);
             return REDIRECT + "userlist";
         } else {
-            confirmation("Bruger præferencerne blev ikke gemt", danger);
+            confirmationTool.confirmation("Bruger præferencerne blev ikke gemt", ConfirmationTool.danger);
             return EDITUSERHISTORY + "/" + user.getUserId();
         }
     }

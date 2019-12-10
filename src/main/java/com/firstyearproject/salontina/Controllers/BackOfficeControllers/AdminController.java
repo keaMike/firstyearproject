@@ -2,8 +2,9 @@ package com.firstyearproject.salontina.Controllers.BackOfficeControllers;
 
 import com.firstyearproject.salontina.Models.AddVacation;
 import com.firstyearproject.salontina.Models.User;
-import com.firstyearproject.salontina.Repositories.BookingRepoImpl;
 import com.firstyearproject.salontina.Services.*;
+import com.firstyearproject.salontina.Tools.ConfirmationTool;
+import com.firstyearproject.salontina.Tools.UserAuthenticator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +15,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpSession;
-import java.sql.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 @Controller
 public class AdminController {
@@ -27,35 +25,20 @@ public class AdminController {
     private String CONTROLPANEL = "controlpanel";
     private String REDIRECT = "redirect:/";
 
-    private boolean showConfirmation = false;
-    private String confirmationText = "";
-    private String alert = "";
-    private String danger = "alert alert-danger";
-    private String success = "alert alert-success";
-
     @Autowired
     BookingServiceImpl bookingService;
+
     @Autowired
     SMSServiceImpl smsService;
+
     @Autowired
     UserAuthenticator userAuthenticator;
+
     @Autowired
     AutoReminderServiceImpl autoReminderService;
 
-    //Luca
-    //Used in Java Methods/mappings
-    public void confirmation(String text){
-        showConfirmation = true;
-        confirmationText = text;
-    }
-
-    //Luca
-    //Used in HTML-Modals
-    public void showConfirmation(Model model){
-        model.addAttribute("showconfirmation", true);
-        model.addAttribute("confirmationtext", confirmationText);
-        showConfirmation = false;
-    }
+    @Autowired
+    ConfirmationTool confirmationTool;
 
     //Mike
     @GetMapping("/controlpanel")
@@ -86,7 +69,9 @@ public class AdminController {
             return REDIRECT;
         }
         User user = (User)session.getAttribute("user");
-        bookingService.addVacationDate(vacationString.getString(), user.getUserId());
+        if(bookingService.addVacationDate(vacationString.getString(), user.getUserId())){
+
+        }
         return REDIRECT + ADDVACATION;
     }
 
