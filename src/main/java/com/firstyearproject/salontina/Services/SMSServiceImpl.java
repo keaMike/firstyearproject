@@ -5,6 +5,8 @@ import com.firstyearproject.salontina.Repositories.BookingRepoImpl;
 import com.firstyearproject.salontina.Repositories.UserRepoImpl;
 import com.firstyearproject.salontina.Tools.SMSConnector;
 import com.twilio.exception.ApiException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,8 @@ import java.util.List;
 //Luca
 @Service
 public class SMSServiceImpl implements SMSService{
+
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     UserRepoImpl userRepoImpl;
@@ -27,6 +31,7 @@ public class SMSServiceImpl implements SMSService{
     //Luca
     @Override
     public boolean sendReminder(){
+        log.info("sendReminder method started...");
         try {
             List<Reminder> reminderList = userRepoImpl.getReminderList();
 
@@ -48,6 +53,7 @@ public class SMSServiceImpl implements SMSService{
     //Method gets a list of phonenumbers and sends text to them
     @Override
     public boolean sendNewsletter(String text){
+        log.info("sendNewsletter method started...");
         try {
             List<String> phonenumbers = getTestNewsletterList(); //userRepo.getNewsletterList();
 
@@ -62,6 +68,7 @@ public class SMSServiceImpl implements SMSService{
     //Luca
     @Override
     public boolean sendNewsletterTest(String phonenumber, String text){
+        log.info("sendNewsletterTest method started...");
         try {
             sendSMS(verifyNumber(phonenumber), text);
             return true;
@@ -74,6 +81,7 @@ public class SMSServiceImpl implements SMSService{
     //Luca
     @Override
     public void sendSMSToList(List<String> numberList, String text) throws ApiException{
+        log.info("sendSMSToList method started...");
         for(String s : numberList){
             sendSMS(verifyNumber(s), text);
         }

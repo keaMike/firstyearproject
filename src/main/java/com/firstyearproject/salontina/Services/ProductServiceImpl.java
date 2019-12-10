@@ -16,7 +16,6 @@ import java.util.ArrayList;
 public class ProductServiceImpl implements ProductService{
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
-    private boolean pHandlerTaskResult = false;
 
     @Autowired
     ProductRepoImpl productRepoImplManager;
@@ -24,64 +23,68 @@ public class ProductServiceImpl implements ProductService{
     //Asbjørn
     @Override
     public boolean createTreatment(Treatment treatment){
-        pHandlerTaskResult = productRepoImplManager.createTreatment(treatment);
-        log.info(String.valueOf(pHandlerTaskResult));
-        return pHandlerTaskResult;
+        log.info("createTreatment method started...");
+        return productRepoImplManager.createTreatment(treatment);
     }
 
     //Mike
     @Override
     public boolean deleteTreatment(int treatmentId){
+        log.info("deleteTreatment method started...");
         return productRepoImplManager.deleteTreatment(treatmentId);
     }
 
     //Asbjørn
     @Override
     public boolean editTreatment(Treatment treatment){
-        pHandlerTaskResult = productRepoImplManager.editTreatment(treatment);
-        return pHandlerTaskResult;
+        log.info("editTreatment method started...");
+        return productRepoImplManager.editTreatment(treatment);
     }
 
     //Asbjørn
     @Override
     public boolean createItem(Item item){
-        pHandlerTaskResult = productRepoImplManager.createItem(item);
-        log.info(String.valueOf(pHandlerTaskResult));
-        return pHandlerTaskResult;
+        log.info("createItem method started...");
+        return productRepoImplManager.createItem(item);
     }
 
     //Mike
     @Override
     public boolean deleteItem(int itemId){
+        log.info("deleteItem method started...");
         return productRepoImplManager.deleteItem(itemId);
     }
 
     //Asbjørn
     @Override
     public boolean editItem(Item item){
-        pHandlerTaskResult = productRepoImplManager.editItem(item);
-        return pHandlerTaskResult;
+        log.info("editItem method started...");
+        return productRepoImplManager.editItem(item);
     }
 
     @Override
     public List<Treatment> createTreatmentArrayList(){
+        log.info("createTreatmentArrayList method started...");
         return productRepoImplManager.createTreatmentArrayList();
     }
 
     @Override
     public List<Item> createItemArrayList(){
+        log.info("createItemArrayList method started...");
         return productRepoImplManager.createItemArrayList();
     }
 
     //Luca
     @Override
     public Treatment getTreatment(int treatmentId){
+        log.info("getTreatment method started...");
         return productRepoImplManager.getTreatment(treatmentId);
     }
 
     //Luca
     @Override
     public Item getItem(int itemId){
+        log.info("getItem method started...");
         return productRepoImplManager.getItem(itemId);
     }
 

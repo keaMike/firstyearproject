@@ -3,6 +3,8 @@ package com.firstyearproject.salontina.Services;
 import com.firstyearproject.salontina.Models.Booking;
 import com.firstyearproject.salontina.Repositories.BookingRepoImpl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,16 +17,21 @@ import java.util.List;
 @Service
 public class BookingServiceImpl implements BookingService{
 
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     BookingRepoImpl bookingRepo;
 
     //Luca
     public boolean addBooking(Booking booking){
+        log.info("addBooking method started...");
         return bookingRepo.addBooking(booking);
     }
 
     //Mike
     public boolean deleteBooking(List<Booking> bookingList, int bookingId){
+        log.info("deleteBooking method started...");
+
         for(Booking booking : bookingList) {
             if(booking.getBookingId() == bookingId) {
                 return bookingRepo.deleteBooking(bookingId);
@@ -34,12 +41,15 @@ public class BookingServiceImpl implements BookingService{
     }
 
     public boolean editBooking(Booking booking){
+        log.info("editBooking method started...");
+        //TODO
         return false;
     }
 
     //Luca
     @Override
     public List<Booking> getBookingList(String startDateString, String endDateString){
+        log.info("getBookingList(String, String) method started...");
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -56,6 +66,7 @@ public class BookingServiceImpl implements BookingService{
     //Luca
     @Override
     public List<Booking> getBookingList(String dateString){
+        log.info("getBookingList(String) method started...");
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -89,6 +100,7 @@ public class BookingServiceImpl implements BookingService{
 
     //Luca
     public List<Booking> getFutureBookings(){
+        log.info("getFutureBookings method started...");
         return bookingRepo.getFutureBookings();
     }
 
@@ -108,6 +120,7 @@ public class BookingServiceImpl implements BookingService{
     //Luca
     @Override
     public boolean addVacationDate(String dateString, int userId){
+        log.info("addVacationDate method started...");
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             java.util.Date date = sdf.parse(dateString);
@@ -122,6 +135,7 @@ public class BookingServiceImpl implements BookingService{
     //Mike
     @Override
     public List<Booking> getBookingList(int userId){
+        log.info("getBookingList(int) method started...");
         return bookingRepo.findBookingsByUserId(userId);
     }
 }

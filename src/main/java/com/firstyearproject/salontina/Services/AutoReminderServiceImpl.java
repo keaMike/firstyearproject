@@ -22,6 +22,7 @@ public class AutoReminderServiceImpl implements AutoReminderService {
     //Asbjørn
     //Used in method for scheduling smsReminders. Creates a thread
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
@@ -34,7 +35,7 @@ public class AutoReminderServiceImpl implements AutoReminderService {
     //This method creates a thread and schedules it to repeat every given timeperiod
     @Override
     public ScheduledFuture initiateAutoReminder(){
-        log.info("Autoreminder Initiated");
+        log.info("initiateAutoReminder method started...");
         final Runnable autoReminder = new Runnable() {
             @Override
             public void run() {
@@ -67,6 +68,7 @@ public class AutoReminderServiceImpl implements AutoReminderService {
     //Underlying method cancels the thread
     @Override
     public boolean cancelAutoReminder() {
+        log.info("cancelAutoReminder method started...");
         Runnable cancelRun = new Runnable() {
             @Override
             public void run() {initiateAutoReminder().cancel(true);}

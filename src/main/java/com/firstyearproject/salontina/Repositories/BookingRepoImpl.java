@@ -30,6 +30,8 @@ public class BookingRepoImpl implements BookingRepo{
     //Luca
     @Override
     public boolean addBooking(Booking booking){
+        log.info("addBooking method started...");
+
         String statement =
                 "INSERT INTO bookings " +
                 "(bookings_date, bookings_time, users_id, bookings_comment) " +
@@ -64,6 +66,7 @@ public class BookingRepoImpl implements BookingRepo{
     public boolean addTreatmentsToBooking(List<Treatment> treatmentList, Booking booking){
         //TODO 'No operations allowed after statement closed.' when adding booking
 
+        log.info("addTreatmentsToBooking method started...");
         String statement =
                 "INSERT INTO bookings_treatment " +
                 "(bookings_id, treatments_id) " +
@@ -93,6 +96,7 @@ public class BookingRepoImpl implements BookingRepo{
 
     //Luca
     private int getBookingId(Booking booking){
+        log.info("getBookingId method started...");
         String statement =
                 "SELECT bookings_id " +
                 "FROM bookings " +
@@ -123,6 +127,7 @@ public class BookingRepoImpl implements BookingRepo{
     //Mike
     @Override
     public List<Booking> findBookingsByUserId(int userid) {
+        log.info("findBookingsByUserId method started...");
         String statement =
                 "SELECT * " +
                 "FROM bookings " +
@@ -154,6 +159,7 @@ public class BookingRepoImpl implements BookingRepo{
     //Luca
     @Override
     public List<Booking> getBookingList(Date startDate, Date endDate){
+        log.info("getBookingList(Date, Date) method started...");
         String statement =
                 "SELECT * FROM bookings " +
                 "WHERE bookings_date BETWEEN DATE(?) AND DATE(?) " +
@@ -193,6 +199,7 @@ public class BookingRepoImpl implements BookingRepo{
     //Luca
     @Override
     public List<Booking> getBookingList(Date date){
+        log.info("getBookingList(Date) method started...");
         String statement =
                 "SELECT * FROM bookings " +
                 "JOIN bookings_treatment on bookings.bookings_id = bookings_treatment.bookings_id " +
@@ -227,6 +234,7 @@ public class BookingRepoImpl implements BookingRepo{
     //Luca
     @Override
     public List<Booking> getFutureBookings(){
+        log.info("getFutureBookings method started...");
         String statement = "SELECT * FROM bookings " +
                             "JOIN bookings_treatment on bookings.bookings_id = bookings_treatment.bookings_id " +
                             "JOIN treatments on bookings_treatment.treatments_id = treatments.treatments_id " +
@@ -307,6 +315,7 @@ public class BookingRepoImpl implements BookingRepo{
     //Mike
     @Override
     public boolean deleteBooking(int bookingId) {
+        log.info("deleteBooking method started...");
         String statement = "DELETE FROM bookings WHERE bookings_id = ?";
 
         try {
@@ -327,6 +336,7 @@ public class BookingRepoImpl implements BookingRepo{
 
     @Override
     public boolean deleteTreatmentByBookingId(int bookingId){
+        log.info("deleteTreatmentByBookingId method started...");
         String statement = "DELETE FROM bookings_treatment WHERE bookings_id = ?";
 
         try {
@@ -348,6 +358,7 @@ public class BookingRepoImpl implements BookingRepo{
     //Asbjørn
     @Override
     public boolean checkSMSReminder() {
+        log.info("checkSMSReminder method started...");
         String statement =
                 "SELECT * FROM smsreminders " +
                 "JOIN bookings " +
@@ -369,6 +380,7 @@ public class BookingRepoImpl implements BookingRepo{
         } catch (SQLException e) {
             e.printStackTrace();
             return true; //Incase of SQLException the thread should NOT proceed with the method
+            //TODO Luca
         } finally {
             mySQLConnector.closeConnection();
         }
@@ -378,7 +390,7 @@ public class BookingRepoImpl implements BookingRepo{
     //Asbjørn
     @Override
     public boolean saveReminder() {
-        log.info("save reached");
+        log.info("saveReminder method started...");
         String statement =
                 "INSERT INTO smsreminders " +
                 "SELECT bookings_id " +

@@ -28,6 +28,7 @@ public class ProductRepoImpl implements ProductRepo {
     //Asbjørn
     @Override
     public boolean createItem(Item item) {
+        log.info("createItem method started...");
         String statement =
                 "INSERT INTO salon_tina_database.items " +
                 "(items_name, items_price, items_description, items_active, items_quantity) " +
@@ -58,6 +59,7 @@ public class ProductRepoImpl implements ProductRepo {
     //Asbjørn
     @Override
     public boolean createTreatment(Treatment treatment) {
+        log.info("createTreatment method started...");
         String statement =
                 "INSERT INTO salon_tina_database.treatments " +
                 "(treatments_name, treatments_price, treatments_description, treatments_duration, treatments_active) " +
@@ -88,6 +90,7 @@ public class ProductRepoImpl implements ProductRepo {
     //Mike
     @Override
     public List findAllTreatments() {
+        log.info("findAllTreatments method started...");
         String statement =
                 "SELECT * " +
                 "FROM treatments";
@@ -120,6 +123,7 @@ public class ProductRepoImpl implements ProductRepo {
     //Asbjørn
     @Override
     public List<Treatment> createTreatmentArrayList(){
+        log.info("createTreatmentArrayList method started...");
         List<Treatment> treatmentList = new ArrayList<>();
         String statement =
                 "SELECT treatments_id, treatments_name, treatments_price, treatments_description, " +
@@ -144,6 +148,7 @@ public class ProductRepoImpl implements ProductRepo {
     //Asbjørn
     @Override
     public List<Item> createItemArrayList(){
+        log.info("createItemArrayList method started...");
         List<Item> itemList = new ArrayList<>();
         String statement =
                 "SELECT items_id, items_name, items_price, items_description, items_quantity, items_active " +
@@ -203,6 +208,7 @@ public class ProductRepoImpl implements ProductRepo {
     //Asbjørn
     @Override
     public boolean editItem(Item item) {
+        log.info("editItem method started...");
         String statement =
                 "UPDATE salon_tina_database.items " +
                 "SET items_name = ?, items_price = ?, items_quantity = ?, items_description = ?, items_active = ? " +
@@ -232,6 +238,7 @@ public class ProductRepoImpl implements ProductRepo {
     //Asbjørn
     @Override
     public boolean editTreatment(Treatment treatment) {
+        log.info("editTreatment method started...");
         String statement =
                 "UPDATE salon_tina_database.treatments " +
                 "SET treatments_name = ?, treatments_price = ?, treatments_duration, treatments_description = ?, " +
@@ -347,6 +354,7 @@ public class ProductRepoImpl implements ProductRepo {
 
     //Mike
     private boolean deleteProduct(int productId, String statement) {
+        log.info("deleteProduct method started...");
         try {
             PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
             pstmt.setInt(1, productId);

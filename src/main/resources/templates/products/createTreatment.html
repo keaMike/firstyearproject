@@ -13,11 +13,11 @@
     </h1>
 </div>
 <div class="container">
-    <form class="form-group" th:method="post" th:action="@{/createTreatment}">
+    <form class="form-group" th:method="post" th:action="@{/createtreatment}" th:object="${treatment}">
         <div>Navn</div>
         <input class="form-control" type="text" th:field="${treatment.productName}" placeholder="Behandlings Navn" required/>
         <br>
-        <div>Beskrivelse</div>
+        <div>Pris</div>
         <input class="form-control" type="text" th:field="${treatment.productPrice}" placeholder="Pris" required/>
         <br>
         <div>Beskrivelse</div>

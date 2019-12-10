@@ -101,7 +101,8 @@ public class UserRepoImpl implements UserRepo{
     //Jonathan
     @Override
     public boolean addUser(User user){
-        boolean userCreated = false;
+        log.info("addUser method started...");
+
         String statement =
                 "INSERT INTO users " +
                 "(users_fullName, users_phonenumber, users_email, users_preferences, users_password) " +
@@ -121,21 +122,18 @@ public class UserRepoImpl implements UserRepo{
                 addToNewsletter(user);
             }
 
-            userCreated = true;
-        } catch (SQLIntegrityConstraintViolationException e) {
+            return true;
+        } catch (SQLException e) {
             e.printStackTrace();
-
-        }
-        catch (SQLException E) {
-            E.printStackTrace();
         } finally {
             mySQLConnector.closeConnection();
         }
-        return userCreated;
+        return false;
     }
 
     //Luca
     private void addToNewsletter(User user){
+        log.info("addToNewsletter method started...");
         User foundUser = authenticateUser(new LoginToken(user.getUserEmail(), user.getUserPassword()));
         subscribeNewsletter(foundUser.getUserId());
     }
@@ -143,6 +141,7 @@ public class UserRepoImpl implements UserRepo{
     //Asbjørn
     @Override
     public boolean subscribeNewsletter(int userId) {
+        log.info("subscribeNewsletter method started...");
         String statement = "INSERT INTO newsletter (users_id) VALUES (?)";
         userRepoTaskResult = newsletterQueries(userId, statement);
         return userRepoTaskResult;
@@ -151,6 +150,7 @@ public class UserRepoImpl implements UserRepo{
     //Asbjørn
     @Override
     public boolean unsubscribeNewsletter(int userId) {
+        log.info("unsubscribeNewsletter method started...");
         String statement = "DELETE FROM newsletter WHERE users_id = ?";
         userRepoTaskResult = newsletterQueries(userId, statement);
         return userRepoTaskResult;
@@ -159,6 +159,7 @@ public class UserRepoImpl implements UserRepo{
     //Asbjørn
     //Both subscribe and unsubscribe use the same execute code
     private boolean newsletterQueries(int userId, String statement) {
+        log.info("newsletterQueries method started...");
         try{
             PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
             pstmt.setInt(1, userId);
@@ -180,6 +181,7 @@ public class UserRepoImpl implements UserRepo{
     //Mike
     @Override
     public List<User> findAllUsers() {
+        log.info("findAllUsers method started...");
         List<User> users = new ArrayList();
         String statement =
                 "SELECT * " +
@@ -212,6 +214,7 @@ public class UserRepoImpl implements UserRepo{
     //Mike
     @Override
     public User findUserById(int userid) {
+        log.info("findUserById method started...");
         User user = new User();
         String statement =
                 "SELECT * " +
@@ -249,8 +252,7 @@ public class UserRepoImpl implements UserRepo{
     //Jonathan
     @Override
     public boolean editUser(User user) {
-        boolean userEdited = false;
-        log.info(user.toString());
+        log.info("editUser method started...");
         String statement;
 
         if(!user.getUserPassword().equals("")) {
@@ -272,9 +274,10 @@ public class UserRepoImpl implements UserRepo{
                 pstms.setString(5, user.getUserPassword());
                 pstms.setInt(6,user.getUserId());
                 pstms.executeUpdate();
-                userEdited = true;
 
                 databaseLogger.writeToLogFile(statement);
+
+                return true;
             } catch (Exception E){
                 E.printStackTrace();
             }
@@ -295,20 +298,22 @@ public class UserRepoImpl implements UserRepo{
                 pstms.setString(4,user.getUserPreference());
                 pstms.setInt(5,user.getUserId());
                 pstms.executeUpdate();
-                userEdited = true;
 
                 databaseLogger.writeToLogFile(statement);
+
+                return true;
             } catch (Exception E){
                 E.printStackTrace();
             }
         }
 
-        return userEdited;
+        return false;
     }
 
     //Mike
     @Override
     public boolean editUserHistory(User user) {
+        log.info("editUserHistory method started...");
         String statement =
                 "UPDATE users " +
                 "SET users_preferences = ? " +
@@ -485,6 +490,7 @@ public class UserRepoImpl implements UserRepo{
     //Mike & Asbjørn
     @Override
     public boolean deleteUser(int userId) {
+        log.info("deleteUser method started...");
         String statement =
                 "INSERT INTO users_archive " +
                 "SELECT users_id, users_fullName, users_phonenumber, users_email, users_preferences " +
