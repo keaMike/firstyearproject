@@ -26,6 +26,11 @@
                     <th>Tid</th>
                     <th>Kommentar</th>
                     <th>Behandlinger</th>
+                    <div th:each="role : ${user.userRoles}" th:if="${role} == 'Admin'">
+                        <th>
+                            Bruger ID
+                        </th>
+                    </div>
                     <th>Slet booking</th>
                 </tr>
                 </thead>
@@ -37,6 +42,11 @@
                     <td th:each="treatment : ${booking.bookingTreatmentList}">
                         <span th:text="${treatment.productName}"></span>
                     </td>
+                    <div th:each="role : ${user.userRoles}" th:if="${role} == 'Admin'">
+                        <td>
+                            <span th:text="${booking.bookingUserId}"></span>
+                        </td>
+                    </div>
                     <td>
                         <a data-toggle="modal" data-target="#deletemodal" th:attrappend="data-target=${booking.bookingId}">
                             <i class = "fas fa-trash-alt" data-toggle="tooltip" title = "Slet booking" style="cursor: pointer;"></i>
@@ -46,7 +56,7 @@
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h3>Er du sikker på du vil slette din tid d.
-                                                <span th:text="${#dates.format(booking.bookingDate, 'dd MMM yyyy')}"></span>
+                                                <span th:text="${#dates.format(booking.bookingDate, 'dd MMM yyyy')}"></span>?
                                             </h3>
                                         </div>
                                         <div class="modal-body">
