@@ -5,6 +5,7 @@ import com.firstyearproject.salontina.Models.User;
 import com.firstyearproject.salontina.Services.BookingServiceImpl;
 import com.firstyearproject.salontina.Services.ProductServiceImpl;
 import com.firstyearproject.salontina.Tools.ConfirmationTool;
+import com.firstyearproject.salontina.Tools.SessionLog;
 import com.firstyearproject.salontina.Tools.UserAuthenticator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +50,8 @@ public class BookingController {
     //Mike
     @GetMapping("/mybookings")
     public String userBookings(Model model, HttpSession session) {
+        log.info("get mybookings action started..." + SessionLog.sessionId(session));
+
         if(!userAuthenticator.userIsUser(session)){
             return REDIRECT;
         }
@@ -66,6 +69,8 @@ public class BookingController {
     //Mike
     @GetMapping("/deletebooking/{bookingId}")
     public String deleteUserBooking(@PathVariable int bookingId, HttpSession session) {
+        log.info(" action started..." + SessionLog.sessionId(session));
+
         if(!userAuthenticator.userIsUser(session)){
             return REDIRECT;
         }
@@ -90,6 +95,8 @@ public class BookingController {
     //Jonathan & Luca
     @GetMapping("choosetreatment")
     public String chooseTreatment(Model model, HttpSession session) {
+        log.info("get choosetreatment action started..." + SessionLog.sessionId(session));
+
         if(!userAuthenticator.userIsUser(session)){
             return REDIRECT;
         }
@@ -103,6 +110,8 @@ public class BookingController {
     //Jonathan & Luca
     @GetMapping("choosetime/{treatmentId}")
     public String chooseTime(HttpSession session, Model model, @PathVariable int treatmentId) {
+        log.info("get choosetime action started..." + SessionLog.sessionId(session));
+
         if(!userAuthenticator.userIsUser(session)){
             return REDIRECT;
         }
@@ -128,6 +137,8 @@ public class BookingController {
     //Jonathan & Luca
     @GetMapping("bookingconfirmation/{time}")
     public String bookingConfirmation(HttpSession session, Model model, @PathVariable String time) {
+        log.info("get bookingconfirmation action started..." + SessionLog.sessionId(session));
+
         if(!userAuthenticator.userIsUser(session)){
             return REDIRECT;
         }

@@ -4,6 +4,7 @@ import com.firstyearproject.salontina.Models.Newsletter;
 import com.firstyearproject.salontina.Models.User;
 import com.firstyearproject.salontina.Services.*;
 import com.firstyearproject.salontina.Tools.ConfirmationTool;
+import com.firstyearproject.salontina.Tools.SessionLog;
 import com.firstyearproject.salontina.Tools.UserAuthenticator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +42,8 @@ public class SMSController {
     //Luca
     @GetMapping("reminder")
     public String reminder(Model model, HttpSession session) {
+        log.info("get reminder action started..." + SessionLog.sessionId(session));
+
         if(!userAuthenticator.userIsAdmin(session)){
             return REDIRECT;
         }
@@ -55,6 +58,8 @@ public class SMSController {
     //Luca
     @GetMapping("sendreminder")
     public String sendreminder(Model model, HttpSession session) {
+        log.info("get sendreminder action started..." + SessionLog.sessionId(session));
+
         if(!userAuthenticator.userIsAdmin(session)){
             return REDIRECT;
         }
@@ -75,6 +80,8 @@ public class SMSController {
     //Luca
     @GetMapping("newsletter")
     public String newsletter(Model model, HttpSession session) {
+        log.info("get newsletter action started..." + SessionLog.sessionId(session));
+
         if(!userAuthenticator.userIsAdmin(session)){
             return REDIRECT;
         }
@@ -90,6 +97,8 @@ public class SMSController {
     //Luca
     @PostMapping("sendnewsletter")
     public String sendNewsletter(Model model, HttpSession session, @ModelAttribute Newsletter newsletter) {
+        log.info("post sendnewsletter action started..." + SessionLog.sessionId(session));
+
         if(!userAuthenticator.userIsAdmin(session)){
             return REDIRECT;
         }
@@ -109,6 +118,8 @@ public class SMSController {
     //Luca
     @PostMapping("sendtestnewsletter")
     public String sendTestNewsletter(Model model, HttpSession session, @ModelAttribute Newsletter newsletter) {
+        log.info("post sendtestnewsletter action started..." + SessionLog.sessionId(session));
+
         if(!userAuthenticator.userIsAdmin(session)){
             return REDIRECT;
         }
@@ -126,8 +137,10 @@ public class SMSController {
     }
 
     //Mike
-    @GetMapping("/sendbesked")
+    @GetMapping("/sms")
     public String sendMessage(Model model, HttpSession session) {
+        log.info("get sms action started..." + SessionLog.sessionId(session));
+
         if(!userAuthenticator.userIsAdmin(session)){
             return REDIRECT;
         }
@@ -140,6 +153,8 @@ public class SMSController {
     //Manually starts the autoReminder
     @PostMapping ("/startAutoReminder")
     public String startAutoReminder(HttpSession session) {
+        log.info("post startAutoReminder action started..." + SessionLog.sessionId(session));
+
         if(!userAuthenticator.userIsAdmin(session)){
             return REDIRECT;
         }
@@ -158,6 +173,8 @@ public class SMSController {
     //Manually stops the autoReminder
     @PostMapping ("/stopAutoReminder")
     public String stopAutoReminde(HttpSession session){
+        log.info("post stopAutoReminder action started..." + SessionLog.sessionId(session));
+
         if(!userAuthenticator.userIsAdmin(session)){
             return REDIRECT;
         }

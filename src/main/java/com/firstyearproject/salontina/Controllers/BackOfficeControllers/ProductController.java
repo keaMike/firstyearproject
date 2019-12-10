@@ -6,6 +6,7 @@ import com.firstyearproject.salontina.Models.Treatment;
 import com.firstyearproject.salontina.Models.User;
 import com.firstyearproject.salontina.Services.*;
 import com.firstyearproject.salontina.Tools.ConfirmationTool;
+import com.firstyearproject.salontina.Tools.SessionLog;
 import com.firstyearproject.salontina.Tools.UserAuthenticator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +48,8 @@ public class ProductController {
     //Asbjørn
     @GetMapping("/createproduct")
     public String createProduct(Model model, HttpSession session) {
+        log.info("get createproduct action started..." + SessionLog.sessionId(session));
+
         if(!userAuthenticator.userIsAdmin(session)){
             return REDIRECT;
         }
@@ -58,6 +61,8 @@ public class ProductController {
     //Asbjørn
     @GetMapping("/createitem")
     public String createItem(Model model, HttpSession session) {
+        log.info("get createitem action started..." + SessionLog.sessionId(session));
+
         if(!userAuthenticator.userIsAdmin(session)){
             return REDIRECT;
         }
@@ -70,6 +75,8 @@ public class ProductController {
     //Asbjørn
     @PostMapping("/createitem")
     public String createItem(@ModelAttribute Item item, HttpSession session) {
+        log.info("post createitem action started..." + SessionLog.sessionId(session));
+
         if(!userAuthenticator.userIsAdmin(session)){
             return REDIRECT;
         }
@@ -86,6 +93,8 @@ public class ProductController {
     //Asbjørn
     @GetMapping("/createtreatment")
     public String createTreatment(Model model, HttpSession session) {
+        log.info("get createtreatment action started..." + SessionLog.sessionId(session));
+
         if(!userAuthenticator.userIsAdmin(session)){
             return REDIRECT;
         }
@@ -98,6 +107,8 @@ public class ProductController {
     //Asbjørn
     @PostMapping("/createtreatment")
     public String createTreatment(@ModelAttribute Treatment treatment, HttpSession session) {
+        log.info("post createtreatment action started..." + SessionLog.sessionId(session));
+
         if(!userAuthenticator.userIsAdmin(session)){
             return REDIRECT;
         }
@@ -114,6 +125,8 @@ public class ProductController {
     //Asbjørn
     @GetMapping ("/treatments")
     public String displayTreatments (Model model, HttpSession session) {
+        log.info("get treatments action started..." + SessionLog.sessionId(session));
+
         if(session.getAttribute("user") != null) {
             User user = (User)session.getAttribute("user");
             model.addAttribute("user", user);
@@ -132,6 +145,8 @@ public class ProductController {
     //Asbjørn
     @GetMapping ("/products")
     public String displayProducts (Model model, HttpSession session) {
+        log.info("get products action started..." + SessionLog.sessionId(session));
+
         if(session.getAttribute("user") != null) {
             User user = (User)session.getAttribute("user");
             model.addAttribute("user", user);
@@ -150,6 +165,8 @@ public class ProductController {
     //Mike
     @GetMapping("/editproduct")
     public String editProduct(Model model, HttpSession session) {
+        log.info("get editproduct action started..." + SessionLog.sessionId(session));
+
         if(!userAuthenticator.userIsAdmin(session)){
             return REDIRECT;
         }
@@ -161,6 +178,8 @@ public class ProductController {
     //Asbjørn
     @GetMapping ("/edittreatment/{id}")
     public String editTreatment (@PathVariable("id") int id, Model model, HttpSession session) {
+        log.info("get edittreatment action started..." + SessionLog.sessionId(session));
+
         if(!userAuthenticator.userIsAdmin(session)){
             return REDIRECT;
         }
@@ -173,6 +192,8 @@ public class ProductController {
     //Asbjørn
     @PostMapping ("/edittreatment")
     public String editTreatment (@ModelAttribute Treatment treatment, HttpSession session) {
+        log.info("post edittreatment action started..." + SessionLog.sessionId(session));
+
         if(!userAuthenticator.userIsAdmin(session)){
             return REDIRECT;
         }
@@ -189,6 +210,8 @@ public class ProductController {
     //Asbjørn
     @GetMapping ("/edititem/{id}")
     public String editItem (@PathVariable ("id") int id, Model model, HttpSession session) {
+        log.info("get edititem action started..." + SessionLog.sessionId(session));
+
         if(!userAuthenticator.userIsAdmin(session)){
             return REDIRECT;
         }
@@ -201,6 +224,8 @@ public class ProductController {
     //Asbjørn
     @PostMapping ("/edititem")
     public String editItem (@ModelAttribute Item item, HttpSession session) {
+        log.info("post edititem action started..." + SessionLog.sessionId(session));
+
         if(!userAuthenticator.userIsAdmin(session)){
             return REDIRECT;
         }

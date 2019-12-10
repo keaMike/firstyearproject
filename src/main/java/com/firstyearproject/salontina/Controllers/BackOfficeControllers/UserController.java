@@ -3,6 +3,7 @@ package com.firstyearproject.salontina.Controllers.BackOfficeControllers;
 import com.firstyearproject.salontina.Models.User;
 import com.firstyearproject.salontina.Services.*;
 import com.firstyearproject.salontina.Tools.ConfirmationTool;
+import com.firstyearproject.salontina.Tools.SessionLog;
 import com.firstyearproject.salontina.Tools.UserAuthenticator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +46,8 @@ public class UserController {
     //Mike
     @GetMapping("/userlist")
     public String userList(Model model, HttpSession session) {
+        log.info("get userlist action started..." + SessionLog.sessionId(session));
+
         if(!userAuthenticator.userIsAdmin(session)){
             return REDIRECT;
         }
@@ -59,6 +62,8 @@ public class UserController {
     //Mike
     @GetMapping("/edituserhistory/{userid}")
     public String editUserHistory(@PathVariable int userid, Model model, HttpSession session) {
+        log.info("get edituserhistory action started..." + SessionLog.sessionId(session));
+
         if(!userAuthenticator.userIsAdmin(session)){
             return REDIRECT;
         }
@@ -75,6 +80,8 @@ public class UserController {
     //Mike
     @PostMapping("/saveuserhistory")
     public String saveUserHistory(@ModelAttribute User user, HttpSession session) {
+        log.info("post saveuserhistory action started..." + SessionLog.sessionId(session));
+
         if(!userAuthenticator.userIsAdmin(session)){
             return REDIRECT;
         }

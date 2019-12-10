@@ -4,6 +4,7 @@ import com.firstyearproject.salontina.Models.AddVacation;
 import com.firstyearproject.salontina.Models.User;
 import com.firstyearproject.salontina.Services.*;
 import com.firstyearproject.salontina.Tools.ConfirmationTool;
+import com.firstyearproject.salontina.Tools.SessionLog;
 import com.firstyearproject.salontina.Tools.UserAuthenticator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +44,8 @@ public class AdminController {
     //Mike
     @GetMapping("/controlpanel")
     public String controlpanel(Model model, HttpSession session) {
+        log.info("get controlpanel action started..." + SessionLog.sessionId(session));
+
         if(!userAuthenticator.userIsAdmin(session)){
             return REDIRECT;
         }
@@ -54,6 +57,8 @@ public class AdminController {
 
     @GetMapping("/addvacation")
     public String addVacation(HttpSession session, Model model){
+        log.info("get addvacation action started..." + SessionLog.sessionId(session));
+
         if(!userAuthenticator.userIsAdmin(session)){
             return REDIRECT;
         }
@@ -65,6 +70,8 @@ public class AdminController {
 
     @PostMapping("/addvacation")
     public String addVacation(HttpSession session, @ModelAttribute AddVacation vacationString){
+        log.info("post addvacation action started..." + SessionLog.sessionId(session));
+
         if(!userAuthenticator.userIsAdmin(session)){
             return REDIRECT;
         }

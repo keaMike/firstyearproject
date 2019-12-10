@@ -4,6 +4,7 @@ import com.firstyearproject.salontina.Models.LoginToken;
 import com.firstyearproject.salontina.Models.User;
 import com.firstyearproject.salontina.Services.BookingServiceImpl;
 import com.firstyearproject.salontina.Tools.ConfirmationTool;
+import com.firstyearproject.salontina.Tools.SessionLog;
 import com.firstyearproject.salontina.Tools.UserAuthenticator;
 import com.firstyearproject.salontina.Services.UserServiceImpl;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class UserAccessController {
     ConfirmationTool confirmationTool;
 
     //Jonathan & Mike
-    private Model userExcists(Model model, HttpSession session) {
+    private Model userExists(Model model, HttpSession session) {
         if(session.getAttribute("user") != null) {
             User user = (User)session.getAttribute("user");
             model.addAttribute("user", user);
@@ -61,7 +62,9 @@ public class UserAccessController {
     //Mike
     @GetMapping("/")
     public String index(Model model, HttpSession session) {
-        userExcists(model, session);
+        log.info("get index action started..." + SessionLog.sessionId(session));
+
+        userExists(model, session);
         confirmationTool.showConfirmation(model);
         return INDEX;
     }
@@ -69,6 +72,8 @@ public class UserAccessController {
     //Luca
     @PostMapping("/")
     public String login(HttpSession session, @ModelAttribute LoginToken loginToken) {
+        log.info("post login action started..." + SessionLog.sessionId(session));
+
         User user = userService.authenticateUser(loginToken);
 
         if(user != null){
@@ -82,6 +87,8 @@ public class UserAccessController {
 
     @GetMapping("/logout")
     public String logout(HttpSession session){
+        log.info("get logout action started..." + SessionLog.sessionId(session));
+
         if(!userAuthenticator.userIsUser(session)){
             return REDIRECT;
         }
@@ -91,7 +98,9 @@ public class UserAccessController {
 
     //Jonathan
     @PostMapping("/register")
-    public String register(@ModelAttribute User user) {
+    public String register(HttpSession session, @ModelAttribute User user) {
+        log.info("post register action started..." + SessionLog.sessionId(session));
+
         taskResult = userService.addUser(user);
         if (taskResult) {
             confirmationTool.confirmation("Du er blevet oprettet som bruger", ConfirmationTool.success);
@@ -104,6 +113,8 @@ public class UserAccessController {
     //Jonathan
     @GetMapping("/editUser")
     public String editUser(HttpSession session, Model model) {
+        log.info("get editUser action started..." + SessionLog.sessionId(session));
+
         if(!userAuthenticator.userIsUser(session)){
              return REDIRECT;
         }
@@ -115,6 +126,8 @@ public class UserAccessController {
     //Jonathan
     @PostMapping("/editUser")
     public String editUser(@ModelAttribute User user, HttpSession session) {
+        log.info("post editUser action started..." + SessionLog.sessionId(session));
+
         if(!userAuthenticator.userIsUser(session)){
             return REDIRECT;
         }
@@ -131,6 +144,8 @@ public class UserAccessController {
 
     @GetMapping("userprofile")
     public String userprofile(Model model, HttpSession session) {
+        log.info("get userprofile action started..." + SessionLog.sessionId(session));
+
         log.info("userprofile action started...");
         if(!userAuthenticator.userIsUser(session)){
             return REDIRECT;
@@ -145,6 +160,8 @@ public class UserAccessController {
     //Mike
     @PostMapping("/deleteuser")
     public String deleteUser(@ModelAttribute User user, HttpSession session) {
+        log.info("post deleteuser action started..." + SessionLog.sessionId(session));
+
         if(!userAuthenticator.userIsUser(session)){
             return REDIRECT;
         }
@@ -157,6 +174,8 @@ public class UserAccessController {
     //Mike
     @GetMapping("/myprofile")
     public String myprofil(Model model, HttpSession session) {
+        log.info("get myprofile action started..." + SessionLog.sessionId(session));
+
         if(!userAuthenticator.userIsUser(session)){
             return REDIRECT;
         }
@@ -168,13 +187,17 @@ public class UserAccessController {
     //Mike
     @GetMapping("/contact")
     public String contact(Model model, HttpSession session) {
-        userExcists(model, session);
+        log.info("get contact action started..." + SessionLog.sessionId(session));
+
+        userExists(model, session);
         return CONTACT;
     }
 
     //Asbjørn
     @PostMapping("subscribeNewsletter")
     public String subscribeNewsletter (@ModelAttribute User user, HttpSession session) {
+        log.info("post subscribeNewsletter action started..." + SessionLog.sessionId(session));
+
         if(!userAuthenticator.userIsUser(session)){
             return REDIRECT;
         }
@@ -190,6 +213,8 @@ public class UserAccessController {
     //Asbjørn
     @PostMapping("unsubscribeNewsletter")
     public String unsubscribeNewsletter (@ModelAttribute User user, HttpSession session) {
+        log.info("post unsubscribeNewsletter action started..." + SessionLog.sessionId(session));
+
         if(!userAuthenticator.userIsUser(session)){
             return REDIRECT;
         }
