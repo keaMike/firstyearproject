@@ -59,6 +59,7 @@ public class AutoReminderServiceImpl implements AutoReminderService {
             public void run() {autoReminderTask.cancel(true); }
         };
         scheduler.schedule(autoStop, 30, TimeUnit.DAYS);
+        //TODO must this return ScheduledFuture or can it return a boolean?
         return autoReminderTask;
     }
 

@@ -9,23 +9,28 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class BookingServiceImpl implements BookingService{
 
     @Autowired
-    BookingRepoImpl BR;
+    BookingRepoImpl bookingRepo;
 
     //Luca
     public boolean addBooking(Booking booking){
-        return BR.addBooking(booking);
+        return bookingRepo.addBooking(booking);
     }
 
     //Mike
-    public boolean deleteBooking(int bookingId){
-        return BR.deleteBooking(bookingId);
+    public boolean deleteBooking(List<Booking> bookingList, int bookingId){
+        for(Booking booking : bookingList) {
+            if(booking.getBookingId() == bookingId) {
+                return bookingRepo.deleteBooking(bookingId);
+            }
+        }
+        return false;
     }
 
     public boolean editBooking(Booking booking){
@@ -41,7 +46,7 @@ public class BookingServiceImpl implements BookingService{
             java.util.Date startDate = sdf.parse(startDateString);
             java.util.Date endDate = sdf.parse(endDateString);
 
-            return BR.getBookingList(new Date(startDate.getTime()), new Date(endDate.getTime()));
+            return bookingRepo.getBookingList(new Date(startDate.getTime()), new Date(endDate.getTime()));
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -56,7 +61,11 @@ public class BookingServiceImpl implements BookingService{
 
             java.util.Date date = sdf.parse(dateString);
 
-            List<Booking> bookingList = BR.getBookingList(new Date(date.getTime()));
+            List<Booking> bookingList = bookingRepo.getBookingList(new Date(date.getTime()));
+
+            if(bookingList == null){
+                bookingList = new ArrayList<>();
+            }
 
             for(int i = 0; i <= 7; i++){
                 String time = (i + 8) + ":00";
@@ -80,11 +89,14 @@ public class BookingServiceImpl implements BookingService{
 
     //Luca
     public List<Booking> getFutureBookings(){
-        return BR.getFutureBookings();
+        return bookingRepo.getFutureBookings();
     }
 
     //Luca
     private boolean timeIsBooked(List<Booking> bookingList, String time){
+        if(bookingList == null){
+            return false;
+        }
         for(Booking b : bookingList){
             if(b.getBookingTime() != null && b.getBookingTime().equals(time)){
                 return true;
@@ -100,7 +112,7 @@ public class BookingServiceImpl implements BookingService{
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             java.util.Date date = sdf.parse(dateString);
 
-            return BR.addVacationDate(new Date(date.getTime()), userId);
+            return bookingRepo.addVacationDate(new Date(date.getTime()), userId);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -110,6 +122,6 @@ public class BookingServiceImpl implements BookingService{
     //Mike
     @Override
     public List<Booking> getBookingList(int userId){
-        return BR.findBookingsByUserId(userId);
+        return bookingRepo.findBookingsByUserId(userId);
     }
 }

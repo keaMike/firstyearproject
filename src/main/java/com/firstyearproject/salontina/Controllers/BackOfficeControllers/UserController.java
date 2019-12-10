@@ -26,8 +26,7 @@ public class UserController {
     private String ALLUSERS = "users/allusers";
     private String EDITUSERHISTORY = "users/edituserhistory";
     private String REDIRECT = "redirect:/";
-
-    private boolean taskResult = false;
+    private String USERLIST = "userlist";
 
 
     @Autowired
@@ -49,6 +48,8 @@ public class UserController {
         log.info("get userlist action started..." + SessionLog.sessionId(session));
 
         if(!userAuthenticator.userIsAdmin(session)){
+            log.info(SessionLog.NOTADMIN + SessionLog.sessionId(session));
+
             return REDIRECT;
         }
         User user = (User)session.getAttribute("user");
@@ -65,6 +66,8 @@ public class UserController {
         log.info("get edituserhistory action started..." + SessionLog.sessionId(session));
 
         if(!userAuthenticator.userIsAdmin(session)){
+            log.info(SessionLog.NOTADMIN + SessionLog.sessionId(session));
+
             return REDIRECT;
         }
         User user = (User)session.getAttribute("user");
@@ -83,16 +86,21 @@ public class UserController {
         log.info("post saveuserhistory action started..." + SessionLog.sessionId(session));
 
         if(!userAuthenticator.userIsAdmin(session)){
+            log.info(SessionLog.NOTADMIN + SessionLog.sessionId(session));
+
             return REDIRECT;
         }
-        taskResult = userServiceImpl.editUserHistory(user);
-        if (taskResult) {
+
+        if (userServiceImpl.editUserHistory(user)) {
+            log.info("edited userhistory..." + SessionLog.sessionId(session));
+
             confirmationTool.confirmation("Bruger præferencerne blev gemt", ConfirmationTool.success);
-            return REDIRECT + "userlist";
-        } else {
-            confirmationTool.confirmation("Bruger præferencerne blev ikke gemt", ConfirmationTool.danger);
-            return EDITUSERHISTORY + "/" + user.getUserId();
+            return REDIRECT + USERLIST;
         }
+        log.info("could not edit userhistory..." + SessionLog.sessionId(session));
+
+        confirmationTool.confirmation("Bruger præferencerne blev ikke gemt", ConfirmationTool.danger);
+        return EDITUSERHISTORY + "/" + user.getUserId();
     }
 
 }

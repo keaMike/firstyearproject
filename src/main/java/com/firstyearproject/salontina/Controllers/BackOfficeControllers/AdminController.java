@@ -47,6 +47,8 @@ public class AdminController {
         log.info("get controlpanel action started..." + SessionLog.sessionId(session));
 
         if(!userAuthenticator.userIsAdmin(session)){
+            log.info(SessionLog.NOTADMIN + SessionLog.sessionId(session));
+
             return REDIRECT;
         }
         autoReminderService.initiateAutoReminder();
@@ -60,6 +62,8 @@ public class AdminController {
         log.info("get addvacation action started..." + SessionLog.sessionId(session));
 
         if(!userAuthenticator.userIsAdmin(session)){
+            log.info(SessionLog.NOTADMIN + SessionLog.sessionId(session));
+
             return REDIRECT;
         }
         User user = (User)session.getAttribute("user");
@@ -73,12 +77,20 @@ public class AdminController {
         log.info("post addvacation action started..." + SessionLog.sessionId(session));
 
         if(!userAuthenticator.userIsAdmin(session)){
+            log.info(SessionLog.NOTADMIN + SessionLog.sessionId(session));
+
             return REDIRECT;
         }
         User user = (User)session.getAttribute("user");
         if(bookingService.addVacationDate(vacationString.getString(), user.getUserId())){
+            log.info("added vacation on date: " + vacationString + "..." + SessionLog.sessionId(session));
 
+            confirmationTool.confirmation("Ferie er blevet tilføjet d. " + vacationString + ".", ConfirmationTool.success);
+            return REDIRECT + ADDVACATION;
         }
+        log.info("could not add vacation on date: " + vacationString + "..." + SessionLog.sessionId(session));
+
+        confirmationTool.confirmation("Ferie kunne ikke tilføjes d. " + vacationString + ".", ConfirmationTool.danger);
         return REDIRECT + ADDVACATION;
     }
 

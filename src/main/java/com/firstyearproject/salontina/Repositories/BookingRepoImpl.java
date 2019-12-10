@@ -54,8 +54,6 @@ public class BookingRepoImpl implements BookingRepo{
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            mySQLConnector.closeConnection();
         }
 
         return false;
@@ -64,6 +62,8 @@ public class BookingRepoImpl implements BookingRepo{
     //Luca
     @Override
     public boolean addTreatmentsToBooking(List<Treatment> treatmentList, Booking booking){
+        //TODO 'No operations allowed after statement closed.' when adding booking
+
         String statement =
                 "INSERT INTO bookings_treatment " +
                 "(bookings_id, treatments_id) " +
@@ -195,8 +195,10 @@ public class BookingRepoImpl implements BookingRepo{
     public List<Booking> getBookingList(Date date){
         String statement =
                 "SELECT * FROM bookings " +
+                "JOIN bookings_treatment on bookings.bookings_id = bookings_treatment.bookings_id " +
+                "JOIN treatments on bookings_treatment.treatments_id = treatments.treatments_id " +
                 "WHERE bookings_date = ? " +
-                "ORDER BY bookings_time;";
+                "ORDER BY bookings_date;";
 
         List<Booking> bookingList = new ArrayList<>();
 

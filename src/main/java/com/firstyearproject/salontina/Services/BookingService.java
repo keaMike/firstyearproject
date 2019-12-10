@@ -9,7 +9,7 @@ import java.util.List;
 public interface BookingService {
 
     boolean addBooking(Booking booking);
-    boolean deleteBooking(int bookingId);
+    boolean deleteBooking(List<Booking> bookingList, int bookingId);
     boolean editBooking(Booking booking);
     List<Booking> getBookingList(String startDate, String endDate);
     List<Booking> getBookingList(String date);

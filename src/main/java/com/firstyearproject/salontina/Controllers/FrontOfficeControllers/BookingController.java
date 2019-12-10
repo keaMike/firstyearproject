@@ -33,8 +33,6 @@ public class BookingController {
     private String CHOOSEBOOKINGTREATMENT = "bookings/choosebookingtreatment";
     private String CHOOSEBOOKINGTIME = "bookings/choosebookingtime";
 
-    private boolean taskResult = false;
-
     @Autowired
     BookingServiceImpl bookingService;
 
@@ -53,12 +51,19 @@ public class BookingController {
         log.info("get mybookings action started..." + SessionLog.sessionId(session));
 
         if(!userAuthenticator.userIsUser(session)){
+            log.info(SessionLog.NOTLOGGEDIN + SessionLog.sessionId(session));
+
             return REDIRECT;
         }
-        User user = (User)session.getAttribute("user");
+
+        User user = (User) session.getAttribute("user");
         if(userAuthenticator.userIsAdmin(session)){
+            log.info("user is logged in as admin... showing future bookings..." + SessionLog.sessionId(session));
+
             model.addAttribute("bookings", bookingService.getFutureBookings());
         } else {
+            log.info("user is logged in... showing bookings..." + SessionLog.sessionId(session));
+
             model.addAttribute("bookings", bookingService.getBookingList(user.getUserId()));
         }
         model.addAttribute("user", user);
@@ -72,24 +77,22 @@ public class BookingController {
         log.info(" action started..." + SessionLog.sessionId(session));
 
         if(!userAuthenticator.userIsUser(session)){
+            log.info(SessionLog.NOTLOGGEDIN + SessionLog.sessionId(session));
+
             return REDIRECT;
         }
-        User user = (User)session.getAttribute("user");
-        List<Booking> bookings = bookingService.getBookingList(user.getUserId());
-        for(Booking booking : bookings) {
-            if(booking.getBookingId() == bookingId) {
-                taskResult = bookingService.deleteBooking(bookingId);
-                if (taskResult) {
-                    confirmationTool.confirmation("Din booking er blevet slettet", ConfirmationTool.success);
-                    return REDIRECT + "mybookings";
-                } else {
-                    confirmationTool.confirmation("Din booking kunne ikke slettes. Prøv igen på et senere tidspunkt", ConfirmationTool.danger);
-                    return REDIRECT + "mybookings";
-                }
-            }
+
+        User user = (User) session.getAttribute("user");
+        if(bookingService.deleteBooking(bookingService.getBookingList(user.getUserId()), bookingId)){
+            log.info("deleted booking: " + bookingId + "..." + SessionLog.sessionId(session));
+
+            confirmationTool.confirmation("Din booking er blevet slettet", ConfirmationTool.success);
+            return REDIRECT + "mybookings";
         }
-        confirmationTool.confirmation("Du kan ikke slette en booking som ikke er din egen", ConfirmationTool.danger);
-        return REDIRECT;
+        log.info("could not delete booking..." + SessionLog.sessionId(session));
+
+        confirmationTool.confirmation("Din booking kunne ikke slettes. Prøv igen på et senere tidspunkt", ConfirmationTool.danger);
+        return REDIRECT + "mybookings";
     }
 
     //Jonathan & Luca
@@ -98,9 +101,12 @@ public class BookingController {
         log.info("get choosetreatment action started..." + SessionLog.sessionId(session));
 
         if(!userAuthenticator.userIsUser(session)){
+            log.info(SessionLog.NOTLOGGEDIN + SessionLog.sessionId(session));
+
             return REDIRECT;
         }
         User user = (User) session.getAttribute("user");
+
         model.addAttribute("user", user);
         model.addAttribute("booking", new Booking());
         model.addAttribute("treatmentList", productService.createTreatmentArrayList());
@@ -113,10 +119,13 @@ public class BookingController {
         log.info("get choosetime action started..." + SessionLog.sessionId(session));
 
         if(!userAuthenticator.userIsUser(session)){
+            log.info(SessionLog.NOTLOGGEDIN + SessionLog.sessionId(session));
+
             return REDIRECT;
         }
 
         User user = (User) session.getAttribute("user");
+
         Date date = new Date(Calendar.getInstance().getTimeInMillis());
 
         Booking booking = new Booking();
@@ -140,6 +149,8 @@ public class BookingController {
         log.info("get bookingconfirmation action started..." + SessionLog.sessionId(session));
 
         if(!userAuthenticator.userIsUser(session)){
+            log.info(SessionLog.NOTLOGGEDIN + SessionLog.sessionId(session));
+
             return REDIRECT;
         }
         User user = (User) session.getAttribute("user");
@@ -148,12 +159,17 @@ public class BookingController {
 
         booking.setBookingTime(time);
 
-        bookingService.addBooking(booking);
+        if(bookingService.addBooking(booking)){
+            log.info("added booking: " + booking.getBookingId() + "..." + SessionLog.sessionId(session));
 
-        model.addAttribute("user", user);
-        model.addAttribute("booking", booking);
-        return BOOKINGCONFIRMATION;
+            model.addAttribute("user", user);
+            model.addAttribute("booking", booking);
+            return BOOKINGCONFIRMATION;
+        }
+        log.info("could not add booking..." + SessionLog.sessionId(session));
 
+        confirmationTool.confirmation("Kunne ikke tilføje din booking. Hvis problemet sker igen, ring til salonen.", ConfirmationTool.danger);
+        return REDIRECT;
     }
 
 }

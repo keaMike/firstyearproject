@@ -45,9 +45,11 @@ public class SMSController {
         log.info("get reminder action started..." + SessionLog.sessionId(session));
 
         if(!userAuthenticator.userIsAdmin(session)){
+            log.info(SessionLog.NOTADMIN + SessionLog.sessionId(session));
+
             return REDIRECT;
         }
-        log.info("get reminder action started...");
+
         User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);
         confirmationTool.showConfirmation(model);
@@ -61,20 +63,22 @@ public class SMSController {
         log.info("get sendreminder action started..." + SessionLog.sessionId(session));
 
         if(!userAuthenticator.userIsAdmin(session)){
+            log.info(SessionLog.NOTADMIN + SessionLog.sessionId(session));
+
             return REDIRECT;
         }
-        log.info("post sendreminder action started...");
+
         User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);
         if(sMSServiceImpl.sendReminder()){
-            log.info("sms reminder sent successfully...");
+            log.info("sms reminder sent successfully..." + SessionLog.sessionId(session));
             confirmationTool.confirmation("SMS Reminder blev sendt.", ConfirmationTool.success);
         } else{
-            log.info("sms reminder failed to sent...");
+            log.info("sms reminder failed to sent..." + SessionLog.sessionId(session));
             confirmationTool.confirmation("Der skete en fejl ved afsendelse af reminder.", ConfirmationTool.danger);
         }
 
-        return REDIRECT + "reminder";
+        return REDIRECT + REMINDER;
     }
 
     //Luca
@@ -83,9 +87,11 @@ public class SMSController {
         log.info("get newsletter action started..." + SessionLog.sessionId(session));
 
         if(!userAuthenticator.userIsAdmin(session)){
+            log.info(SessionLog.NOTADMIN + SessionLog.sessionId(session));
+
             return REDIRECT;
         }
-        log.info("get newsletter action started...");
+
         User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);
         model.addAttribute("newsletter", new Newsletter());
@@ -100,19 +106,20 @@ public class SMSController {
         log.info("post sendnewsletter action started..." + SessionLog.sessionId(session));
 
         if(!userAuthenticator.userIsAdmin(session)){
+            log.info(SessionLog.NOTADMIN + SessionLog.sessionId(session));
+
             return REDIRECT;
         }
-        log.info("post newsletter action started...");
 
         if(sMSServiceImpl.sendNewsletter(newsletter.getText())){
-            log.info("newsletter was successfully sent...");
+            log.info("newsletter was successfully sent..." + SessionLog.sessionId(session));
             confirmationTool.confirmation("Nyhedsbrev blev sendt.", ConfirmationTool.success);
         } else{
-            log.info("sms newsletter failed to sent...");
+            log.info("sms newsletter failed to sent..." + SessionLog.sessionId(session));
             confirmationTool.confirmation("Der skete en fejl ved afsendelse af nyhedsbrev.", ConfirmationTool.danger);
         }
 
-        return REDIRECT + "newsletter";
+        return REDIRECT + NEWSLETTER;
     }
 
     //Luca
@@ -121,19 +128,20 @@ public class SMSController {
         log.info("post sendtestnewsletter action started..." + SessionLog.sessionId(session));
 
         if(!userAuthenticator.userIsAdmin(session)){
+            log.info(SessionLog.NOTADMIN + SessionLog.sessionId(session));
+
             return REDIRECT;
         }
-        log.info("post newsletter action started...");
 
         if(sMSServiceImpl.sendNewsletterTest(newsletter.getTestNumber(), newsletter.getText())){
-            log.info("newsletter was successfully sent...");
+            log.info("newsletter was successfully sent..." + SessionLog.sessionId(session));
             confirmationTool.confirmation("Test nyhedsbrev blev sendt.", ConfirmationTool.success);
         } else{
-            log.info("sms reminder failed to sent...");
+            log.info("sms reminder failed to sent..." + SessionLog.sessionId(session));
             confirmationTool.confirmation("Der skete en fejl ved afsendelse af nyhedsbrev.", ConfirmationTool.danger);
         }
 
-        return REDIRECT + "newsletter";
+        return REDIRECT + NEWSLETTER;
     }
 
     //Mike
@@ -142,6 +150,8 @@ public class SMSController {
         log.info("get sms action started..." + SessionLog.sessionId(session));
 
         if(!userAuthenticator.userIsAdmin(session)){
+            log.info(SessionLog.NOTADMIN + SessionLog.sessionId(session));
+
             return REDIRECT;
         }
         User user = (User)session.getAttribute("user");
@@ -156,14 +166,16 @@ public class SMSController {
         log.info("post startAutoReminder action started..." + SessionLog.sessionId(session));
 
         if(!userAuthenticator.userIsAdmin(session)){
+            log.info(SessionLog.NOTADMIN + SessionLog.sessionId(session));
+
             return REDIRECT;
         }
         autoReminderService.initiateAutoReminder();
         if (true) {
-            log.info("AutoReminder succesfully started");
+            log.info("AutoReminder succesfully started..." + SessionLog.sessionId(session));
             confirmationTool.confirmation("SMS påmindelse er i gangsat", ConfirmationTool.success);
         } else {
-            log.info("AutoReminder could not be started");
+            log.info("AutoReminder could not be started..." + SessionLog.sessionId(session));
             confirmationTool.confirmation("SMS påmindelse kunne ikke startes", ConfirmationTool.danger);
         }
         return REDIRECT + REMINDER;
@@ -176,13 +188,15 @@ public class SMSController {
         log.info("post stopAutoReminder action started..." + SessionLog.sessionId(session));
 
         if(!userAuthenticator.userIsAdmin(session)){
+            log.info(SessionLog.NOTADMIN + SessionLog.sessionId(session));
+
             return REDIRECT;
         }
         if(autoReminderService.cancelAutoReminder()) {
-            log.info("Autoreminder succesfully stopped");
+            log.info("Autoreminder succesfully stopped..." + SessionLog.sessionId(session));
             confirmationTool.confirmation("SMS påmindelse er blevet stoppet", ConfirmationTool.success);
         } else{
-            log.info("AutoReminder failed to stop...");
+            log.info("AutoReminder failed to stop..." + SessionLog.sessionId(session));
             confirmationTool.confirmation("SMS påmindelse kunne ikke stoppes", ConfirmationTool.danger);
         }
         return REDIRECT + REMINDER;

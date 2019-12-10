@@ -32,8 +32,6 @@ public class UserAccessController {
     private String MYPROFILE = "users/myprofile";
     private String CONTACT = "contact";
 
-    private boolean taskResult = false;
-
     @Autowired
     UserServiceImpl userService;
 
@@ -47,7 +45,7 @@ public class UserAccessController {
     ConfirmationTool confirmationTool;
 
     //Jonathan & Mike
-    private Model userExists(Model model, HttpSession session) {
+    public static Model userExists(Model model, HttpSession session) {
         if(session.getAttribute("user") != null) {
             User user = (User)session.getAttribute("user");
             model.addAttribute("user", user);
@@ -78,9 +76,14 @@ public class UserAccessController {
 
         if(user != null){
             session.setAttribute("user", user);
+
+            log.info("user: " + user.getUsername() + " is logged in... " + SessionLog.sessionId(session));
+
             confirmationTool.confirmation("Velkommen " + user.getUsername() + ", du er blevet logget ind", ConfirmationTool.success);
             return REDIRECT;
         }
+        log.info("could not find user..." + SessionLog.sessionId(session));
+
         confirmationTool.confirmation("Fejl ved login, enten din email/tlf. eller kodeord er forkert", ConfirmationTool.danger);
         return REDIRECT;
     }
@@ -90,9 +93,14 @@ public class UserAccessController {
         log.info("get logout action started..." + SessionLog.sessionId(session));
 
         if(!userAuthenticator.userIsUser(session)){
+            log.info(SessionLog.NOTLOGGEDIN + SessionLog.sessionId(session));
+
             return REDIRECT;
         }
         session.removeAttribute("user");
+
+        log.info("user is logged out..." + SessionLog.sessionId(session));
+
         return REDIRECT;
     }
 
@@ -101,11 +109,14 @@ public class UserAccessController {
     public String register(HttpSession session, @ModelAttribute User user) {
         log.info("post register action started..." + SessionLog.sessionId(session));
 
-        taskResult = userService.addUser(user);
-        if (taskResult) {
+        if (userService.addUser(user)) {
+            log.info("added user: " + user.getUsername() + "..." + SessionLog.sessionId(session));
+
             confirmationTool.confirmation("Du er blevet oprettet som bruger", ConfirmationTool.success);
             return REDIRECT;
         }
+        log.info("could not add user: " + user.getUsername() + "..." + SessionLog.sessionId(session));
+
         confirmationTool.confirmation("Vi kunne ikke oprette dig som bruger. Prøv igen", ConfirmationTool.danger);
         return REDIRECT;
     }
@@ -116,7 +127,9 @@ public class UserAccessController {
         log.info("get editUser action started..." + SessionLog.sessionId(session));
 
         if(!userAuthenticator.userIsUser(session)){
-             return REDIRECT;
+            log.info(SessionLog.NOTLOGGEDIN + SessionLog.sessionId(session));
+
+            return REDIRECT;
         }
         User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);
@@ -129,15 +142,23 @@ public class UserAccessController {
         log.info("post editUser action started..." + SessionLog.sessionId(session));
 
         if(!userAuthenticator.userIsUser(session)){
+            log.info(SessionLog.NOTLOGGEDIN + SessionLog.sessionId(session));
+
             return REDIRECT;
         }
-        taskResult = userService.editUser(user);
-        User editedUser = userService.getUserById(user.getUserId());
-        session.setAttribute("user", editedUser);
-        if (taskResult) {
+
+        if (userService.editUser(user)) {
             confirmationTool.confirmation("Ændringerne er blevet gemt", ConfirmationTool.success);
+
+            User editedUser = userService.getUserById(user.getUserId());
+            session.setAttribute("user", editedUser);
+
+            log.info("changes to user: " + user.getUsername() + " has been saved..." + SessionLog.sessionId(session));
+
             return REDIRECT + "userprofile";
         }
+        log.info("could not save changes to user: " + user.getUsername() + "..." + SessionLog.sessionId(session));
+
         confirmationTool.confirmation("Vi kunne ikke gemme dine ændringer. Prøv igen", ConfirmationTool.danger);
         return REDIRECT + "userprofile";
     }
@@ -146,13 +167,16 @@ public class UserAccessController {
     public String userprofile(Model model, HttpSession session) {
         log.info("get userprofile action started..." + SessionLog.sessionId(session));
 
-        log.info("userprofile action started...");
         if(!userAuthenticator.userIsUser(session)){
+            log.info(SessionLog.NOTLOGGEDIN + SessionLog.sessionId(session));
+
             return REDIRECT;
         }
-        log.info("user is admin or user...");
+        log.info("user is admin or user..." + SessionLog.sessionId(session));
+
         User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);
+
         confirmationTool.showConfirmation(model);
         return USERPROFILE;
     }
@@ -163,12 +187,22 @@ public class UserAccessController {
         log.info("post deleteuser action started..." + SessionLog.sessionId(session));
 
         if(!userAuthenticator.userIsUser(session)){
+            log.info(SessionLog.NOTLOGGEDIN + SessionLog.sessionId(session));
+
             return REDIRECT;
         }
-        confirmationTool.confirmation("Din profil blev successfuldt slettet", ConfirmationTool.success);
-        session.removeAttribute("user");
-        userService.deleteUser(user.getUserId());
-        return REDIRECT;
+
+        if(userService.deleteUser(user.getUserId())){
+            log.info("deleted user: " + user.getUsername() + "..." + SessionLog.sessionId(session));
+
+            confirmationTool.confirmation("Din profil blev successfuldt slettet", ConfirmationTool.success);
+            session.removeAttribute("user");
+            return REDIRECT;
+        }
+        log.info("could not delete user: " + user.getUsername() + "..." + SessionLog.sessionId(session));
+
+        confirmationTool.confirmation("Kunne ikke slette din profil", ConfirmationTool.danger);
+        return REDIRECT + USERPROFILE;
     }
 
     //Mike
@@ -177,6 +211,8 @@ public class UserAccessController {
         log.info("get myprofile action started..." + SessionLog.sessionId(session));
 
         if(!userAuthenticator.userIsUser(session)){
+            log.info(SessionLog.NOTLOGGEDIN + SessionLog.sessionId(session));
+
             return REDIRECT;
         }
         User user = (User)session.getAttribute("user");
@@ -199,13 +235,19 @@ public class UserAccessController {
         log.info("post subscribeNewsletter action started..." + SessionLog.sessionId(session));
 
         if(!userAuthenticator.userIsUser(session)){
+            log.info(SessionLog.NOTLOGGEDIN + SessionLog.sessionId(session));
+
             return REDIRECT;
         }
-        taskResult = userService.subscribeNewsletter(user.getUserId());
-        if (taskResult) {
+
+        if (userService.subscribeNewsletter(user.getUserId())) {
+            log.info("user: " + user.getUsername() + " subscribed to newsletter..." + SessionLog.sessionId(session));
+
             confirmationTool.confirmation("Du er blevet tilmeldt nyhedsbrevet", ConfirmationTool.success);
             return REDIRECT + "userprofile";
         }
+        log.info("could not subscribe user: " + user.getUsername() + " to newsletter..." + SessionLog.sessionId(session));
+
         confirmationTool.confirmation("Vi kunne ikke tilmelde dig nyhedsbrevet. Prøv igen senere", ConfirmationTool.danger);
         return REDIRECT + "userprofile";
     }
@@ -216,13 +258,18 @@ public class UserAccessController {
         log.info("post unsubscribeNewsletter action started..." + SessionLog.sessionId(session));
 
         if(!userAuthenticator.userIsUser(session)){
+            log.info(SessionLog.NOTLOGGEDIN + SessionLog.sessionId(session));
+
             return REDIRECT;
         }
-        taskResult = userService.unsubscribeNewsletter(user.getUserId());
-        if (taskResult) {
+
+        if (userService.unsubscribeNewsletter(user.getUserId())) {
+            log.info("user: " + user.getUsername() + " unsubscribed to newsletter..." + SessionLog.sessionId(session));
+
             confirmationTool.confirmation("Du er blevet afmeldt nyhedsbrevet", ConfirmationTool.success);
             return REDIRECT + "userprofile";
         }
+        log.info("could not unsubscribe user: " + user.getUsername() + " from newsletter..." + SessionLog.sessionId(session));
         confirmationTool.confirmation("Vi kunne ikke afmelde dig nyhedsbrevet. Prøv igen senere", ConfirmationTool.danger);
         return REDIRECT + "userprofile";
     }
