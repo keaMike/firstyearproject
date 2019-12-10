@@ -27,6 +27,9 @@ public class SMSController {
 
     private boolean showConfirmation = false;
     private String confirmationText = "";
+    private String alert = "";
+    private String danger = "alert alert-danger";
+    private String success = "alert alert-success";
 
     @Autowired
     SMSServiceImpl sMSServiceImpl;
@@ -39,15 +42,16 @@ public class SMSController {
 
     //Luca
     //Used in Java Methods/mappings
-    public void confirmation(String text){
+    public void confirmation(String text, String alert){
         showConfirmation = true;
         confirmationText = text;
+        this.alert = alert;
     }
 
     //Luca
     //Used in HTML-Modals
     public void showConfirmation(Model model){
-        model.addAttribute("showconfirmation", true);
+        model.addAttribute("showconfirmation", showConfirmation);
         model.addAttribute("confirmationtext", confirmationText);
         showConfirmation = false;
     }
@@ -61,9 +65,7 @@ public class SMSController {
         log.info("get reminder action started...");
         User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);
-        if (showConfirmation) {
-            showConfirmation(model);
-        }
+        showConfirmation(model);
 
         return REMINDER;
     }
@@ -79,13 +81,13 @@ public class SMSController {
         model.addAttribute("user", user);
         if(sMSServiceImpl.sendReminder()){
             log.info("sms reminder sent successfully...");
-            confirmation("SMS Reminder blev sendt.");
+            confirmation("SMS Reminder blev sendt.", success);
         } else{
             log.info("sms reminder failed to sent...");
-            confirmation("Der skete en fejl ved afsendelse af reminder.");
+            confirmation("Der skete en fejl ved afsendelse af reminder.", danger);
         }
 
-        return REDIRECT + REMINDER;
+        return REDIRECT + "reminder";
     }
 
     //Luca
@@ -97,11 +99,9 @@ public class SMSController {
         log.info("get newsletter action started...");
         User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);
-        if (showConfirmation) {
-            showConfirmation(model);
-        }
-
         model.addAttribute("newsletter", new Newsletter());
+        showConfirmation(model);
+
         return NEWSLETTER;
     }
 
@@ -115,13 +115,13 @@ public class SMSController {
 
         if(sMSServiceImpl.sendNewsletter(newsletter.getText())){
             log.info("newsletter was successfully sent...");
-            confirmation("Nyhedsbrev blev sendt.");
+            confirmation("Nyhedsbrev blev sendt.", success);
         } else{
             log.info("sms newsletter failed to sent...");
-            confirmation("Der skete en fejl ved afsendelse af nyhedsbrev.");
+            confirmation("Der skete en fejl ved afsendelse af nyhedsbrev.", danger);
         }
 
-        return REDIRECT + NEWSLETTER;
+        return REDIRECT + "newsletter";
     }
 
     //Luca
@@ -134,13 +134,13 @@ public class SMSController {
 
         if(sMSServiceImpl.sendNewsletterTest(newsletter.getTestNumber(), newsletter.getText())){
             log.info("newsletter was successfully sent...");
-            confirmation("Test nyhedsbrev blev sendt.");
+            confirmation("Test nyhedsbrev blev sendt.", success);
         } else{
             log.info("sms reminder failed to sent...");
-            confirmation("Der skete en fejl ved afsendelse af nyhedsbrev.");
+            confirmation("Der skete en fejl ved afsendelse af nyhedsbrev.", danger);
         }
 
-        return REDIRECT + NEWSLETTER;
+        return REDIRECT + "newsletter";
     }
 
     //Mike

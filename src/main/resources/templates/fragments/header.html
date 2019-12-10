@@ -53,8 +53,9 @@
                                 </div>
                                 <div>
                                     <h5>Fulde Navn</h5>
-                                    <input type="text" class="input" id="username" pattern="[A-Z/sa-z/s]+$"
-                                           oninvalid="this.setCustomValidity('Indtast dit navn med bogstaver')"
+                                    <input type="text" class="input" id="username" pattern="[A-Z/a-zæøåÆØÅ/s + A-Za-zæøåÆØÅ]+$"
+                                           oninvalid="setCustomValidity('Indtast dit navn med bogstaver')"
+                                           oninput="setCustomValidity('')"
                                            th:field="${user.username}" required>
                                 </div>
                             </div>
@@ -65,8 +66,9 @@
                                 </div>
                                 <div>
                                     <h5>E-Mail</h5>
-                                    <input class="input" type="email" id="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
-                                           oninvalid="this.setCustomValidity('Indtast en gyldig e-mail adresse')"
+                                    <input class="input" type="email" id="email" pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-z]{2,4}$"
+                                           oninvalid="setCustomValidity('Indtast en gyldig e-mail adresse')"
+                                           oninput="setCustomValidity('')"
                                            th:field="${user.userEmail}" required>
                                 </div>
                             </div>
@@ -78,7 +80,8 @@
                                 <div>
                                     <h5>Telefonnummer</h5>
                                     <input type="text" class="input" id="phonenumber" pattern="[0-9]{8}"
-                                           oninvalid="this.setCustomValidity('Indtast et gyldigt telefon nummer')"
+                                           oninvalid="setCustomValidity('Indtast et gyldigt telefon nummer')"
+                                           oninput="setCustomValidity('')"
                                            th:field="${user.userPhonenumber}" required>
                                 </div>
                             </div>

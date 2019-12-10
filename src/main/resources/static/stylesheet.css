@@ -16,6 +16,10 @@
     padding: 10px;
 }
 
+.buttons .btn {
+    margin-bottom: 20px;
+}
+
 .controlpaneltitle {
     display: block;
     text-align: center;

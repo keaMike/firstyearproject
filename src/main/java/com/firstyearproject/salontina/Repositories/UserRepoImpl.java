@@ -121,7 +121,11 @@ public class UserRepoImpl implements UserRepo{
             }
 
             userCreated = true;
-        } catch (Exception E) {
+        } catch (SQLIntegrityConstraintViolationException e) {
+            e.printStackTrace();
+
+        }
+        catch (SQLException E) {
             E.printStackTrace();
         } finally {
             mySQLConnector.closeConnection();
@@ -138,7 +142,7 @@ public class UserRepoImpl implements UserRepo{
     //Asbjørn
     @Override
     public boolean subscribeNewsletter(int userId) {
-        String statement = "INSERT INTO salon_tina_database.newsletter (users_id) VALUES (?)";
+        String statement = "INSERT INTO newsletter (users_id) VALUES (?)";
         userRepoTaskResult = newsletterQueries(userId, statement);
         return userRepoTaskResult;
     }
@@ -146,7 +150,7 @@ public class UserRepoImpl implements UserRepo{
     //Asbjørn
     @Override
     public boolean unsubscribeNewsletter(int userId) {
-        String statement = "DELETE FROM salon_tina_database.newsletter WHERE users_id = ?";
+        String statement = "DELETE FROM newsletter WHERE users_id = ?";
         userRepoTaskResult = newsletterQueries(userId, statement);
         return userRepoTaskResult;
     }
@@ -245,32 +249,59 @@ public class UserRepoImpl implements UserRepo{
     @Override
     public boolean editUser(User user) {
         boolean userEdited = false;
-        log.info(user.toString());
-        String statement =
-                "UPDATE users " +
-                "SET users_fullName = ?, " +
-                "users_phonenumber = ?, " +
-                "users_email = ?, " +
-                "users_preferences = ?, " +
-                "users_password = ? " +
-                "WHERE users_id = ?;";
-        try{
-            PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
-            pstmt.setString(1, user.getUsername());
-            pstmt.setInt(2,user.getUserPhonenumber());
-            pstmt.setString(3,user.getUserEmail());
-            pstmt.setString(4,user.getUserPreference());
-            pstmt.setString(5, user.getUserPassword());
-            pstmt.setInt(6,user.getUserId());
-            pstmt.executeUpdate();
-            userEdited = true;
+        log.info(user.toString()):
+        String statement;
 
-            databaseLogger.writeToLogFile(statement);
-        } catch (Exception e){
-            e.printStackTrace();
-        } finally {
-            mySQLConnector.closeConnection();
+        if(!user.getUserPassword().equals("")) {
+            statement =  "UPDATE users " +
+                    "SET users_fullName = ?, " +
+                    "users_phonenumber = ?, " +
+                    "users_email = ?, " +
+                    "users_preferences = ?, " +
+                    "users_password = ? " +
+                    "WHERE users_id = ?;";
+            try{
+
+                Connection connection = mySQLConnector.openConnection();
+                PreparedStatement pstms = connection.prepareStatement(statement);
+                pstms.setString(1, user.getUsername());
+                pstms.setInt(2,user.getUserPhonenumber());
+                pstms.setString(3,user.getUserEmail());
+                pstms.setString(4,user.getUserPreference());
+                pstms.setString(5, user.getUserPassword());
+                pstms.setInt(6,user.getUserId());
+                pstms.executeUpdate();
+                userEdited = true;
+
+                databaseLogger.writeToLogFile(statement);
+            } catch (Exception E){
+                E.printStackTrace();
+            }
+        } else {
+            statement =  "UPDATE users " +
+                    "SET users_fullName = ?, " +
+                    "users_phonenumber = ?, " +
+                    "users_email = ?, " +
+                    "users_preferences = ? " +
+                    "WHERE users_id = ?;";
+            try{
+
+                Connection connection = mySQLConnector.openConnection();
+                PreparedStatement pstms = connection.prepareStatement(statement);
+                pstms.setString(1, user.getUsername());
+                pstms.setInt(2,user.getUserPhonenumber());
+                pstms.setString(3,user.getUserEmail());
+                pstms.setString(4,user.getUserPreference());
+                pstms.setInt(5,user.getUserId());
+                pstms.executeUpdate();
+                userEdited = true;
+
+                databaseLogger.writeToLogFile(statement);
+            } catch (Exception E){
+                E.printStackTrace();
+            }
         }
+
         return userEdited;
     }
 

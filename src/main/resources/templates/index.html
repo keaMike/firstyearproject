@@ -8,6 +8,9 @@
 <div th:include="fragments/header :: navbar"></div>
 <body>
     <div class="backgroundimage">
+        <div th:if="${showconfirmation}" th:class="${alert}" role="alert">
+            <span th:text="${confirmationtext}"></span>
+        </div>
         <h1 class="landingpage">Velkommen til Salon-Tina</h1>
     </div>
     <div th:include="fragments/footer :: footer"></div>

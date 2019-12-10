@@ -7,22 +7,23 @@
 </head>
 <div th:include = "fragments/header :: navbar"></div>
 <body>
-<div class="container">
-    <button class="btn btn-primary" href="/sendreminder" >Send behandlingsreminder</button>
-</div>
+    <div class="container">
+        <h1 class="controlpaneltitle">Send reminder
+            <i class="fas fa-bell"></i>
+        </h1>
+        <div class="buttons text-center">
+            <a class="btn btn-dark" th:href="@{/sendreminder}" >Send behandlingsreminder</a>
+            <br>
+            <a class="btn btn-dark" th:href="@{/startAutoReminder}" >Start Automatisk Reminder</a>
+            <br>
+            <a class="btn btn-dark" th:href="@{/stopAutoReminder}" >Stop Automatisk Reminder</a>
+        </div>
+    </div>
 
-<div class="container">
-    <button class="btn btn-primary" href="/startAutoReminder" >Start Automatisk Reminder</button>
-</div>
-
-<div class="container">
-    <button class="btn btn-primary" href="/stopAutoReminder" >Stop Automatisk Reminder</button>
-</div>
-
-<div th:if="${showconfirmation}">
-    <div th:include="fragments/confirmation :: modal"></div>
-    <div th:include="fragments/confirmation :: script"></div>
-</div>
-<div th:include="fragments/footer :: footer"></div>
+    <div th:if="${showconfirmation}">
+        <div th:include="fragments/confirmation :: modal"></div>
+        <div th:include="fragments/confirmation :: script"></div>
+    </div>
+    <div th:include="fragments/footer :: footer"></div>
 </body>
 </html>

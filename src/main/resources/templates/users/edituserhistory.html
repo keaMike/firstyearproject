@@ -8,8 +8,12 @@
 <div th:include = "fragments/header :: navbar"></div>
 <body>
     <div class="container">
-        <form class="form-group" th:method="post" th:action="@{/edituserhistory}" th:object="${user}">
-            <input type="hidden" th:field="${user.userId}">
+        <div th:if="${showconfirmation}" th:class="${alert}" role="alert">
+            <span th:text="${confirmationtext}"></span>
+        </div>
+
+        <form class="form-group" th:method="post" th:action="@{/saveuserhistory}" th:object="${user}">
+            <input type="hidden" th:field="${editedUser.userId}">
             <label for="username">Kundenavn</label>
             <input class="form-control" id="username" type="text" readonly th:field="${editedUser.username}">
 

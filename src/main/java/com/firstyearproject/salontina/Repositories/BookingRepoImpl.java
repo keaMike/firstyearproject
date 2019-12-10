@@ -139,28 +139,7 @@ public class BookingRepoImpl implements BookingRepo{
             ResultSet rs = pstmt.executeQuery();
             List<Booking> bookings = new ArrayList<>();
             while(rs.next()) {
-                Booking booking = new Booking();
-                booking.setBookingId(rs.getInt("bookings_id"));
-                booking.setBookingUserId(rs.getInt("users_id"));
-                //TODO setTime?
-                booking.setBookingDate(rs.getDate("bookings_date"));
-                booking.setBookingComment(rs.getString("bookings_comment"));
-
-                Treatment treatment = new Treatment();
-                treatment.setProductId(rs.getInt("treatments_id"));
-                treatment.setProductName(rs.getString("treatments_name"));
-                treatment.setProductPrice(rs.getInt("treatments_price"));
-                treatment.setProductDescription(rs.getString("treatments_description"));
-                treatment.setTreatmentDuration(rs.getInt("treatments_duration"));
-                treatment.setProductActive(rs.getBoolean("treatments_active"));
-
-                //Initializing list
-                List<Treatment> treatments = new ArrayList<>();
-                booking.setBookingTreatmentList(treatments);
-                //Add treatments to a bookings treatment list
-                booking.getBookingTreatmentList().add(treatment);
-                //Add bookings to ArrayList
-                bookings.add(booking);
+                bookings.add(generateBookingFromResultSet(rs));
             }
 
             databaseLogger.writeToLogFile(statement);
@@ -248,10 +227,11 @@ public class BookingRepoImpl implements BookingRepo{
     //Luca
     @Override
     public List<Booking> getFutureBookings(){
-        String statement =
-                "SELECT * FROM bookings " +
-                "WHERE bookings_date BETWEEN DATE_ADD(CURDATE(), INTERVAL 1 day) AND DATE_ADD(CURDATE(), INTERVAL 30 day) " +
-                "ORDER BY bookings_date;";
+        String statement = "SELECT * FROM bookings " +
+                            "JOIN bookings_treatment on bookings.bookings_id = bookings_treatment.bookings_id " +
+                            "JOIN treatments on bookings_treatment.treatments_id = treatments.treatments_id " +
+                            "WHERE bookings_date BETWEEN DATE_ADD(CURDATE(), INTERVAL 1 day) AND DATE_ADD(CURDATE(), INTERVAL 30 day) " +
+                            "ORDER BY bookings_date;";
 
         List<Booking> bookingList = new ArrayList<>();
         try{
@@ -283,6 +263,21 @@ public class BookingRepoImpl implements BookingRepo{
         booking.setBookingTime(rs.getString(3));
         booking.setBookingDate(rs.getDate(4));
         booking.setBookingComment(rs.getString(5));
+
+        Treatment t = new Treatment();
+        t.setProductId(rs.getInt("treatments_id"));
+        t.setProductName(rs.getString("treatments_name"));
+        t.setProductPrice(rs.getInt("treatments_price"));
+        t.setProductDescription(rs.getString("treatments_description"));
+        t.setTreatmentDuration(rs.getInt("treatments_duration"));
+        t.setProductActive(rs.getBoolean("treatments_active"));
+
+        //Initializing list
+        List<Treatment> treatments = new ArrayList<>();
+        booking.setBookingTreatmentList(treatments);
+        //Add treatments to a bookings treatment list
+        booking.getBookingTreatmentList().add(t);
+
         return booking;
     }
 

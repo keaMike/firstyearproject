@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpSession;
 import java.sql.Date;
@@ -27,6 +29,7 @@ public class BookingController {
 
     private String REDIRECT = "redirect:/";
     private String MYBOOKINGS = "bookings/mybookings";
+    private String DELETEBOOKING = "bookings/deletebooking";
     private String BOOKINGCONFIRMATION = "bookings/bookingconfirmation";
     private String CHOOSEBOOKINGTREATMENT = "bookings/choosebookingtreatment";
     private String CHOOSEBOOKINGTIME = "bookings/choosebookingtime";
@@ -34,6 +37,9 @@ public class BookingController {
     private boolean taskResult = false;
     private boolean showConfirmation = false;
     private String confirmationText = "";
+    private String alert = "";
+    private String danger = "alert alert-danger";
+    private String success = "alert alert-success";
 
     @Autowired
     BookingServiceImpl bookingService;
@@ -46,15 +52,16 @@ public class BookingController {
 
     //Luca
     //Used in Java Methods/mappings
-    public void confirmation(String text){
+    public void confirmation(String text, String alert){
         showConfirmation = true;
         confirmationText = text;
+        this.alert = alert;
     }
 
     //Luca
     //Used in HTML-Modals
     public void showConfirmation(Model model){
-        model.addAttribute("showconfirmation", true);
+        model.addAttribute("showconfirmation", showConfirmation);
         model.addAttribute("confirmationtext", confirmationText);
         showConfirmation = false;
     }
@@ -72,23 +79,32 @@ public class BookingController {
             model.addAttribute("bookings", bookingService.getBookingList(user.getUserId()));
         }
         model.addAttribute("user", user);
+        showConfirmation(model);
         return MYBOOKINGS;
     }
 
     //Mike
-    @GetMapping("/deletebooking/{bookingid}")
-    public String deleteUserBooking(@PathVariable int bookingid, HttpSession session) {
+    @GetMapping("/deletebooking/{bookingId}")
+    public String deleteUserBooking(@PathVariable int bookingId, HttpSession session) {
         if(!userAuthenticator.userIsUser(session)){
             return REDIRECT;
         }
-        taskResult = bookingService.deleteBooking(bookingid);
-        if (taskResult) {
-            confirmation("Din booking er blevet slettet");
-            return REDIRECT + MYBOOKINGS;
-        } else {
-            confirmation("Din booking kunne ikke slettes. Prøv igen på et senere tidspunkt");
-            return MYBOOKINGS;
+        User user = (User)session.getAttribute("user");
+        List<Booking> bookings = bookingService.getBookingList(user.getUserId());
+        for(Booking booking : bookings) {
+            if(booking.getBookingId() == bookingId) {
+                taskResult = bookingService.deleteBooking(bookingId);
+                if (taskResult) {
+                    confirmation("Din booking er blevet slettet", success);
+                    return REDIRECT + "mybookings";
+                } else {
+                    confirmation("Din booking kunne ikke slettes. Prøv igen på et senere tidspunkt", danger);
+                    return REDIRECT + "mybookings";
+                }
+            }
         }
+        confirmation("Du kan ikke slette en booking som ikke er din egen", danger);
+        return REDIRECT;
     }
 
     //Jonathan & Luca
