@@ -249,7 +249,7 @@ public class UserRepoImpl implements UserRepo{
     @Override
     public boolean editUser(User user) {
         boolean userEdited = false;
-        log.info(user.toString()):
+        log.info(user.toString());
         String statement;
 
         if(!user.getUserPassword().equals("")) {

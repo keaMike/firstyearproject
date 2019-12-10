@@ -164,10 +164,10 @@ public class SMSController {
         autoReminderService.initiateAutoReminder();
         if (true) {
             log.info("AutoReminder succesfully started");
-            confirmation("SMS påmindelse er i gangsat");
+            confirmation("SMS påmindelse er i gangsat", success);
         } else {
             log.info("AutoReminder could not be started");
-            confirmation("SMS påmindelse kunne ikke startes");
+            confirmation("SMS påmindelse kunne ikke startes", danger);
         }
         return REDIRECT + REMINDER;
     }
@@ -181,10 +181,10 @@ public class SMSController {
         }
         if(autoReminderService.cancelAutoReminder()) {
             log.info("Autoreminder succesfully stopped");
-            confirmation("SMS påmindelse er blevet stoppet");
+            confirmation("SMS påmindelse er blevet stoppet", success);
         } else{
             log.info("AutoReminder failed to stop...");
-            confirmation("SMS påmindelse kunne ikke stoppes");
+            confirmation("SMS påmindelse kunne ikke stoppes", danger);
         }
         return REDIRECT + REMINDER;
     }
