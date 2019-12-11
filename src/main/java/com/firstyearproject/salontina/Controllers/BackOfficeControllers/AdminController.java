@@ -82,7 +82,7 @@ public class AdminController {
             return REDIRECT;
         }
         User user = (User)session.getAttribute("user");
-        if(bookingService.addVacationDate(chooseDate.getString(), user.getUserId())){
+        if(bookingService.addVacationDate(chooseDate.getDate().toString(), user.getUserId())){
             log.info("added vacation on date: " + chooseDate + "..." + SessionLog.sessionId(session));
 
             confirmationTool.confirmation("Ferie er blevet tilføjet d. " + chooseDate + ".", ConfirmationTool.success);

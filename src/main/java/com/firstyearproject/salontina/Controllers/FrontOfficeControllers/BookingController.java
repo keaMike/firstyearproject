@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpSession;
 import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -145,10 +144,10 @@ public class BookingController {
             Date date = new Date(Calendar.getInstance().getTimeInMillis());
             booking.setBookingDate(date);
             bookingList = bookingService.getBookingList(date.toString());
-            model.addAttribute("choosedate", new ChooseDate(date.toString()));
+            model.addAttribute("choosedate", new ChooseDate(date));
         } else {
-            booking.setBookingDate(bookingService.parseDateString(chooseDate.getString()));
-            bookingList = bookingService.getBookingList(chooseDate.getString());
+            booking.setBookingDate(bookingService.parseDateString(chooseDate.getDate().toString()));
+            bookingList = bookingService.getBookingList(chooseDate.getDate().toString());
             model.addAttribute("choosedate", chooseDate);
         }
 
@@ -169,7 +168,7 @@ public class BookingController {
             return REDIRECT;
         }
 
-        if(chooseDate.getString() != null){
+        if(chooseDate.getDate() != null){
             session.setAttribute("choosedate", chooseDate);
         }
 

@@ -14,9 +14,13 @@
         <div class="buttons text-center">
             <a class="btn btn-dark" th:href="@{/sendreminder}" >Send behandlingsreminder</a>
             <br>
-            <a class="btn btn-dark" th:href="@{/startAutoReminder}" >Start Automatisk Reminder</a>
-            <br>
-            <a class="btn btn-dark" th:href="@{/stopAutoReminder}" >Stop Automatisk Reminder</a>
+            <div class="card">
+                <div class="card-body">
+                    <a class="btn btn-dark" th:href="@{/startAutoReminder}" >Start Automatisk Reminder</a>
+                    <br>
+                    <a class="btn btn-dark" th:href="@{/stopAutoReminder}" >Stop Automatisk Reminder</a>
+                </div>
+            </div>
         </div>
     </div>
 

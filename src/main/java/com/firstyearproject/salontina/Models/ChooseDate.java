@@ -1,21 +1,23 @@
 package com.firstyearproject.salontina.Models;
 
+import java.sql.Date;
+
 public class ChooseDate {
 
-    private String string;
+    private Date date;
 
     public ChooseDate() {
     }
 
-    public ChooseDate(String string) {
-        this.string = string;
+    public ChooseDate(Date string) {
+        this.date = string;
     }
 
-    public String getString() {
-        return string;
+    public Date getDate() {
+        return date;
     }
 
-    public void setString(String string) {
-        this.string = string;
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

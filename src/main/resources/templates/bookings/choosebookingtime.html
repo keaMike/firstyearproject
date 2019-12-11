@@ -13,7 +13,7 @@
         <h1>Vælg tidspunkt
             <i class = "fas fa-clock"></i>
         </h1>
-        <h3 th:text="'Valgt dato: ' + ${choosedate.string}"></h3>
+        <h3 th:text="'Valgt dato: ' + ${choosedate.date}"></h3>
     </div>
     <div class="row">
         <div class="col-1">
@@ -50,8 +50,7 @@
                     <form th:method="Post" th:object="${choosedate}" th:action="@{changebookingdate}">
                         <div class="form-group">
                             <label for="dateInput">Booking dato</label>
-                            <input id="dateInput" type="text" class="form-control" aria-describedby="dateInputHelp" th:field="${choosedate.string}">
-                            <small id="dateInputHelp" class="text-muted">Skal skrives i formatet: 'ÅÅÅÅ-MM-DD'.</small>
+                            <input id="dateInput" type="date" class="form-control" th:field="${choosedate.date}">
                         </div>
                         <input class="btn btn-dark" type="submit" value="Skift dato"/>
                     </form>
