@@ -1,0 +1,106 @@
+CREATE DATABASE IF NOT EXISTS salon_tina_database;
+USE salon_tina_database;
+
+create table salon_tina_database.items
+(
+    items_id          int auto_increment,
+    items_name        varchar(50) not null,
+    items_price       double      not null,
+    items_description text        null,
+    items_active      tinyint(1)  not null,
+    items_quantity    int         null,
+    constraint items_id
+        unique (items_id)
+);
+
+create table salon_tina_database.treatments
+(
+    treatments_id          int auto_increment,
+    treatments_name        varchar(50) not null,
+    treatments_price       double      not null,
+    treatments_description text        null,
+    treatments_duration    int         null,
+    treatments_active      tinyint(1)  not null,
+    constraint treatments_id
+        unique (treatments_id)
+);
+
+create table salon_tina_database.users
+(
+    users_id          int auto_increment,
+    users_fullName    varchar(100) not null,
+    users_password    varchar(100) not null,
+    users_phonenumber int          not null,
+    users_email       varchar(50)  not null,
+    users_preferences text         null,
+    constraint users_email
+        unique (users_email),
+    constraint users_id
+        unique (users_id),
+    constraint users_phonenumber
+        unique (users_phonenumber)
+);
+
+create table salon_tina_database.bookings
+(
+    bookings_id      int auto_increment,
+    users_id         int        not null,
+    bookings_time    varchar(8) null,
+    bookings_date    date       not null,
+    bookings_comment text       null,
+    constraint bookings_id
+        unique (bookings_id),
+    constraint bookings_fk_users
+        foreign key (users_id) references salon_tina_database.users (users_id)
+            on delete cascade
+);
+
+create table salon_tina_database.bookings_treatment
+(
+    bookings_id   int not null,
+    treatments_id int not null,
+    constraint bookingstreatment_fk_bookings
+        foreign key (bookings_id) references salon_tina_database.bookings (bookings_id)
+            on delete cascade,
+    constraint bookingstreatment_fk_treatments
+        foreign key (treatments_id) references salon_tina_database.treatments (treatments_id)
+            on delete cascade
+);
+
+create table salon_tina_database.newsletter
+(
+    users_id int not null,
+    constraint users_id
+        unique (users_id),
+    constraint newsletter_fk_users
+        foreign key (users_id) references salon_tina_database.users (users_id)
+);
+
+create table salon_tina_database.smsreminders
+(
+    booking_id int not null,
+    constraint booking_id
+        unique (booking_id),
+    constraint smsreminder_fk_bookings
+        foreign key (booking_id) references salon_tina_database.bookings (bookings_id)
+);
+
+create table salon_tina_database.users_archive
+(
+    users_id          int          not null,
+    users_fullName    varchar(100) null,
+    users_phonenumber int          null,
+    users_email       varchar(50)  null,
+    users_preferences text         null,
+    constraint users_id
+        unique (users_id)
+);
+
+create table salon_tina_database.users_roles
+(
+    users_id int         not null,
+    role     varchar(20) null,
+    constraint usersroles_fk_users
+        foreign key (users_id) references salon_tina_database.users (users_id)
+            on delete cascade
+);
