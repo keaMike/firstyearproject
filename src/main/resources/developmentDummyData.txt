@@ -1,0 +1,70 @@
+USE salon_tina_database;
+
+INSERT INTO users (users_fullName, users_password, users_phonenumber, users_email) VALUES
+('admin', '89146bd636a722bfa5f423ad208f54bf', 100000001, 'admin@admin.com'),
+('Frisør', '644f7427180c737aebc6bdb2ad6b07dd', 10000002, 'frisør@salon.dk'),
+('Adam Hansen', '78c263af1e079e5aa51723dfb28deced', 67426732, 'AdamnHansen@gmail.com'),
+('Alexa Korsberg', '34d9fc9de4ece0c200a29064f739d9fd', 88214321, 'AlexaKorsberg@gmail.com'),
+('Andrea Munck', 'd8178084591516ba79d37363d676b17b', 56867845, 'AndreaMunch@gmail.com'),
+('Martin Lund', 'ee7bdbd75dbe2b7871b662edd515aeef', 75849762, 'MartinLund@gmail.com'),
+('Trine Zedeler', '7208856d85d4e38be61b3ac959d30a18', 23536148, 'TrineZedeler@gmail.com'),
+('Jonas Olczyk', 'e9da978bd35ef37f89bb3defb94baab8', 21135362, 'JonasOlczyk@gmail.com'),
+('Anders Steen Thranum', '8cb9a09f5e439ce9e826d03739816adf', 86235142, 'AndersThranum@hotmail.com'),
+('Morten Brander Knudsen', 'de020b5ca349f0ba471cf4349ef18dd9', 65221147, 'Morten@knudsen.dk'),
+('Christian De Freiesleben Røssel', 'ff6cb1de90f843476da683ad2c9d7ca9', 40025684, 'Christan@Røssel.dk'),
+('Wen Hao Xuan', '755f9590116c8f56fd50f34f8ff13205', 20124254, 'WenHaoXuan@gmail.com'),
+('Emilie Riisberg', '48945308832ae5feae1747c3cd39d946', 30689885, 'EmilieRis@gmail.com'),
+('Stefan Hansen', '7f7c7c9dc4bdf5e85447e550337f690c', 45879586, 'Stefan@hansen.com'),
+('Otto Linnet', 'c26f8a6ba913ee889697d6fc65a276', 78424006, 'OttoLinnet@gmail.com'),
+('Harald Welling', '3b985bde9e131d89595279719e91e69e', 62545212, 'Harald@Welling.com'),
+('Chris Raahauge DeStantis', '2cff3c8ed6a4da444d8267a733de6344', 20024578, 'Chris@DeStantis.com');
+
+INSERT INTO users_archive (users_id, users_fullName, users_phonenumber, users_email, users_preferences )
+VALUES
+(101, 'Ida Gether', 22124257, 'IdaGether@gmail.com', 'Blond'),
+(102, 'Rasmus Kuhlmann', 64824578, 'Rasmus@Kuhlmann.dk', '10mm i siderne, 15mm i toppen');
+
+INSERT INTO users_roles (users_id, role) VALUES
+(1, 'Admin'),
+(2, 'Frisør');
+
+INSERT INTO newsletter (users_id) VALUES
+(1), (2), (4), (6), (7), (9), (5);
+
+INSERT INTO bookings (users_id, bookings_time, bookings_date) VALUES
+(3, '08:00', '2019-12-05'), (3, '12:00', '2019-06-10'), (4, '09:00', '2019-12-09'),(5, '10:00', '2019-10-29'),(5, '08:00', '2019-12-20'),
+(6, '15:00', '2019-12-01'), (7, '14:00', '2019-12-15'), (8, '10:00', '2019-09-01'), (9, '11:00', '2019-12-13'), (10, '09:00', '2019-11-30'),
+(11, '13:00', '2019-01-16'), (12, '14:00', '2019-12-10'), (12, '15:00', '2019-12-22'),
+(5, '10:00', '2019-12-05'),(8, '09:00', '2019-12-05'),(11, '12:00', '2019-12-05'),(6, '14:00', '2019-12-05'),(16, '13:00', '2019-12-05'),
+(14, '11:00', '2019-12-10'),(15, '08:00', '2019-12-15');
+
+INSERT INTO treatments (treatments_name, treatments_price, treatments_description, treatments_duration, treatments_active) VALUES
+('Dameklip', 290.00, 'Normal klipning for damer', 30, 1),
+('Herreklip', 210.00, 'Normal klipning for herre', 30, 1),
+('Børneklip', 200.00, 'Normal klipning for børn', 30, 1),
+('Farve', 380.00, 'Farvning af hår', 90, 1),
+('Permanent', 380.00, 'Permanent farvning af hår', 90, 1),
+('Lys spidser', 380.00, 'Lys farvning af spidser', 90, 1),
+('Bryn & Vipper', 180.00, 'Både bryn og bipper', 15, 1),
+('Bryn', 90.00, 'Kun bryn', 15, 1),
+('Vipper', 90.00, 'Kun vipper', 15, 1),
+('Føn', 210, 'Føn', 30, 1),
+('Skylle Farve', 280, 'Skylle farve', 90, 1);
+
+INSERT INTO bookings_treatment (bookings_id, treatments_id) VALUES
+(1, 2), (2, 5), (3, 10), (4, 5), (5, 1), (6, 4), (7, 1), (8, 2), (9, 1), (10, 4), (11, 7), (12, 8), (13, 6), (14, 3),
+(15, 11), (16, 2), (17, 5), (18, 6), (19, 3), (20, 10);
+
+INSERT INTO items (items_name, items_price, items_description, items_active, items_quantity) VALUES
+('Super 88 Hårkur 150 ml', 126.75, 'Super 88 Hårkur er en professionel hårkur til farvet, permanentet, tørt og porøst hår. Tilfører håret fugtighed, elasticitet, glans og forbedrer hårstrukturen mærkbart.', 1, 10),
+('Clearspring Organic Coconut Oil 550 ml', 74.25, 'Clearspring Organic Coconut Oil er et helt fantastisk produkt.', 1, 20);
+
+SELECT * FROM newsletter;
+SELECT * FROM bookings;
+SELECT * FROM users;
+SELECT * FROM users_roles;
+SELECT * FROM bookings_treatment;
+SELECT * FROM treatments;
+SELECT * FROM items;
+SELECT * FROM users_archive;
+SELECT * FROM smsreminders;
