@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Repository
 public class BookingRepoImpl implements BookingRepo{
@@ -45,6 +46,11 @@ public class BookingRepoImpl implements BookingRepo{
             pstmt.execute();
 
             if(booking.getBookingTreatmentList() != null && booking.getBookingTreatmentList().size() != 0){
+                try {
+                    TimeUnit.SECONDS.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 addTreatmentsToBooking(booking.getBookingTreatmentList(), booking);
             }
 
