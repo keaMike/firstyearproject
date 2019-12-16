@@ -43,14 +43,14 @@ public class BookingRepoImpl implements BookingRepo{
             pstmt.setString(2, booking.getBookingTime());
             pstmt.setInt(3, booking.getBookingUserId());
             pstmt.setString(4, booking.getBookingComment());
-            pstmt.execute();
+
+            //Returns int representing how many rows where affected by statement. If zero we know
+            //that statement, has failed.
+            if(pstmt.executeUpdate() <= 0){
+                return false;
+            }
 
             if(booking.getBookingTreatmentList() != null && booking.getBookingTreatmentList().size() != 0){
-                try {
-                    TimeUnit.SECONDS.sleep(1);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
                 addTreatmentsToBooking(booking.getBookingTreatmentList(), booking);
             }
 
@@ -130,7 +130,7 @@ public class BookingRepoImpl implements BookingRepo{
                 "ON bookings.bookings_id = bookings_treatment.bookings_id " +
                 "JOIN treatments " +
                 "ON bookings_treatment.treatments_id = treatments.treatments_id " +
-                "WHERE users_id = ?";
+                "WHERE users_id = ? ORDER BY bookings_date, bookings_time";
         try {
             PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
             pstmt.setInt(1, userid);
@@ -234,7 +234,7 @@ public class BookingRepoImpl implements BookingRepo{
                             "JOIN bookings_treatment on bookings.bookings_id = bookings_treatment.bookings_id " +
                             "JOIN treatments on bookings_treatment.treatments_id = treatments.treatments_id " +
                             "WHERE bookings_date BETWEEN DATE_ADD(CURDATE(), INTERVAL 0 DAY) AND DATE_ADD(CURDATE(), INTERVAL 365 DAY) " +
-                            "ORDER BY bookings_date;";
+                            "ORDER BY bookings_date, bookings_time;";
 
         List<Booking> bookingList = new ArrayList<>();
         try{
