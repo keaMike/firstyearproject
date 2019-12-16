@@ -37,3 +37,4 @@ build/
 ### VS Code ###
 .vscode/
 /logFile.txt
+/src/main/resources/application-devhttps.properties
