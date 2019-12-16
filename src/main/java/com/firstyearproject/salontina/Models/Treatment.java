@@ -1,9 +1,5 @@
 package com.firstyearproject.salontina.Models;
 
-import com.firstyearproject.salontina.Repositories.ProductRepoImpl;
-
-import java.util.List;
-
 public class Treatment extends Product {
 
     private int treatmentDuration;

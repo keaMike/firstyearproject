@@ -22,13 +22,17 @@ public class BookingServiceImpl implements BookingService{
     @Autowired
     BookingRepoImpl bookingRepo;
 
-    //Luca
+    /**
+     * Luca
+     */
     public boolean addBooking(Booking booking){
         log.info("addBooking method started...");
         return bookingRepo.addBooking(booking);
     }
 
-    //Mike
+    /**
+     * Mike
+     */
     public boolean deleteBooking(List<Booking> bookingList, int bookingId, boolean admin){
         log.info("deleteBooking method started...");
 
@@ -46,13 +50,9 @@ public class BookingServiceImpl implements BookingService{
         return false;
     }
 
-    public boolean editBooking(Booking booking){
-        log.info("editBooking method started...");
-        //TODO
-        return false;
-    }
-
-    //Luca
+    /**
+     * Luca
+     */
     @Override
     public List<Booking> getBookingList(String startDateString, String endDateString){
         log.info("getBookingList(String, String) method started...");
@@ -69,7 +69,10 @@ public class BookingServiceImpl implements BookingService{
         return null;
     }
 
-    //Luca
+    /**
+     * Luca
+     * @return List of timeslots on specific day, either with actual Booking object or placeholder Booking object.
+     */
     @Override
     public List<Booking> getBookingList(String dateString){
         log.info("getBookingList(String) method started...");
@@ -96,7 +99,11 @@ public class BookingServiceImpl implements BookingService{
         return bookingList;
     }
 
-    //Luca
+    /**
+     * Luca
+     * @param dateString Date as String in format "yyyy-MM-dd".
+     * @return java.sql.Date object.
+     */
     public Date parseDateString(String dateString){
         try{
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -110,13 +117,17 @@ public class BookingServiceImpl implements BookingService{
         return null;
     }
 
-    //Luca
+    /**
+     * Luca
+     */
     public List<Booking> getFutureBookings(){
         log.info("getFutureBookings method started...");
         return bookingRepo.getFutureBookings();
     }
 
-    //Luca
+    /**
+     * Luca
+     */
     private boolean timeIsBooked(List<Booking> bookingList, String time){
         if(bookingList == null){
             return false;
@@ -129,7 +140,9 @@ public class BookingServiceImpl implements BookingService{
         return false;
     }
 
-    //Luca
+    /**
+     * Luca
+     */
     @Override
     public boolean addVacationDate(String dateString, int userId){
         log.info("addVacationDate method started...");
@@ -144,6 +157,9 @@ public class BookingServiceImpl implements BookingService{
         return false;
     }
 
+    /**
+     * Luca
+     */
     @Override
     public boolean bookingExists(Booking booking) {
         return bookingRepo.bookingExists(booking);

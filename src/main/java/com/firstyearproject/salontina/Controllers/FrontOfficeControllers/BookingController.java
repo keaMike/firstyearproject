@@ -48,7 +48,9 @@ public class BookingController {
     @Autowired
     ConfirmationTool confirmationTool;
 
-    //Mike
+    /**
+     * Mike
+     */
     @GetMapping("/mybookings")
     public String userBookings(Model model, HttpSession session) {
         log.info("get mybookings action started..." + SessionLog.sessionId(session));
@@ -74,7 +76,9 @@ public class BookingController {
         return MYBOOKINGS;
     }
 
-    //Mike
+    /**
+     * Mike
+     */
     @GetMapping("/deletebooking/{bookingId}")
     public String deleteUserBooking(@PathVariable int bookingId, HttpSession session) {
         log.info(" action started..." + SessionLog.sessionId(session));
@@ -98,7 +102,9 @@ public class BookingController {
         return REDIRECT + "mybookings";
     }
 
-    //Jonathan & Luca
+    /**
+     * Jonathan & Luca
+     */
     @GetMapping("choosetreatment")
     public String chooseTreatment(Model model, HttpSession session) {
         log.info("get choosetreatment action started..." + SessionLog.sessionId(session));
@@ -116,7 +122,9 @@ public class BookingController {
         return CHOOSEBOOKINGTREATMENT;
     }
 
-    //Jonathan & Luca
+    /**
+     * Jonathan & Luca
+     */
     @GetMapping("choosetime/{treatmentId}")
     public String chooseTime(HttpSession session, Model model, @PathVariable int treatmentId) {
         log.info("get choosetime action started..." + SessionLog.sessionId(session));
@@ -158,6 +166,9 @@ public class BookingController {
         return CHOOSEBOOKINGTIME;
     }
 
+    /**
+     * Luca
+     */
     @PostMapping("choosetime/changebookingdate")
     public String changebookingdate(Model model, HttpSession session, @ModelAttribute ChooseDate chooseDate){
         log.info("post changebookingtime action started..." + SessionLog.sessionId(session));
@@ -175,7 +186,9 @@ public class BookingController {
         return REDIRECT + "choosetime/0";
     }
 
-    //Jonathan & Luca
+    /**
+     * Jonathan & Luca
+     */
     @GetMapping("bookingconfirmation/{time}")
     public String bookingConfirmation(HttpSession session, Model model, @PathVariable String time) {
         log.info("get bookingconfirmation action started..." + SessionLog.sessionId(session));
@@ -207,6 +220,9 @@ public class BookingController {
         return BOOKINGCONFIRMATION;
     }
 
+    /**
+     * Luca
+     */
     @PostMapping("bookingconfirmation/savebooking")
     public String bookingConfirmation(HttpSession session, Model model, @ModelAttribute Booking foundBooking){
         log.info("post bookingconfirmation action started..." + SessionLog.sessionId(session));

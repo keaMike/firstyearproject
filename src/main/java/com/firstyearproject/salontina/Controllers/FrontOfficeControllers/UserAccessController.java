@@ -43,7 +43,9 @@ public class UserAccessController {
     @Autowired
     ConfirmationTool confirmationTool;
 
-    //Jonathan & Mike
+    /**
+     * Jonathan & Mike
+     */
     public static Model userExists(Model model, HttpSession session) {
         if(session.getAttribute("user") != null) {
             User user = (User)session.getAttribute("user");
@@ -55,8 +57,9 @@ public class UserAccessController {
         return model;
     }
 
-
-    //Mike
+    /**
+     * Mike
+     */
     @GetMapping("/")
     public String index(Model model, HttpSession session) {
         log.info("get index action started..." + SessionLog.sessionId(session));
@@ -66,7 +69,9 @@ public class UserAccessController {
         return INDEX;
     }
 
-    //Luca
+    /**
+     * Luca
+     */
     @PostMapping("/")
     public String login(HttpSession session, @ModelAttribute LoginToken loginToken) {
         log.info("post login action started..." + SessionLog.sessionId(session));
@@ -87,6 +92,9 @@ public class UserAccessController {
         return REDIRECT;
     }
 
+    /**
+     * Luca
+     */
     @GetMapping("/logout")
     public String logout(HttpSession session){
         log.info("get logout action started..." + SessionLog.sessionId(session));
@@ -103,7 +111,9 @@ public class UserAccessController {
         return REDIRECT;
     }
 
-    //Jonathan
+    /**
+     * Jonathan
+     */
     @PostMapping("/register")
     public String register(HttpSession session, @ModelAttribute User user) {
         log.info("post register action started..." + SessionLog.sessionId(session));
@@ -120,7 +130,9 @@ public class UserAccessController {
         return REDIRECT;
     }
 
-    //Jonathan
+    /**
+     * Jonathan
+     */
     @GetMapping("/editUser")
     public String editUser(HttpSession session, Model model) {
         log.info("get editUser action started..." + SessionLog.sessionId(session));
@@ -135,7 +147,9 @@ public class UserAccessController {
         return EDITUSER;
     }
 
-    //Jonathan
+    /**
+     * Jonathan
+     */
     @PostMapping("/editUser")
     public String editUser(@ModelAttribute User user, HttpSession session) {
         log.info("post editUser action started..." + SessionLog.sessionId(session));
@@ -162,7 +176,9 @@ public class UserAccessController {
         return REDIRECT + "userprofile";
     }
 
-    //Mike
+    /**
+     * Mike
+     */
     @GetMapping("userprofile")
     public String userprofile(Model model, HttpSession session) {
         log.info("get userprofile action started..." + SessionLog.sessionId(session));
@@ -181,7 +197,9 @@ public class UserAccessController {
         return USERPROFILE;
     }
 
-    //Mike
+    /**
+     * Mike
+     */
     @PostMapping("/deleteuser")
     public String deleteUser(@ModelAttribute User user, HttpSession session) {
         log.info("post deleteuser action started..." + SessionLog.sessionId(session));
@@ -205,7 +223,9 @@ public class UserAccessController {
         return REDIRECT + USERPROFILE;
     }
 
-    //Mike
+    /**
+     * Mike
+     */
     @GetMapping("/contact")
     public String contact(Model model, HttpSession session) {
         log.info("get contact action started..." + SessionLog.sessionId(session));
@@ -214,7 +234,9 @@ public class UserAccessController {
         return CONTACT;
     }
 
-    //Asbjørn
+    /**
+     * Asbjørn
+     */
     @PostMapping("subscribeNewsletter")
     public String subscribeNewsletter (HttpSession session) {
         log.info("post subscribeNewsletter action started..." + SessionLog.sessionId(session));
@@ -241,7 +263,9 @@ public class UserAccessController {
         return REDIRECT + "userprofile";
     }
 
-    //Asbjørn
+    /**
+     * Asbjørn
+     */
     @PostMapping("unsubscribeNewsletter")
     public String unsubscribeNewsletter (HttpSession session) {
         log.info("post unsubscribeNewsletter action started..." + SessionLog.sessionId(session));

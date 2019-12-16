@@ -1,6 +1,6 @@
 package com.firstyearproject.salontina.Models;
 
-import java.sql.Date; //Maybe other "Date"?
+import java.sql.Date;
 import java.util.List;
 
 public class Booking {

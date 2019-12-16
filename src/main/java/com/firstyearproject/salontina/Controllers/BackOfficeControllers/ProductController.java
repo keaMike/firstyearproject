@@ -46,7 +46,9 @@ public class ProductController {
     @Autowired
     ConfirmationTool confirmationTool;
 
-    //Asbjørn
+    /**
+     * Asbjørn
+     */
     @GetMapping("/createproduct")
     public String createProduct(Model model, HttpSession session) {
         log.info("get createproduct action started..." + SessionLog.sessionId(session));
@@ -61,7 +63,9 @@ public class ProductController {
         return CREATEPRODUCT;
     }
 
-    //Asbjørn
+    /**
+     * Asbjørn
+     */
     @GetMapping("/createitem")
     public String createItem(Model model, HttpSession session) {
         log.info("get createitem action started..." + SessionLog.sessionId(session));
@@ -77,7 +81,9 @@ public class ProductController {
         return CREATEITEM;
     }
 
-    //Asbjørn
+    /**
+     * Asbjørn
+     */
     @PostMapping("/createitem")
     public String createItem(@ModelAttribute Item item, HttpSession session) {
         log.info("post createitem action started..." + SessionLog.sessionId(session));
@@ -100,7 +106,9 @@ public class ProductController {
         return REDIRECT + PRODUCTS;
     }
 
-    //Asbjørn
+    /**
+     * Asbjørn
+     */
     @GetMapping("/createtreatment")
     public String createTreatment(Model model, HttpSession session) {
         log.info("get createtreatment action started..." + SessionLog.sessionId(session));
@@ -116,7 +124,9 @@ public class ProductController {
         return CREATETREATMENT;
     }
 
-    //Asbjørn
+    /**
+     * Asbjørn
+     */
     @PostMapping("/createtreatment")
     public String createTreatment(@ModelAttribute Treatment treatment, HttpSession session) {
         log.info("post createtreatment action started..." + SessionLog.sessionId(session));
@@ -139,7 +149,9 @@ public class ProductController {
         return REDIRECT + TREATMENTS;
     }
 
-    //Asbjørn
+    /**
+     * Asbjørn
+     */
     @GetMapping ("/treatments")
     public String displayTreatments (Model model, HttpSession session) {
         log.info("get treatments action started..." + SessionLog.sessionId(session));
@@ -155,7 +167,9 @@ public class ProductController {
         return DISPLAYPRODUCTS;
     }
 
-    //Asbjørn
+    /**
+     * Asbjørn
+     */
     @GetMapping ("/products")
     public String displayProducts (Model model, HttpSession session) {
         log.info("get products action started..." + SessionLog.sessionId(session));
@@ -171,7 +185,9 @@ public class ProductController {
         return DISPLAYPRODUCTS;
     }
 
-    //Mike
+    /**
+     * Mike
+     */
     @GetMapping("/editproduct")
     public String editProduct(Model model, HttpSession session) {
         log.info("get editproduct action started..." + SessionLog.sessionId(session));
@@ -186,7 +202,9 @@ public class ProductController {
         return EDITPRODUCT;
     }
 
-    //Asbjørn
+    /**
+     * Asbjørn
+     */
     @GetMapping ("/edittreatment/{id}")
     public String editTreatment (@PathVariable("id") int id, Model model, HttpSession session) {
         log.info("get edittreatment action started..." + SessionLog.sessionId(session));
@@ -202,7 +220,9 @@ public class ProductController {
         return EDITTREATMENT;
     }
 
-    //Asbjørn
+    /**
+     * Asbjørn
+     */
     @PostMapping ("/edittreatment")
     public String editTreatment (@ModelAttribute Treatment treatment, HttpSession session) {
         log.info("post edittreatment action started..." + SessionLog.sessionId(session));
@@ -225,7 +245,9 @@ public class ProductController {
         return REDIRECT + "treatments";
     }
 
-    //Asbjørn
+    /**
+     * Asbjørn
+     */
     @GetMapping ("/edititem/{id}")
     public String editItem (@PathVariable ("id") int id, Model model, HttpSession session) {
         log.info("get edititem action started..." + SessionLog.sessionId(session));
@@ -241,7 +263,9 @@ public class ProductController {
         return EDITITEM;
     }
 
-    //Asbjørn
+    /**
+     * Asbjørn
+     */
     @PostMapping ("/edititem")
     public String editItem (@ModelAttribute Item item, HttpSession session) {
         log.info("post edititem action started..." + SessionLog.sessionId(session));

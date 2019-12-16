@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @Repository
 public class BookingRepoImpl implements BookingRepo{
@@ -25,7 +24,11 @@ public class BookingRepoImpl implements BookingRepo{
     @Autowired
     DatabaseLogger databaseLogger;
 
-    //Luca
+    /**
+     * Luca
+     * @param booking The new booking object.
+     * @return Return if the query was successful.
+     */
     @Override
     public boolean addBooking(Booking booking){
         log.info("addBooking method started...");
@@ -66,7 +69,9 @@ public class BookingRepoImpl implements BookingRepo{
         return false;
     }
 
-    //Luca
+    /**
+     * Luca
+     */
     @Override
     public boolean addTreatmentsToBooking(List<Treatment> treatmentList, Booking booking){
         log.info("addTreatmentsToBooking method started...");
@@ -89,7 +94,10 @@ public class BookingRepoImpl implements BookingRepo{
         return true;
     }
 
-    //Luca
+    /**
+     * Luca
+     * @return The booking id found by bookingDate and bookingTime
+     */
     private int getBookingId(Booking booking){
         log.info("getBookingId method started...");
         String statement =
@@ -119,7 +127,10 @@ public class BookingRepoImpl implements BookingRepo{
         return 0;
     }
 
-    //Mike
+    /**
+     * Mike
+     * @return List of Bookings found by userId
+     */
     @Override
     public List<Booking> findBookingsByUserId(int userid) {
         log.info("findBookingsByUserId method started...");
@@ -151,7 +162,10 @@ public class BookingRepoImpl implements BookingRepo{
         return null;
     }
 
-    //Luca
+    /**
+     * Luca
+     * @return List of Bookings found by a start and end date.
+     */
     @Override
     public List<Booking> getBookingList(Date startDate, Date endDate){
         log.info("getBookingList(Date, Date) method started...");
@@ -191,7 +205,10 @@ public class BookingRepoImpl implements BookingRepo{
         return null;
     }
 
-    //Luca
+    /**
+     * Luca
+     * @return List of Bookings found by single date.
+     */
     @Override
     public List<Booking> getBookingList(Date date){
         log.info("getBookingList(Date) method started...");
@@ -226,7 +243,10 @@ public class BookingRepoImpl implements BookingRepo{
         return null;
     }
 
-    //Luca
+    /**
+     * Luca
+     * @return List of Bookings from current date and a year ahead.
+     */
     @Override
     public List<Booking> getFutureBookings(){
         log.info("getFutureBookings method started...");
@@ -258,7 +278,10 @@ public class BookingRepoImpl implements BookingRepo{
         return null;
     }
 
-    //Luca
+    /**
+     * Luca
+     * @return Booking object generates from ResultSet.
+     */
     private Booking generateBookingFromResultSet(ResultSet rs) throws SQLException{
         Booking booking = new Booking();
         booking.setBookingId(rs.getInt(1));
@@ -284,7 +307,9 @@ public class BookingRepoImpl implements BookingRepo{
         return booking;
     }
 
-    //Luca
+    /**
+     * Luca
+     */
     @Override
     public boolean addVacationDate(Date date, int userId){
         log.info("addVacation method started...");
@@ -306,8 +331,10 @@ public class BookingRepoImpl implements BookingRepo{
         }
         return true;
     }
-  
-    //Mike
+
+    /**
+     * Mike
+     */
     @Override
     public boolean deleteBooking(int bookingId) {
         log.info("deleteBooking method started...");
@@ -329,6 +356,9 @@ public class BookingRepoImpl implements BookingRepo{
         return false;
     }
 
+    /**
+     * Luca
+     */
     @Override
     public boolean deleteTreatmentByBookingId(int bookingId){
         log.info("deleteTreatmentByBookingId method started...");
@@ -350,7 +380,9 @@ public class BookingRepoImpl implements BookingRepo{
         return false;
     }
 
-    //Asbjørn
+    /**
+     * Asbjørn
+     */
     @Override
     public boolean checkSMSReminder() {
         log.info("checkSMSReminder method started...");
@@ -382,7 +414,9 @@ public class BookingRepoImpl implements BookingRepo{
         return false;
     }
 
-    //Asbjørn
+    /**
+     * Asbjørn
+     */
     @Override
     public boolean saveReminder() {
         log.info("saveReminder method started...");
@@ -409,6 +443,10 @@ public class BookingRepoImpl implements BookingRepo{
         return true;
     }
 
+    /**
+     * Luca
+     * @return Boolean stating if the booking already exists.
+     */
     @Override
     public boolean bookingExists(Booking booking) {
         log.info("bookingExists method started...");
