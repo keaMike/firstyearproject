@@ -104,3 +104,9 @@ create table salon_tina_database.users_roles
         foreign key (users_id) references salon_tina_database.users (users_id)
             on delete cascade
 );
+
+INSERT INTO (users_fullName, users_password, users_phonenumber, users_email) VALUES
+    ('admin', '89146bd636a722bfa5f423ad208f54bf', 0, 'admin@admin.com');
+
+INSERT INTO users_roles (users_id, role) VALUES
+    (1, 'Admin');
