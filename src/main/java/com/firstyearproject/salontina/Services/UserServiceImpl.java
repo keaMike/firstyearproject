@@ -25,20 +25,26 @@ public class UserServiceImpl implements UserService {
     @Value("${hashing.salt}")
     private String hashingSalt;
 
-    //Jonathan
+    /**
+     * Jonathan
+     */
     @Override
     public boolean addUser(User user){
         user.setUserPassword(hashPassword(user.getUserPassword()));
         return UR.addUser(user);
     }
 
-    //Mike & Asbjørn
+    /**
+     * Mike & Asbjørn
+     */
     @Override
     public boolean deleteUser(int userId){
         return UR.deleteUser(userId);
     }
 
-    //Jonathan
+    /**
+     * Jonathan
+     */
     @Override
     public boolean editUser(User user){
         if(user.getUserPassword() != "") {
@@ -47,47 +53,63 @@ public class UserServiceImpl implements UserService {
         return UR.editUser(user);
     }
 
-    //Mike
+    /**
+     * Mike
+     */
     @Override
     public User authenticateUser(LoginToken loginToken) {
         loginToken.setLoginTokenPassword(hashPassword(loginToken.getLoginTokenPassword()));
         return UR.authenticateUser(loginToken);
     }
 
-    //Asbjørn
+    /**
+     * Asbjørn
+     */
     @Override
     public boolean subscribeNewsletter(int userId) {
         boolean userSerivceTaskResult = UR.subscribeNewsletter(userId);
         return userSerivceTaskResult;
     }
 
-    //Asbjørn
+    /**
+     * Asbjørn
+     */
     @Override
     public boolean unsubscribeNewsletter(int userId) {
         boolean userServiceTaskResult = UR.unsubscribeNewsletter(userId);
         return userServiceTaskResult;
     }
 
-    //Mike
+    /**
+     * Mike
+     */
     @Override
     public boolean editUserHistory(User user){
         boolean userEdited = UR.editUserHistory(user);
         return userEdited;
     }
 
-    //Mike
+    /**
+     * Mike
+     */
     @Override
     public List<User> getAllUsers() {
         return UR.findAllUsers();
     }
 
-    //Mike
+    /**
+     * Mike
+     */
     @Override
     public User getUserById(int userid) {
         return UR.findUserById(userid);
     }
 
-    //Luca
+    /**
+     * Luca
+     * @param password Unencrypted password as String.
+     * @return Encrypted password as String.
+     */
     private String hashPassword(String password){
         if(password == null){
             return null;

@@ -25,7 +25,10 @@ public class UserRepoImpl implements UserRepo{
     @Autowired
     DatabaseLogger databaseLogger;
 
-    //Luca
+    /**
+     * Luca
+     * @return List of phonenumbers on newsletterlist as Strings.
+     */
     @Override
     public List<String> getNewsletterList(){
         log.info("getNewsletterList method started...");
@@ -59,7 +62,10 @@ public class UserRepoImpl implements UserRepo{
         return null;
     }
 
-    //Luca
+    /**
+     * Luca
+     * @return List of Reminders for next day.
+     */
     @Override
     public List<Reminder> getReminderList(){
         log.info("getReminderList method started...");
@@ -98,7 +104,9 @@ public class UserRepoImpl implements UserRepo{
         return null;
     }
 
-    //Jonathan
+    /**
+     * Jonathan
+     */
     @Override
     public boolean addUser(User user){
         log.info("addUser method started...");
@@ -131,14 +139,18 @@ public class UserRepoImpl implements UserRepo{
         return false;
     }
 
-    //Luca
+    /**
+     * Luca
+     */
     private void addToNewsletter(User user){
         log.info("addToNewsletter method started...");
         User foundUser = authenticateUser(new LoginToken(user.getUserEmail(), user.getUserPassword()));
         subscribeNewsletter(foundUser.getUserId());
     }
 
-    //Asbjørn
+    /**
+     * Asbjørn
+     */
     @Override
     public boolean subscribeNewsletter(int userId) {
         log.info("subscribeNewsletter method started...");
@@ -147,7 +159,9 @@ public class UserRepoImpl implements UserRepo{
         return userRepoTaskResult;
     }
 
-    //Asbjørn
+    /**
+     * Asbjørn
+     */
     @Override
     public boolean unsubscribeNewsletter(int userId) {
         log.info("unsubscribeNewsletter method started...");
@@ -156,8 +170,10 @@ public class UserRepoImpl implements UserRepo{
         return userRepoTaskResult;
     }
 
-    //Asbjørn
-    //Both subscribe and unsubscribe use the same execute code
+    /**
+     * Asbjørn
+     * Both subscribe and unsubscribe use the same execute code
+     */
     private boolean newsletterQueries(int userId, String statement) {
         log.info("newsletterQueries method started...");
         try{
@@ -178,7 +194,9 @@ public class UserRepoImpl implements UserRepo{
         return userRepoTaskResult;
     }
 
-    //Mike
+    /**
+     * Mike
+     */
     @Override
     public List<User> findAllUsers() {
         log.info("findAllUsers method started...");
@@ -211,7 +229,9 @@ public class UserRepoImpl implements UserRepo{
         return null;
     }
 
-    //Mike
+    /**
+     * Mike
+     */
     @Override
     public User findUserById(int userid) {
         log.info("findUserById method started...");
@@ -239,7 +259,9 @@ public class UserRepoImpl implements UserRepo{
         return null;
     }
 
-    //Luca
+    /**
+     * Luca
+     */
     private void generateUserFromResultSet(User user, ResultSet rs) throws SQLException {
         user.setUserId(rs.getInt(1));
         user.setUsername(rs.getString(2));
@@ -249,7 +271,9 @@ public class UserRepoImpl implements UserRepo{
         user.setUserPreference(rs.getString(6));
     }
 
-    //Jonathan
+    /**
+     * Jonathan
+     */
     @Override
     public boolean editUser(User user) {
         log.info("editUser method started...");
@@ -310,7 +334,9 @@ public class UserRepoImpl implements UserRepo{
         return false;
     }
 
-    //Mike
+    /**
+     * Mike
+     */
     @Override
     public boolean editUserHistory(User user) {
         log.info("editUserHistory method started...");
@@ -335,7 +361,10 @@ public class UserRepoImpl implements UserRepo{
         return false;
     }
 
-    //Luca
+    /**
+     * Luca
+     * @return User if either phonenumber or email and password is correct.
+     */
     @Override
     public User authenticateUser(LoginToken loginToken){
         log.info("authenticateUser method started...");
@@ -367,7 +396,10 @@ public class UserRepoImpl implements UserRepo{
         return null;
     }
 
-    //Luca
+    /**
+     * Luca
+     * @return List of user roles for specific user as Strings.
+     */
     private List<String> getUserRoles(int userId){
         log.info("getUserRoles method started...");
 
@@ -398,7 +430,10 @@ public class UserRepoImpl implements UserRepo{
         return null;
     }
 
-    //Luca
+    /**
+     * Luca
+     * @return List of previous bookings for specific user as Bookings.
+     */
     private List<Booking> getUserHistory(int userId){
         log.info("getUserHistory method started...");
 
@@ -437,7 +472,9 @@ public class UserRepoImpl implements UserRepo{
         return null;
     }
 
-    //Mike
+    /**
+     * Mike
+     */
     public boolean isNewsletter(int userId) {
         String statement = "SELECT * FROM newsletter WHERE users_id = ?";
 
@@ -456,7 +493,9 @@ public class UserRepoImpl implements UserRepo{
         return false;
     }
 
-    //Luca
+    /**
+     * Luca
+     */
     private List<Treatment> getTreatmentsForBooking(int bookingId){
         log.info("getTreatmentsForBooking method started...");
 
@@ -494,7 +533,9 @@ public class UserRepoImpl implements UserRepo{
         return null;
     }
 
-    //Luca
+    /**
+     * Luca
+     */
     private User generateUserFromResultSet(ResultSet rs) throws SQLException{
         if(!rs.next()){
             return null;
@@ -509,7 +550,9 @@ public class UserRepoImpl implements UserRepo{
         return user;
     }
 
-    //Mike & Asbjørn
+    /**
+     * Mike & Asbjørn
+     */
     @Override
     public boolean deleteUser(int userId) {
         log.info("deleteUser method started...");

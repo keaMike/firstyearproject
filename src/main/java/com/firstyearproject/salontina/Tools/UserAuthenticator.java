@@ -7,7 +7,10 @@ import javax.servlet.http.HttpSession;
 
 @Component
 public class UserAuthenticator {
-    //Jonathan
+
+    /**
+     * Jonathan
+     */
     public boolean userIsAdmin(HttpSession session) {
         User user = (User) session.getAttribute("user");
         if(user != null) {
@@ -20,8 +23,10 @@ public class UserAuthenticator {
         return false;
     }
 
-    //Jonathan
-    //As no users in the database has the role "Bruger" yet, this method simply checks if they are not null.
+    /**
+     * Jonathan
+     * As no users in the database has the role "Bruger" yet, this method simply checks if they are not null.
+     */
     public boolean userIsUser(HttpSession session) {
         User user = (User) session.getAttribute("user");
         if(user != null) {

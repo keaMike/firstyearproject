@@ -9,7 +9,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-//Luca
+/**
+ * Luca
+ */
 @Component
 public class MySQLConnector {
 
@@ -37,9 +39,10 @@ public class MySQLConnector {
         return singleInstance;
     }
 
+    /**
+      * @return Connection object with connection to MySQL server.
+     */
     public Connection openConnection(){
-        //Enter URL, username and password for Database in the getConnection call below
-
         if(connectionOpened){
             return con;
         }

@@ -39,7 +39,9 @@ public class SMSController {
     @Autowired
     ConfirmationTool confirmationTool;
 
-    //Luca
+    /**
+     * Luca
+     */
     @GetMapping("reminder")
     public String reminder(Model model, HttpSession session) {
         log.info("get reminder action started..." + SessionLog.sessionId(session));
@@ -57,7 +59,9 @@ public class SMSController {
         return REMINDER;
     }
 
-    //Luca
+    /**
+     * Luca
+     */
     @GetMapping("sendreminder")
     public String sendreminder(Model model, HttpSession session) {
         log.info("get sendreminder action started..." + SessionLog.sessionId(session));
@@ -81,7 +85,9 @@ public class SMSController {
         return REDIRECT + REMINDER;
     }
 
-    //Luca
+    /**
+     * Luca
+     */
     @GetMapping("newsletter")
     public String newsletter(Model model, HttpSession session) {
         log.info("get newsletter action started..." + SessionLog.sessionId(session));
@@ -100,7 +106,9 @@ public class SMSController {
         return NEWSLETTER;
     }
 
-    //Luca
+    /**
+     * Luca
+     */
     @PostMapping("sendnewsletter")
     public String sendNewsletter(Model model, HttpSession session, @ModelAttribute Newsletter newsletter) {
         log.info("post sendnewsletter action started..." + SessionLog.sessionId(session));
@@ -122,7 +130,9 @@ public class SMSController {
         return REDIRECT + NEWSLETTER;
     }
 
-    //Luca
+    /**
+     * Luca
+     */
     @PostMapping("sendtestnewsletter")
     public String sendTestNewsletter(Model model, HttpSession session, @ModelAttribute Newsletter newsletter) {
         log.info("post sendtestnewsletter action started..." + SessionLog.sessionId(session));
@@ -144,7 +154,9 @@ public class SMSController {
         return REDIRECT + NEWSLETTER;
     }
 
-    //Mike
+    /**
+     * Mike
+     */
     @GetMapping("/sms")
     public String sendMessage(Model model, HttpSession session) {
         log.info("get sms action started..." + SessionLog.sessionId(session));
@@ -159,8 +171,10 @@ public class SMSController {
         return NEWSLETTERORREMINDER;
     }
 
-    //Asbjørn
-    //Manually starts the autoReminder
+    /**
+     * Asbjørn
+     * Manually starts the autoReminder
+     */
     @PostMapping ("/startAutoReminder")
     public String startAutoReminder(HttpSession session) {
         log.info("post startAutoReminder action started..." + SessionLog.sessionId(session));
@@ -181,8 +195,10 @@ public class SMSController {
         return REDIRECT + REMINDER;
     }
 
-    //Asbjørn
-    //Manually stops the autoReminder
+    /**
+     * Asbjørn
+     * Manually stops the autoReminder
+     */
     @PostMapping ("/stopAutoReminder")
     public String stopAutoReminde(HttpSession session){
         log.info("post stopAutoReminder action started..." + SessionLog.sessionId(session));

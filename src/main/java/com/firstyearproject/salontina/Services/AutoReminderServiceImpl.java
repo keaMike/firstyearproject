@@ -19,8 +19,10 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class AutoReminderServiceImpl implements AutoReminderService {
 
-    //Asbjørn
-    //Used in method for scheduling smsReminders. Creates a thread
+    /**
+     * Asbjørn
+     * Used in method for scheduling smsReminders. Creates a thread.
+     */
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
@@ -31,8 +33,10 @@ public class AutoReminderServiceImpl implements AutoReminderService {
     @Autowired
     BookingRepoImpl bookingRepo;
 
-    //Asbjørn
-    //This method creates a thread and schedules it to repeat every given timeperiod
+    /**
+     * Asbjørn
+     * This method creates a thread and schedules it to repeat every given time period
+     */
     @Override
     public ScheduledFuture initiateAutoReminder(){
         log.info("initiateAutoReminder method started...");
@@ -64,8 +68,10 @@ public class AutoReminderServiceImpl implements AutoReminderService {
         return autoReminderTask;
     }
 
-    //Asbjørn
-    //Underlying method cancels the thread
+    /**
+     * Asbjørn
+     * Underlying method cancels the thread
+     */
     @Override
     public boolean cancelAutoReminder() {
         log.info("cancelAutoReminder method started...");

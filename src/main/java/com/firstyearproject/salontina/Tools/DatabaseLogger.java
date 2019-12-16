@@ -8,7 +8,10 @@ import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.util.Date;
 
-//Luca
+/**
+ * Luca
+ * Used to write database log to .txt
+ */
 @Component
 public class DatabaseLogger {
 

@@ -12,16 +12,20 @@ public class ConfirmationTool {
     public static String danger = "alert alert-danger";
     public static String success = "alert alert-success";
 
-    //Luca
-    //Used in Java Methods/mappings
+    /**
+     * Luca
+     * Used in Java Methods/mappings
+     */
     public void confirmation(String text, String alert){
         showConfirmation = true;
         confirmationText = text;
         this.alert = alert;
     }
 
-    //Luca
-    //Used in HTML-Modals
+    /**
+     * Luca
+     * Sends data to HTML-modals
+     */
     public void showConfirmation(Model model){
         model.addAttribute("showconfirmation", showConfirmation);
         model.addAttribute("confirmationtext", confirmationText);

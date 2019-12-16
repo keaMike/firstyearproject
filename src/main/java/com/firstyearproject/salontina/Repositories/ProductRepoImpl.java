@@ -25,7 +25,9 @@ public class ProductRepoImpl implements ProductRepo {
     @Autowired
     DatabaseLogger databaseLogger;
 
-    //Asbjørn
+    /**
+     * Asbjørn
+     */
     @Override
     public boolean createItem(Item item) {
         log.info("createItem method started...");
@@ -56,7 +58,9 @@ public class ProductRepoImpl implements ProductRepo {
         return repoTaskResult;
     }
 
-    //Asbjørn
+    /**
+     * Asbjørn
+     */
     @Override
     public boolean createTreatment(Treatment treatment) {
         log.info("createTreatment method started...");
@@ -87,7 +91,9 @@ public class ProductRepoImpl implements ProductRepo {
     }
 
 
-    //Mike
+    /**
+     * Mike
+     */
     @Override
     public List findAllTreatments() {
         log.info("findAllTreatments method started...");
@@ -120,7 +126,9 @@ public class ProductRepoImpl implements ProductRepo {
         return null;
     }
 
-    //Asbjørn
+    /**
+     * Asbjørn
+     */
     @Override
     public List<Treatment> createTreatmentArrayList(){
         log.info("createTreatmentArrayList method started...");
@@ -145,7 +153,9 @@ public class ProductRepoImpl implements ProductRepo {
         return null;
     }
 
-    //Asbjørn
+    /**
+     * Asbjørn
+     */
     @Override
     public List<Item> createItemArrayList(){
         log.info("createItemArrayList method started...");
@@ -169,7 +179,9 @@ public class ProductRepoImpl implements ProductRepo {
         return null;
     }
 
-    //Asbjørn
+    /**
+     * Asbjørn
+     */
     private void insertIntoItemArrayList(List<Item> itemArrayList, ResultSet rsItems) {
         try {
             itemArrayList.clear();
@@ -187,7 +199,9 @@ public class ProductRepoImpl implements ProductRepo {
         }
     }
 
-    //Asbjørn
+    /**
+     * Asbjørn
+     */
     private void insertIntoTreatmentArrayList(List<Treatment> treatmentArrayList, ResultSet rsTreatments) {
         try {
             treatmentArrayList.clear();
@@ -205,7 +219,9 @@ public class ProductRepoImpl implements ProductRepo {
         }
     }
 
-    //Asbjørn
+    /**
+     * Asbjørn
+     */
     @Override
     public boolean editItem(Item item) {
         log.info("editItem method started...");
@@ -235,7 +251,9 @@ public class ProductRepoImpl implements ProductRepo {
         return repoTaskResult;
     }
 
-    //Asbjørn
+    /**
+     * Asbjørn
+     */
     @Override
     public boolean editTreatment(Treatment treatment) {
         log.info("editTreatment method started...");
@@ -266,7 +284,9 @@ public class ProductRepoImpl implements ProductRepo {
         return repoTaskResult;
     }
 
-    //Luca
+    /**
+     * Luca
+     */
     @Override
     public Treatment getTreatment(int treatmentId){
         log.info("getTreatement method started...");
@@ -299,7 +319,9 @@ public class ProductRepoImpl implements ProductRepo {
         return null;
     }
 
-    //Luca
+    /**
+     * Luca
+     */
     @Override
     public Item getItem(int itemId){
         log.info("getTreatement method started...");
@@ -332,7 +354,9 @@ public class ProductRepoImpl implements ProductRepo {
         return null;
     }
 
-    //Mike
+    /**
+     * Mike
+     */
     @Override
     public boolean deleteTreatment(int treatmentId) {
         log.info("deleteTreatment method started...");
@@ -342,7 +366,9 @@ public class ProductRepoImpl implements ProductRepo {
         return deleteProduct(treatmentId, statement);
     }
 
-    //Mike
+    /**
+     * Mike
+     */
     @Override
     public boolean deleteItem(int itemId) {
         log.info("deleteItem method started...");
@@ -352,7 +378,9 @@ public class ProductRepoImpl implements ProductRepo {
         return deleteProduct(itemId, statement);
     }
 
-    //Mike
+    /**
+     * Mike
+     */
     private boolean deleteProduct(int productId, String statement) {
         log.info("deleteProduct method started...");
         try {

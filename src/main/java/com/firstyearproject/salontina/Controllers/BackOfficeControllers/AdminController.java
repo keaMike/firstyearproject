@@ -41,7 +41,9 @@ public class AdminController {
     @Autowired
     ConfirmationTool confirmationTool;
 
-    //Mike
+    /**
+     * Mike
+     */
     @GetMapping("/controlpanel")
     public String controlpanel(Model model, HttpSession session) {
         log.info("get controlpanel action started..." + SessionLog.sessionId(session));
@@ -57,6 +59,9 @@ public class AdminController {
         return CONTROLPANEL;
     }
 
+    /**
+     * Luca
+     */
     @GetMapping("/addvacation")
     public String addVacation(HttpSession session, Model model){
         log.info("get addvacation action started..." + SessionLog.sessionId(session));
@@ -72,6 +77,9 @@ public class AdminController {
         return ADDVACATION;
     }
 
+    /**
+     * Luca
+     */
     @PostMapping("/addvacation")
     public String addVacation(HttpSession session, @ModelAttribute ChooseDate chooseDate){
         log.info("post addvacation action started..." + SessionLog.sessionId(session));

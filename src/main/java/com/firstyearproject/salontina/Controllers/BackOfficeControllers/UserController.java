@@ -42,7 +42,9 @@ public class UserController {
     ConfirmationTool confirmationTool;
 
 
-    //Mike
+    /**
+     * Mike
+     */
     @GetMapping("/userlist")
     public String userList(Model model, HttpSession session) {
         log.info("get userlist action started..." + SessionLog.sessionId(session));
@@ -60,7 +62,9 @@ public class UserController {
         return ALLUSERS;
     }
 
-    //Mike
+    /**
+     * Mike
+     */
     @GetMapping("/edituserhistory/{userid}")
     public String editUserHistory(@PathVariable int userid, Model model, HttpSession session) {
         log.info("get edituserhistory action started..." + SessionLog.sessionId(session));
@@ -79,7 +83,9 @@ public class UserController {
         return EDITUSERHISTORY;
     }
 
-    //Mike
+    /**
+     * Mike
+     */
     @PostMapping("/saveuserhistory")
     public String saveUserHistory(@ModelAttribute User user, HttpSession session) {
         log.info("post saveuserhistory action started..." + SessionLog.sessionId(session));

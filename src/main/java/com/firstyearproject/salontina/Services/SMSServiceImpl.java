@@ -28,7 +28,9 @@ public class SMSServiceImpl implements SMSService{
     @Autowired
     BookingRepoImpl bookingRepo;
 
-    //Luca
+    /**
+     * Luca
+     */
     @Override
     public boolean sendReminder(){
         log.info("sendReminder method started...");
@@ -49,8 +51,10 @@ public class SMSServiceImpl implements SMSService{
         }
     }
 
-    //Luca
-    //Method gets a list of phonenumbers and sends text to them
+    /**
+     * Luca
+     * Method gets a list of phonenumbers and sends text to them
+     */
     @Override
     public boolean sendNewsletter(String text){
         log.info("sendNewsletter method started...");
@@ -65,7 +69,9 @@ public class SMSServiceImpl implements SMSService{
         }
     }
 
-    //Luca
+    /**
+     * Luca
+     */
     @Override
     public boolean sendNewsletterTest(String phonenumber, String text){
         log.info("sendNewsletterTest method started...");
@@ -78,7 +84,9 @@ public class SMSServiceImpl implements SMSService{
         }
     }
 
-    //Luca
+    /**
+     * Luca
+     */
     @Override
     public void sendSMSToList(List<String> numberList, String text) throws ApiException{
         log.info("sendSMSToList method started...");
@@ -87,15 +95,21 @@ public class SMSServiceImpl implements SMSService{
         }
     }
 
-    //Luca
-    //Method is only called internally in the class
+    /**
+     * Luca
+     * Method is only called internally in the class
+     */
     private void sendSMS(String phonenumber, String text) throws ApiException{
         smsConnector.sendSMS(phonenumber, text);
     }
 
-    //Luca
-    //Method validates (or fixes) that number starts with +45 and is the correct length
-    private String verifyNumber(String number) throws ApiException {
+    /**
+     * Luca
+     * Method validates (or fixes) that number starts with +45 and is correct length
+     * @param number Number as String.
+     * @return Fixed number as String.
+     */
+    private String verifyNumber(String number) {
         if(number.length() > 2 && !number.substring(0,3).equals("+45")){
             number = "+45" + number;
         }
@@ -105,9 +119,11 @@ public class SMSServiceImpl implements SMSService{
         return number;
     }
 
-    //Luca
-    //Method only relevant in development, as SMS-API only sends to 'verified' numbers,
-    //when using trial account.
+    /**
+     * Luca
+     * Method only relevant in development, as SMS-API only sends to 'verified' numbers,
+     * when using trial account.
+     */
     private List<String> getTestNewsletterList(){
         List<String> testList = new ArrayList<>();
 
