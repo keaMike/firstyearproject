@@ -148,11 +148,4 @@ public class BookingServiceImpl implements BookingService{
     public boolean bookingExists(Booking booking) {
         return bookingRepo.bookingExists(booking);
     }
-
-    //Mike
-    @Override
-    public List<Booking> getBookingList(int userId){
-        log.info("getBookingList(int) method started...");
-        return bookingRepo.findBookingsByUserId(userId);
-    }
 }

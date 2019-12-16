@@ -29,7 +29,6 @@ public class UserAccessController {
     private String REGISTER = "users/register";
     private String EDITUSER = "users/edituser";
     private String USERPROFILE = "users/userprofile";
-    private String MYPROFILE = "users/myprofile";
     private String CONTACT = "contact";
 
     @Autowired
@@ -163,6 +162,7 @@ public class UserAccessController {
         return REDIRECT + "userprofile";
     }
 
+    //Mike
     @GetMapping("userprofile")
     public String userprofile(Model model, HttpSession session) {
         log.info("get userprofile action started..." + SessionLog.sessionId(session));
@@ -176,7 +176,7 @@ public class UserAccessController {
 
         User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);
-
+        log.info(user.toString());
         confirmationTool.showConfirmation(model);
         return USERPROFILE;
     }
@@ -206,21 +206,6 @@ public class UserAccessController {
     }
 
     //Mike
-    @GetMapping("/myprofile")
-    public String myprofil(Model model, HttpSession session) {
-        log.info("get myprofile action started..." + SessionLog.sessionId(session));
-
-        if(!userAuthenticator.userIsUser(session)){
-            log.info(SessionLog.NOTLOGGEDIN + SessionLog.sessionId(session));
-
-            return REDIRECT;
-        }
-        User user = (User)session.getAttribute("user");
-        model.addAttribute("user", user);
-        return MYPROFILE;
-    }
-
-    //Mike
     @GetMapping("/contact")
     public String contact(Model model, HttpSession session) {
         log.info("get contact action started..." + SessionLog.sessionId(session));
@@ -231,8 +216,10 @@ public class UserAccessController {
 
     //Asbjørn
     @PostMapping("subscribeNewsletter")
-    public String subscribeNewsletter (@ModelAttribute User user, HttpSession session) {
+    public String subscribeNewsletter (HttpSession session) {
         log.info("post subscribeNewsletter action started..." + SessionLog.sessionId(session));
+
+        User user = (User)session.getAttribute("user");
 
         if(!userAuthenticator.userIsUser(session)){
             log.info(SessionLog.NOTLOGGEDIN + SessionLog.sessionId(session));
@@ -242,6 +229,8 @@ public class UserAccessController {
 
         if (userService.subscribeNewsletter(user.getUserId())) {
             log.info("user: " + user.getUsername() + " subscribed to newsletter..." + SessionLog.sessionId(session));
+
+            user.setUserNewsLetter(true);
 
             confirmationTool.confirmation("Du er blevet tilmeldt nyhedsbrevet", ConfirmationTool.success);
             return REDIRECT + "userprofile";
@@ -254,8 +243,10 @@ public class UserAccessController {
 
     //Asbjørn
     @PostMapping("unsubscribeNewsletter")
-    public String unsubscribeNewsletter (@ModelAttribute User user, HttpSession session) {
+    public String unsubscribeNewsletter (HttpSession session) {
         log.info("post unsubscribeNewsletter action started..." + SessionLog.sessionId(session));
+
+        User user = (User)session.getAttribute("user");
 
         if(!userAuthenticator.userIsUser(session)){
             log.info(SessionLog.NOTLOGGEDIN + SessionLog.sessionId(session));
@@ -265,6 +256,8 @@ public class UserAccessController {
 
         if (userService.unsubscribeNewsletter(user.getUserId())) {
             log.info("user: " + user.getUsername() + " unsubscribed to newsletter..." + SessionLog.sessionId(session));
+
+            user.setUserNewsLetter(false);
 
             confirmationTool.confirmation("Du er blevet afmeldt nyhedsbrevet", ConfirmationTool.success);
             return REDIRECT + "userprofile";

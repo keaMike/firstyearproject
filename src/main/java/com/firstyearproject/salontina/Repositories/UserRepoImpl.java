@@ -424,6 +424,8 @@ public class UserRepoImpl implements UserRepo{
                 booking.setBookingDate(rs.getDate(4));
                 booking.setBookingComment(rs.getString(5));
                 booking.setBookingTreatmentList(getTreatmentsForBooking(booking.getBookingId()));
+
+                userHistory.add(booking);
             }
 
             databaseLogger.writeToLogFile(statement);
@@ -433,6 +435,25 @@ public class UserRepoImpl implements UserRepo{
             e.printStackTrace();
         }
         return null;
+    }
+
+    //Mike
+    public boolean isNewsletter(int userId) {
+        String statement = "SELECT * FROM newsletter WHERE users_id = ?";
+
+        try {
+            PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
+            pstmt.setInt(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+            if(rs.next()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     //Luca
@@ -483,6 +504,7 @@ public class UserRepoImpl implements UserRepo{
         generateUserFromResultSet(user, rs);
         user.setUserRoles(getUserRoles(user.getUserId()));
         user.setUserHistory(getUserHistory(user.getUserId()));
+        user.setUserNewsLetter(isNewsletter(user.getUserId()));
 
         return user;
     }

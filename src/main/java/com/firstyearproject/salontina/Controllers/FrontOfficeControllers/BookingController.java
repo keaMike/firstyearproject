@@ -67,7 +67,7 @@ public class BookingController {
         } else {
             log.info("user is logged in... showing bookings..." + SessionLog.sessionId(session));
 
-            model.addAttribute("bookings", bookingService.getBookingList(user.getUserId()));
+            model.addAttribute("bookings", user.getUserHistory());
         }
         model.addAttribute("user", user);
         confirmationTool.showConfirmation(model);
@@ -86,7 +86,7 @@ public class BookingController {
         }
 
         User user = (User) session.getAttribute("user");
-        if(bookingService.deleteBooking(bookingService.getBookingList(user.getUserId()), bookingId, userAuthenticator.userIsAdmin(session))){
+        if(bookingService.deleteBooking(user.getUserHistory(), bookingId, userAuthenticator.userIsAdmin(session))){
             log.info("deleted booking: " + bookingId + "..." + SessionLog.sessionId(session));
 
             confirmationTool.confirmation("Din booking er blevet slettet", ConfirmationTool.success);

@@ -38,17 +38,15 @@
             <input class="btn btn-dark option" type="submit" value="Gem ændringer">
         </form>
 
-        <div class="option">
+        <div class="option" th:unless="${user.userNewsLetter}">
             <form method="post" th:action="@{/subscribeNewsletter}" >
                 <input class="btn btn-dark" type="submit" value="Tilmeld nyhedsbrev">
-                <input type="hidden" th:field="${user.userId}">
             </form>
         </div>
 
-        <div class="option">
+        <div class="option" th:if="${user.userNewsLetter}">
             <form method="post" th:action="@{/unsubscribeNewsletter}" >
                 <input class="btn btn-dark" type="submit" value="Afmeld nyhedsbrev">
-                <input type="hidden" th:field="${user.userId}">
             </form>
         </div>
 
