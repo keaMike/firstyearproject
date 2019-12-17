@@ -125,7 +125,7 @@ INSERT INTO items (items_name, items_price, items_description, items_active, ite
 
 CREATE TABLE IF NOT EXISTS smsreminders (
     bookings_id INT UNIQUE NOT NULL,
-    CONSTRAINT smsreminders_fk_bookings FOREIGN KEY (booking_id) REFERENCES bookings (bookings_id)
+    CONSTRAINT smsreminders_fk_bookings FOREIGN KEY (bookings_id) REFERENCES bookings (bookings_id)
 );
 
 
