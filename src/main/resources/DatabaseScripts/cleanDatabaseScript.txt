@@ -78,11 +78,11 @@ create table salon_tina_database.newsletter
 
 create table salon_tina_database.smsreminders
 (
-    booking_id int not null,
-    constraint booking_id
-        unique (booking_id),
-    constraint smsreminder_fk_bookings
-        foreign key (booking_id) references salon_tina_database.bookings (bookings_id)
+    bookings_id int not null,
+    constraint bookings_id
+        unique (bookings_id),
+    constraint smsreminders_fk_bookings
+        foreign key (bookings_id) references salon_tina_database.bookings (bookings_id)
 );
 
 create table salon_tina_database.users_archive
