@@ -53,7 +53,6 @@ public class AdminController {
 
             return REDIRECT;
         }
-        autoReminderService.initiateAutoReminder();
         User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);
         return CONTROLPANEL;

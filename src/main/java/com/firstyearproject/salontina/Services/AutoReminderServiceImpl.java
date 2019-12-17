@@ -56,7 +56,7 @@ public class AutoReminderServiceImpl implements AutoReminderService {
 
         //The first long is the first delay after initialization. The second long is the delay between each execution
         //TimeUnit can be configured to the desired unit of measure. <?> is an unbounded wildcard meaning it can be any type of object
-        final ScheduledFuture<?> autoReminderTask = scheduler.scheduleAtFixedRate(autoReminder, 6, 24, TimeUnit.HOURS);
+        final ScheduledFuture<?> autoReminderTask = scheduler.scheduleAtFixedRate(autoReminder, 0, 24, TimeUnit.HOURS);
 
         //The following method is used to limit how long the autoReminder runs but can be manually started from Back-Office
         Runnable autoStop = new Runnable() {

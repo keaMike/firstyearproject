@@ -82,7 +82,7 @@ public class SMSController {
             confirmationTool.confirmation("Der skete en fejl ved afsendelse af reminder.", ConfirmationTool.danger);
         }
 
-        return REDIRECT + REMINDER;
+        return REDIRECT;
     }
 
     /**
@@ -175,7 +175,7 @@ public class SMSController {
      * Asbjørn
      * Manually starts the autoReminder
      */
-    @PostMapping ("/startAutoReminder")
+    @GetMapping ("/startAutoReminder")
     public String startAutoReminder(HttpSession session) {
         log.info("post startAutoReminder action started..." + SessionLog.sessionId(session));
 
@@ -192,14 +192,14 @@ public class SMSController {
             log.info("AutoReminder could not be started..." + SessionLog.sessionId(session));
             confirmationTool.confirmation("SMS påmindelse kunne ikke startes", ConfirmationTool.danger);
         }
-        return REDIRECT + REMINDER;
+        return REDIRECT;
     }
 
     /**
      * Asbjørn
      * Manually stops the autoReminder
      */
-    @PostMapping ("/stopAutoReminder")
+    @GetMapping ("/stopAutoReminder")
     public String stopAutoReminde(HttpSession session){
         log.info("post stopAutoReminder action started..." + SessionLog.sessionId(session));
 
@@ -215,6 +215,6 @@ public class SMSController {
             log.info("AutoReminder failed to stop..." + SessionLog.sessionId(session));
             confirmationTool.confirmation("SMS påmindelse kunne ikke stoppes", ConfirmationTool.danger);
         }
-        return REDIRECT + REMINDER;
+        return REDIRECT;
     }
 }

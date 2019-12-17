@@ -124,8 +124,8 @@ INSERT INTO items (items_name, items_price, items_description, items_active, ite
 ('Clearspring Organic Coconut Oil 550 ml', 74.25, 'Clearspring Organic Coconut Oil er et helt fantastisk produkt.', 1, 20);
 
 CREATE TABLE IF NOT EXISTS smsreminders (
-    booking_id INT UNIQUE NOT NULL,
-    CONSTRAINT smsreminder_fk_bookings FOREIGN KEY (booking_id) REFERENCES bookings (bookings_id)
+    bookings_id INT UNIQUE NOT NULL,
+    CONSTRAINT smsreminders_fk_bookings FOREIGN KEY (booking_id) REFERENCES bookings (bookings_id)
 );
 
 
