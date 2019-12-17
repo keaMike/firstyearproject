@@ -71,6 +71,9 @@ public class AdminController {
 
             return REDIRECT;
         }
+
+        confirmationTool.showConfirmation(model);
+
         User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);
         model.addAttribute("choosedate", new ChooseDate());

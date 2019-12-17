@@ -9,6 +9,9 @@
 </head>
 <body>
     <div class="container">
+        <div th:if="${showconfirmation}" th:class="${alert}" role="alert">
+            <span th:text="${confirmationtext}"></span>
+        </div>
         <div class="controlpaneltitle">
             <h1>Tilføj ferie
                 <i class = "fas fa-plane-departure"></i>
