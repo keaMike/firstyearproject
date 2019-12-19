@@ -29,7 +29,7 @@ public class BookingRepoImpl implements BookingRepo{
      * @param booking The new booking object.
      * @return Return if the query was successful.
      */
-    @Override
+    /*@Override
     public boolean addBooking(Booking booking){
         log.info("addBooking method started...");
 
@@ -66,6 +66,54 @@ public class BookingRepoImpl implements BookingRepo{
             mySQLConnector.closeConnection();
         }
 
+        return false;
+    } */
+
+    //TODO I think a better method for adding bookings... Will need to test for stability. - Luca
+    public boolean addBooking(Booking booking){
+        log.info("addBooking method started...");
+
+        String statement =      "INSERT INTO bookings " +
+                                "(users_id, bookings_time, bookings_date, bookings_comment) " +
+                                "VALUES " +
+                                "(?, ?, ?, ?); ";
+
+        String statement1 =     "INSERT bookings_treatment " +
+                                "(bookings_id, treatments_id) " +
+                                "VALUES " +
+                                "(" +
+                                    "(SELECT bookings_id FROM bookings " +
+                                    "WHERE bookings_date = ? " +
+                                    "AND bookings_time = ? " +
+                                    "AND users_id = ?)" +
+                                ", 1);";
+
+
+        try {
+            PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
+            PreparedStatement pstmt1 = mySQLConnector.openConnection().prepareStatement(statement1);
+
+            pstmt.setInt(1, booking.getBookingUserId());
+            pstmt.setString(2, booking.getBookingTime());
+            pstmt.setDate(3, booking.getBookingDate());
+            pstmt.setString(4, booking.getBookingComment());
+
+            pstmt1.setDate(1, booking.getBookingDate());
+            pstmt1.setString(2, booking.getBookingTime());
+            pstmt1.setInt(3, booking.getBookingUserId());
+
+            pstmt.executeUpdate();
+            pstmt1.executeUpdate();
+
+            databaseLogger.writeToLogFile(statement);
+            databaseLogger.writeToLogFile(statement1);
+
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            mySQLConnector.closeConnection();
+        }
         return false;
     }
 

@@ -192,7 +192,6 @@ public class UserAccessController {
 
         User user = (User)session.getAttribute("user");
         model.addAttribute("user", user);
-        log.info(user.toString());
         confirmationTool.showConfirmation(model);
         return USERPROFILE;
     }
