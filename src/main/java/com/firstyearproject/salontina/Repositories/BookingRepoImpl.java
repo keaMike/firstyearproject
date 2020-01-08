@@ -363,7 +363,7 @@ public class BookingRepoImpl implements BookingRepo{
         log.info("addVacation method started...");
 
         Treatment t = new Treatment();
-        t.setProductId(14);
+        t.setProductId(1);
 
         List<Treatment> treatmentList = new ArrayList<>();
         treatmentList.add(t);

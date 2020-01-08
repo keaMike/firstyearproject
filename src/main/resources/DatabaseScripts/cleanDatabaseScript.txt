@@ -110,3 +110,6 @@ INSERT INTO (users_fullName, users_password, users_phonenumber, users_email) VAL
 
 INSERT INTO users_roles (users_id, role) VALUES
     (1, 'Admin');
+
+INSERT INTO treatments (treatments_name, treatments_price, treatments_description, treatments_duration, treatments_active) VALUES
+    ('Ferie', 0, 'Ferie. Salon er derfor lukket.', 60, 0);
