@@ -69,7 +69,7 @@ public class BookingController {
         } else {
             log.info("user is logged in... showing bookings..." + SessionLog.sessionId(session));
 
-            model.addAttribute("bookings", user.getUserHistory());
+            model.addAttribute("bookings", bookingService.findBookingsByUserId(user.getUserId()));
         }
         model.addAttribute("user", user);
         confirmationTool.showConfirmation(model);

@@ -69,7 +69,7 @@ public class BookingRepoImpl implements BookingRepo{
         return false;
     } */
 
-    //TODO I think a better method for adding bookings... Will need to test for stability. - Luca
+    //TODO I think this is a better method for adding bookings... Will need to test for stability. - Luca
     public boolean addBooking(Booking booking){
         log.info("addBooking method started...");
 
@@ -362,6 +362,12 @@ public class BookingRepoImpl implements BookingRepo{
     public boolean addVacationDate(Date date, int userId){
         log.info("addVacation method started...");
 
+        Treatment t = new Treatment();
+        t.setProductId(14);
+
+        List<Treatment> treatmentList = new ArrayList<>();
+        treatmentList.add(t);
+
         for(int i = 0; i <= 7; i++){
             String time = (i + 8) + ":00";
             if(time.length() != 5){
@@ -372,6 +378,7 @@ public class BookingRepoImpl implements BookingRepo{
             booking.setBookingDate(date);
             booking.setBookingTime(time);
             booking.setBookingUserId(userId);
+            booking.setBookingTreatmentList(treatmentList);
 
             if(!addBooking(booking)){
                 return false;

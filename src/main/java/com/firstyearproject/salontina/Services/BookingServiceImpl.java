@@ -125,6 +125,11 @@ public class BookingServiceImpl implements BookingService{
         return bookingRepo.getFutureBookings();
     }
 
+    @Override
+    public List<Booking> findBookingsByUserId(int userId) {
+        return bookingRepo.findBookingsByUserId(userId);
+    }
+
     /**
      * Luca
      */
