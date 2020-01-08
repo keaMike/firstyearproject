@@ -22,11 +22,13 @@
             </thead>
             <tbody>
             <tr th:each="treatment : ${treatmentList}">
-                <td th:text="${treatment.productName}"></td>
-                <td th:text="${treatment.productPrice} + ' DKK'"></td>
-                <td>
-                    <a class="btn btn-dark" th:href="'/choosetime/' + ${treatment.productId}">Vælg behandling</a>
-                </td>
+                <div th:if="${treatment.productActive}">
+                    <td th:text="${treatment.productName}"></td>
+                    <td th:text="${treatment.productPrice} + ' DKK'"></td>
+                    <td>
+                        <a class="btn btn-dark" th:href="'/choosetime/' + ${treatment.productId}">Vælg behandling</a>
+                    </td>
+                </div>
             </tr>
             </tbody>
         </table>

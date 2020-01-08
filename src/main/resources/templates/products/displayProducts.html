@@ -39,8 +39,8 @@
                 <td th:text="${treatment.productDescription}"></td>
                 <div th:each="role : ${user.userRoles}" th:if="${role} == 'Admin'">
                     <td th:if="${treatment.productActive}">Aktiv</td>
-                    <td th:text="${treatment.productId}"></td>
                     <td th:unless="${treatment.productActive}">Ikke aktiv</td>
+                    <td th:text="${treatment.productId}"></td>
                     <td>
                         <a th:href="${'edittreatment/' + treatment.productId}"><i class="fas fa-edit" data-toggle="tooltip" title="Rediger behandling" ></i></a>
                     </td>

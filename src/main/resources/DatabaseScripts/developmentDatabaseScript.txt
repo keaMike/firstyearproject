@@ -87,6 +87,7 @@ CREATE TABLE IF NOT EXISTS treatments (
 );
 
 INSERT INTO treatments (treatments_name, treatments_price, treatments_description, treatments_duration, treatments_active) VALUES
+('Ferie', 0, 'Ferie. Salon er derfor lukket.', 60, 0),
 ('Dameklip', 290.00, 'Normal klipning for damer', 30, 1),
 ('Herreklip', 210.00, 'Normal klipning for herre', 30, 1),
 ('Børneklip', 200.00, 'Normal klipning for børn', 30, 1),

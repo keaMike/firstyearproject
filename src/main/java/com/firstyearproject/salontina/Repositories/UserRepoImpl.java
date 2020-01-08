@@ -235,7 +235,7 @@ public class UserRepoImpl implements UserRepo{
     @Override
     public User findUserById(int userid) {
         log.info("findUserById method started...");
-        User user = new User();
+        User user = null;
         String statement =
                 "SELECT * " +
                 "FROM users " +
@@ -244,9 +244,8 @@ public class UserRepoImpl implements UserRepo{
             PreparedStatement pstmt = mySQLConnector.openConnection().prepareStatement(statement);
             pstmt.setInt(1, userid);
             ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                generateUserFromResultSet(user, rs);
-            }
+
+            user = generateUserFromResultSet(rs);
 
             databaseLogger.writeToLogFile(statement);
 
