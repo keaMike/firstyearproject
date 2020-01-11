@@ -86,7 +86,7 @@ public class BookingRepoImpl implements BookingRepo{
                                     "WHERE bookings_date = ? " +
                                     "AND bookings_time = ? " +
                                     "AND users_id = ?)" +
-                                ", 1);";
+                                ", ?);";
 
 
         try {
@@ -101,6 +101,7 @@ public class BookingRepoImpl implements BookingRepo{
             pstmt1.setDate(1, booking.getBookingDate());
             pstmt1.setString(2, booking.getBookingTime());
             pstmt1.setInt(3, booking.getBookingUserId());
+            pstmt1.setInt(4, booking.getBookingTreatmentList().get(0).getProductId());
 
             pstmt.executeUpdate();
             pstmt1.executeUpdate();
